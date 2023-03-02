@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import Blueprint, render_template, redirect, url_for
 from app import session
 
 from .forms import *

@@ -1,16 +1,18 @@
 from flask import Flask
 from flask_apispec.extension import FlaskApiSpec
 from flask_jwt_extended import JWTManager
+
+from flask_sqlalchemy import SQLAlchemy
+
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from .config import Config
-from .dataBase_connect import Base, engine, session
+
 import logging
 app = Flask(__name__)
 app.config.from_object(Config)
 client = app.test_client()
 
-Base.query = session.query_property()
 
 docs = FlaskApiSpec()
 
@@ -28,7 +30,7 @@ app.config.update({
 # Импорт модели данных 
 from .models import *
 # Создание таблиц в БД
-Base.metadata.create_all(bind=engine)
+
 
 # Конфигурация логгера
 def setup_logger():
@@ -44,7 +46,8 @@ def setup_logger():
 logger = setup_logger()
 
 
-
+session = db.session
+Base = db.Model
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     session.remove()
@@ -53,6 +56,8 @@ def shutdown_session(exception=None):
 from .main.views import records
 
 app.register_blueprint(records)
+
+db = SQLAlchemy(app)
 
 
 jwt = JWTManager(app)

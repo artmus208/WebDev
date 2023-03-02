@@ -1,11 +1,6 @@
 
-from .dataBase_connect import db, session, Base
-from sqlalchemy.orm import relationship
+from app import db, Base
 from sqlalchemy.sql import func
-from flask_jwt_extended import create_access_token
-from datetime import timedelta
-from passlib.hash import bcrypt
-
 
 class Record_Keeping(Base):
     __tablename__ = 'records'
