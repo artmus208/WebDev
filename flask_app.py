@@ -1,12 +1,13 @@
 from flask import Flask, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 from config import Config
 import logging
-# Импорт модели данных 
+# Импорт модели данных
 from models import *
 from forms import *
 # Создание таблиц в БД
-db = SQLAlchemy()
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
@@ -17,7 +18,7 @@ def setup_logger():
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('log/api.log')
+    file_handler = logging.FileHandler('WebDev/log/api.log')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
@@ -45,7 +46,7 @@ def record(uname):
             rec.employee = uname
             rec.project_name = form.project_name.data
             rec.category_of_costs = form.category_of_costs.data
-            rec.task = form.task.data 
+            rec.task = form.task.data
             rec.hours = form.hours.data
             rec.minuts = form.minuts.data
             db.session.add(rec)
@@ -66,4 +67,4 @@ def create_database():
         db.create_all()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=1234)
