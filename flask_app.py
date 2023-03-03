@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, render_template, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 from config import Config
@@ -18,7 +18,7 @@ def setup_logger():
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('WebDev/log/api.log')
+    file_handler = logging.FileHandler('log/api.log')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
@@ -29,18 +29,19 @@ logger = setup_logger()
 def home():
     try:
         form = UserForm()
+        reportBtn = ProjectButton()
         if form.validate_on_submit():
             username = form.username.data
             return redirect(url_for('record', uname=username))
         else:
-            return render_template('home.html', form=form)
+            return render_template('home.html', form=form, reportBtn=reportBtn)
     except Exception as e:
         logger.warning(f"In Index page fail has been ocured: {e}")
 
 @app.route("/record/<uname>", methods=['GET', 'POST'])
 def record(uname):
     try:
-        form = Record()
+        form = Record()        
         if form.validate_on_submit():
             rec = Record_Keeping()
             rec.employee = uname
@@ -61,10 +62,98 @@ def record(uname):
 def shutdown_session(exception=None):
     db.session.remove()
 
+
 @app.before_first_request
 def create_database():
     with app.app_context():
         db.create_all()
+
+
+def MakeProjectReport(records, project_name):
+    repData_set = {
+        "employee": set(),
+        "category_of_costs": set(),
+        "task": set(),
+    }
+    for r in records:
+        r_dict = r.as_dict()
+        for key in r_dict:
+            if key in repData_set.keys():
+                repData_set[key].add(r_dict[key])
+
+    # repData = \
+    # {
+    #     "Project_name":project_name,
+    #     "list_of_cat_costs": list(repData_set["category_of_costs"])
+    #         cost1={
+    #             "list_of_tasks":[
+    #                 task1={
+    #                     "list_of_employees":[
+    #                         emp1={
+    #                             summtime
+    #                         },
+    #                         emp2={
+    #                             summtime
+    #                         }
+    #                     ]
+    #                 },
+    #                 task2={
+    #                     "list_of_employees":[
+    #                         emp1={
+    #                             summtime
+    #                         },
+    #                         emp2={
+    #                             summtime
+    #                         }
+    #                     ]
+    #                 }
+    #             ]
+            
+    #         }, 
+    #         cost2={
+    #             "list_of_tasks":[
+    #                 task1={
+    #                     "list_of_employees":[
+    #                         emp1={
+    #                             summtime
+    #                         },
+    #                         emp2={
+    #                             summtime
+    #                         }
+    #                     ]
+    #                 }
+    #             ]
+
+    #         }
+    #     ]
+    # }
+
+    return repData_set
+
+@app.route('/rep', methods=['GET', 'POST'])
+def project_report():
+    try:
+        form = ReportProjectForm()
+        form.project_name.data
+        if form.validate_on_submit():
+            selectedProj = form.project_name.data
+            records = Record_Keeping.query.filter_by(project_name=selectedProj).all()
+            for r in records:
+                print(r.as_dict())
+            print(MakeProjectReport(records=records))
+            return "Render template"
+        else:
+            return render_template('project_report.html', form=form)
+    except Exception as e:
+        logger.warning(f"In project_report fail has been ocured: {e}")
+
+@app.route('/rep/<selectedProj>', methods=['GET'])
+def show_report(selectedProj):
+    pass
+
+    
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=1234)

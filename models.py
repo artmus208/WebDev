@@ -12,6 +12,8 @@ class Record_Keeping(db.Model):
     task = db.Column(db.String(250), nullable=False)
     hours = db.Column(db.Integer)
     minuts = db.Column(db.Integer)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)

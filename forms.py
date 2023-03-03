@@ -29,3 +29,10 @@ class Record(FlaskForm):
 class UserForm(FlaskForm):
     username = StringField(label='Имя сотрудника', validators=[data_required(), length(min=3)])
     submit = SubmitField('Продолжить')
+
+class ProjectButton(FlaskForm):
+    submit = SubmitField('Отчет по проекту')
+
+class ReportProjectForm(FlaskForm):
+    project_name = SelectField(u'Проект', choices=List_of_Projects)
+    submit = SubmitField('Создать отчет по проекту')
