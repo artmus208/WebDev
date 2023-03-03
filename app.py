@@ -1,24 +1,15 @@
-from flask import Flask
-from flask_apispec.extension import FlaskApiSpec
-from flask_jwt_extended import JWTManager
+from flask import Flask, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
-
 import logging
+# Импорт модели данных 
+from models import *
+from forms import *
+# Создание таблиц в БД
+db = SQLAlchemy()
 app = Flask(__name__)
 app.config.from_object(Config)
-client = app.test_client()
-
-
-docs = FlaskApiSpec()
-
-
-
-
-# Импорт модели данных 
-from .models import *
-# Создание таблиц в БД
-
+db.init_app(app)
 
 # Конфигурация логгера
 def setup_logger():
@@ -33,20 +24,46 @@ def setup_logger():
 
 logger = setup_logger()
 
+@app.route("/", methods=['GET', 'POST'])
+def home():
+    try:
+        form = UserForm()
+        if form.validate_on_submit():
+            username = form.username.data
+            return redirect(url_for('record', uname=username))
+        else:
+            return render_template('home.html', form=form)
+    except Exception as e:
+        logger.warning(f"In Index page fail has been ocured: {e}")
 
-session = db.session
-Base = db.Model
+@app.route("/record/<uname>", methods=['GET', 'POST'])
+def record(uname):
+    try:
+        form = Record()
+        if form.validate_on_submit():
+            rec = Record_Keeping()
+            rec.employee = uname
+            rec.project_name = form.project_name.data
+            rec.category_of_costs = form.category_of_costs.data
+            rec.task = form.task.data 
+            rec.hours = form.hours.data
+            rec.minuts = form.minuts.data
+            db.session.add(rec)
+            db.session.commit()
+            return render_template('success.html', uname=uname)
+        else:
+            return render_template('records.html', form=form, uname=uname)
+    except Exception as e:
+        logger.warning(f"In record page fail has been ocured: {e}")
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
-    session.remove()
+    db.session.remove()
 
+@app.before_first_request
+def create_database():
+    with app.app_context():
+        db.create_all()
 
-from .main.views import records
-
-app.register_blueprint(records)
-
-db = SQLAlchemy(app)
-
-
-jwt = JWTManager(app)
-docs.init_app(app)
+if __name__ == "__main__":
+    app.run(debug=True)
