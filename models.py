@@ -1,5 +1,5 @@
 
-from app import db
+from flask_app import db
 from sqlalchemy.sql import func
 
 class Record_Keeping(db.Model):
