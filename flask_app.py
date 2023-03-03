@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from reports_makers import make_query_to_dict_list, get_project_report_dict
 db = SQLAlchemy()
 from config import Config
 import logging
@@ -69,79 +70,16 @@ def create_database():
         db.create_all()
 
 
-def MakeProjectReport(records, project_name):
-    repData_set = {
-        "employee": set(),
-        "category_of_costs": set(),
-        "task": set(),
-    }
-    for r in records:
-        r_dict = r.as_dict()
-        for key in r_dict:
-            if key in repData_set.keys():
-                repData_set[key].add(r_dict[key])
-
-    # repData = \
-    # {
-    #     "Project_name":project_name,
-    #     "list_of_cat_costs": list(repData_set["category_of_costs"])
-    #         cost1={
-    #             "list_of_tasks":[
-    #                 task1={
-    #                     "list_of_employees":[
-    #                         emp1={
-    #                             summtime
-    #                         },
-    #                         emp2={
-    #                             summtime
-    #                         }
-    #                     ]
-    #                 },
-    #                 task2={
-    #                     "list_of_employees":[
-    #                         emp1={
-    #                             summtime
-    #                         },
-    #                         emp2={
-    #                             summtime
-    #                         }
-    #                     ]
-    #                 }
-    #             ]
-            
-    #         }, 
-    #         cost2={
-    #             "list_of_tasks":[
-    #                 task1={
-    #                     "list_of_employees":[
-    #                         emp1={
-    #                             summtime
-    #                         },
-    #                         emp2={
-    #                             summtime
-    #                         }
-    #                     ]
-    #                 }
-    #             ]
-
-    #         }
-    #     ]
-    # }
-
-    return repData_set
-
 @app.route('/rep', methods=['GET', 'POST'])
 def project_report():
     try:
         form = ReportProjectForm()
-        form.project_name.data
         if form.validate_on_submit():
             selectedProj = form.project_name.data
             records = Record_Keeping.query.filter_by(project_name=selectedProj).all()
-            for r in records:
-                print(r.as_dict())
-            print(MakeProjectReport(records=records))
-            return "Render template"
+            rec_list_dict = make_query_to_dict_list(records)
+            res_dict = get_project_report_dict(all_records=rec_list_dict, p_name=selectedProj)
+            return jsonify(res_dict)
         else:
             return render_template('project_report.html', form=form)
     except Exception as e:
