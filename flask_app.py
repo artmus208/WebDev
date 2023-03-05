@@ -1,8 +1,11 @@
 from flask import Flask, redirect, render_template, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
+
 from reports_makers import make_query_to_dict_list, get_project_report_dict
+
 db = SQLAlchemy()
 from config import Config
+import click
 import logging
 # Импорт модели данных
 from models import *
@@ -12,6 +15,29 @@ from forms import *
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
+
+
+@app.cli.command("check")
+@click.argument("name")
+def create_user(name):
+    print("Check", name)
+
+@app.cli.command("drop_db")
+def drop_db():
+    print("Start droping")
+    db.drop_all()
+    db.session.commit()
+    print("End droping")
+
+
+@app.cli.command("create_db")
+def create_db():
+    print("Start creating")
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
+    print("End creating")
+    
 
 # Конфигурация логгера
 def setup_logger():

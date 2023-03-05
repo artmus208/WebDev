@@ -17,3 +17,4 @@ class Config:
     SQLALCHEMY_POOL_RECYCLE = 299
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
+    FLASK_APP = "flask_app"
