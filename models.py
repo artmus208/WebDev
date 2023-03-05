@@ -13,10 +13,10 @@ class Records(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
     hours = db.Column(db.Integer)
     minuts = db.Column(db.Integer)
-    
+
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-    
+
 class Employees(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -40,7 +40,7 @@ class Projects(db.Model):
     start_time = db.Column(db.DateTime(timezone=True))
     end_time = db.Column(db.DateTime(timezone=True))
     end_time_fact = db.Column(db.DateTime(timezone=True))
-    costs_tasks = db.relationship("CostsProjectsTasks", 
+    costs_tasks = db.relationship("CostsProjectsTasks",
                                 backref='Projects', lazy='dynamic')
 
     def __init__(self, p_name, gip_id, start_time, end_time):
@@ -62,25 +62,25 @@ class GIPs(db.Model):
     def __init__(self, gip_id):
         self.employee_id = gip_id
 
-   
+
 class Costs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     cost_name = db.Column(db.String(85), nullable=False, unique=True)
-    projects_tasks = db.relationship("CostsProjectsTasks", 
+    projects_tasks = db.relationship("CostsProjectsTasks",
                                 backref='Costs', lazy='dynamic')
     def __init__(self, cost_name):
-        self.cost_name = cost_name 
+        self.cost_name = cost_name
 
 class Tasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     task_name = db.Column(db.String(85), nullable=False)
-    projects_costs = db.relationship("CostsProjectsTasks", 
+    projects_costs = db.relationship("CostsProjectsTasks",
                                 backref='tasks', lazy='dynamic')
-    
+
     def __init__(self, task_name):
         self.task_name = task_name
 class CostsProjectsTasks(db.Model):
@@ -97,7 +97,7 @@ class CostsProjectsTasks(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
     man_days = db.Column(db.Integer)
     man_days_fact = db.Column(db.Integer)
-     
+
 
 
 class Admins(db.Model):
@@ -105,17 +105,3 @@ class Admins(db.Model):
     employee_id = db.Column(db.Integer, db.ForeignKey("employees.id"))
     def __init__(self, employee_id):
         self.employee_id = employee_id
-
-
-class Record_Keeping(db.Model):
-    __tablename__ = 'records_old'
-    id = db.Column(db.Integer, primary_key=True)
-    time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    employee = db.Column(db.String(250), nullable=False)
-    project_name = db.Column(db.String(250), nullable=False)
-    category_of_costs = db.Column(db.String(250), nullable=False)
-    task = db.Column(db.String(250), nullable=False)
-    hours = db.Column(db.Integer)
-    minuts = db.Column(db.Integer)
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}

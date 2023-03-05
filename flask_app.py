@@ -41,7 +41,7 @@ def create_db():
     db.create_all()
     db.session.commit()
     print("End creating")
-    
+
 @app.cli.command("init_emp")
 def init_emp():
     with open("static/files/employees.txt",'r') as f:
@@ -65,7 +65,7 @@ def add_admin(admin_login):
         db.session.commit()
         print(admin_login, 'is added')
     else:
-        print("No such employeer with login: " + admin_login)            
+        print("No such employeer with login: " + admin_login)
 
 @app.cli.command("init_costs")
 def init_costs():
@@ -112,7 +112,7 @@ def init_projects():
                 start_time = datetime.datetime(year, month, day)
                 day, month, year = map(int, one_proj[2].split())
                 end_time = datetime.datetime(year, month, day)
-                gip_login = one_proj[3] 
+                gip_login = one_proj[3]
                 emp_id = Employees.query.filter_by(login=gip_login).first().id
                 gip_id = GIPs.query.filter_by(employee_id=emp_id).first().id
                 project = Projects(project_name, gip_id, start_time, end_time)
@@ -131,7 +131,7 @@ def setup_logger():
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('log/api.log')
+    file_handler = logging.FileHandler('./log/api.log')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
@@ -160,7 +160,7 @@ def record(login):
             ]
         projects_name_list = [
             p.project_name for p in db.session.execute(db.select(Projects)).scalars()
-            ]        
+            ]
         form.category_of_costs.choices = costs_name_list
         form.project_name.choices = projects_name_list
         if form.validate_on_submit():
@@ -168,7 +168,7 @@ def record(login):
             rec.employee_id = Employees.query.filter_by(login=login).first().id
             rec.project_id = Projects.query.filter_by(project_name=form.project_name.data).first().id
             rec.cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
-            rec.task_id = Tasks.query.filter_by(task_name=form.task.data).first().id 
+            rec.task_id = Tasks.query.filter_by(task_name=form.task.data).first().id
             rec.hours = form.hours.data
             rec.minuts = form.minuts.data
             db.session.add(rec)
@@ -199,7 +199,7 @@ def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
         if item["task_id"] == "blank_task":
             item["task_id"] = item["employee_id"] + "_" + item["task_id"]
     return list_of_ditc
-    
+
 
 @app.route('/rep', methods=['GET', 'POST'])
 def project_report():
@@ -207,7 +207,7 @@ def project_report():
         form = ReportProjectForm()
         projects_name_list = [
             p.project_name for p in db.session.execute(db.select(Projects)).scalars()
-            ]      
+            ]
         form.project_name.choices = projects_name_list
         if form.validate_on_submit():
             selected_proj_name = form.project_name.data
