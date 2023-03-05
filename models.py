@@ -53,9 +53,12 @@ class Costs(db.Model):
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     cost_name = db.Column(db.String(85), nullable=False)
-    man_days = db.Column(db.Integer)
     projects_tasks = db.relationship("CostsProjectsTasks", 
                                 backref='Costs', lazy='dynamic')
+    def __init__(self, cost_name):
+        self.cost_name = cost_name
+        
+
     
 
 class Tasks(db.Model):

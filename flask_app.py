@@ -70,7 +70,13 @@ def add_admin(admin_login):
     else:
         print("No such employeer with login: " + admin_login)            
 
-
+@app.cli.command("init_costs")
+def init_emp():
+    with open("static/files/costs.txt",'r') as f:
+        for line in f:
+            cost = Costs(cost_name=line)
+            db.session.add(cost)
+        db.session.commit()
 
 # Конфигурация логгера
 def setup_logger():
