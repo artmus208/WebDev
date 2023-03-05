@@ -3,4 +3,3 @@ venv
 *.sqlite
 log/
 docs/
-static/files/
