@@ -13,6 +13,7 @@ class Records(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
     hours = db.Column(db.Integer)
     minuts = db.Column(db.Integer)
+    
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
@@ -47,6 +48,9 @@ class Projects(db.Model):
         self.gip_id = gip_id
         self.start_time = start_time
         self.end_time = end_time
+
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class GIPs(db.Model):
     __tablename__ = "gips"

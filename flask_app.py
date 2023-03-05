@@ -7,12 +7,13 @@ from flask_sqlalchemy import SQLAlchemy
 
 from reports_makers import make_query_to_dict_list, get_project_report_dict
 
-db = SQLAlchemy()
-from config import Config
 
+from config import Config
+db = SQLAlchemy()
 # Импорт модели данных
-from models import Employees, Admins, Costs, Tasks, CostsProjectsTasks, GIPs
-from models import Records, Projects, Record_Keeping
+from models import * # Employees, Admins, Costs, Tasks, CostsProjectsTasks, GIPs
+# from models import Records, Projects, Record_Keeping
+
 from forms import *
 # Создание таблиц в БД
 
@@ -153,18 +154,26 @@ def home():
 @app.route("/record/<login>", methods=['GET', 'POST'])
 def record(login):
     try:
-        form = Record()        
+        form = RecordsForm()
+        costs_name_list = [
+            c.cost_name for c in db.session.execute(db.select(Costs)).scalars()
+            ]
+        projects_name_list = [
+            p.project_name for p in db.session.execute(db.select(Projects)).scalars()
+            ]        
+        form.category_of_costs.choices = costs_name_list
+        form.project_name.choices = projects_name_list
         if form.validate_on_submit():
             rec = Records()
-            rec.employee = login
-            rec.project_name = form.project_name.data
-            rec.category_of_costs = form.category_of_costs.data
-            rec.task = form.task.data
+            rec.employee_id = Employees.query.filter_by(login=login).first().id
+            rec.project_id = Projects.query.filter_by(project_name=form.project_name.data).first().id
+            rec.cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
+            rec.task_id = Tasks.query.filter_by(task_name=form.task.data).first().id 
             rec.hours = form.hours.data
             rec.minuts = form.minuts.data
             db.session.add(rec)
             db.session.commit()
-            return render_template('success.html', login=login)
+            return redirect(url_for('record', login=login))
         else:
             return render_template('records.html', form=form, login=login)
     except Exception as e:
@@ -181,15 +190,34 @@ def create_database():
         db.create_all()
 
 
+def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
+    for item in list_of_ditc:
+        item["employee_id"] = db.session.get(Employees, item["employee_id"]).login
+        item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
+        item["cost_id"] = db.session.get(Costs, item["cost_id"]).cost_name
+        item["task_id"] = db.session.get(Tasks, item["task_id"]).task_name
+        if item["task_id"] == "blank_task":
+            item["task_id"] = item["employee_id"] + "_" + item["task_id"]
+    return list_of_ditc
+    
+
 @app.route('/rep', methods=['GET', 'POST'])
 def project_report():
     try:
         form = ReportProjectForm()
+        projects_name_list = [
+            p.project_name for p in db.session.execute(db.select(Projects)).scalars()
+            ]      
+        form.project_name.choices = projects_name_list
         if form.validate_on_submit():
-            selectedProj = form.project_name.data
-            records = Record_Keeping.query.filter_by(project_name=selectedProj).all()
+            selected_proj_name = form.project_name.data
+            proj_id = Projects.query.filter_by(project_name=selected_proj_name).first().id
+            records = Records.query.filter_by(project_id=proj_id).all()
             rec_list_dict = make_query_to_dict_list(records)
-            res_dict = get_project_report_dict(all_records=rec_list_dict, p_name=selectedProj)
+            print(rec_list_dict)
+            rec_list_dict = replace_id_to_name_in_record_dict(rec_list_dict)
+            print(rec_list_dict)
+            res_dict = get_project_report_dict(all_records=rec_list_dict, p_name=selected_proj_name)
             return jsonify(res_dict)
         else:
             return render_template('project_report.html', form=form)
@@ -199,9 +227,6 @@ def project_report():
 @app.route('/rep/<selectedProj>', methods=['GET'])
 def show_report(selectedProj):
     pass
-
-    
-
 
 
 if __name__ == "__main__":

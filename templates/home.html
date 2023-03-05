@@ -14,7 +14,7 @@
             </div>
         </form>
 
-        <form method="GET" action="{{url_for('project_report')}}">
+        <form method="POST" action="{{url_for('project_report')}}">
             {{reportBtn.csrf_token}}
             <div class="row p-5 justify-content-center">
                 <div class="col-2">

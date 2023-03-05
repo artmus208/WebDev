@@ -66,27 +66,31 @@ def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
     """
     emp_summ_time_h = 0
     emp_summ_time_min = 0
-    list_of_category_of_costs = get_uniq_key_values(all_records, "category_of_costs")
+    list_of_category_of_costs = get_uniq_key_values(all_records, "cost_id")
     print(p_name)
     buff_dict_item_0 = {"list_of_cat_cos": [0 for i in range(len(list_of_category_of_costs))]}
+    if not buff_dict_item_0['list_of_cat_cos']:
+        buff_dict_item_0['list_of_cat_cos'] = "No data available"
     for i_c, category_of_costs in enumerate(list_of_category_of_costs):
-        buff_dict_1 = filter_dict_by(all_records, ("category_of_costs", category_of_costs))
-        list_uniq_tasks = get_uniq_key_values(buff_dict_1, "task")
+        buff_dict_1 = filter_dict_by(all_records, ("cost_id", category_of_costs))
+        list_uniq_tasks = get_uniq_key_values(buff_dict_1, "task_id")
         buff_dict_item_1 = {"cat_of_cost": category_of_costs, "list_of_tasks": [0 for i in range(len(list_uniq_tasks))]}
         print('\t', category_of_costs)
         # reportDict[category_of_costs] = list()
         for i_t, task in enumerate(list_uniq_tasks): 
-            buff_dict_2 = filter_dict_by(all_records, ("task", task))
-            list_uniq_emp = get_uniq_key_values(buff_dict_2, "employee")
+            buff_dict_2 = filter_dict_by(all_records, ("task_id", task))
+            list_uniq_emp = get_uniq_key_values(buff_dict_2, "employee_id")
             print('\t\t', task)
             buff_dict_item_2 = {"task_name": task, "list_of_emp": [0 for i in range(len(list_uniq_emp))]}
             for i_e, employee in enumerate(list_uniq_emp):                
-                buff_dict_3 = filter_dict_by(all_records, ("employee", employee))
+                buff_dict_3 = filter_dict_by(all_records, ("employee_id", employee))
                 for d_item in buff_dict_3:
                     emp_summ_time_h = emp_summ_time_h + d_item['hours']
                     emp_summ_time_min = emp_summ_time_min + d_item['minuts']
                 emp_summ_time_gen_h = (60*emp_summ_time_h + emp_summ_time_min) // 60
                 emp_summ_time_gen_m = (60*emp_summ_time_h + emp_summ_time_min) % 60
+                emp_summ_time_h = 0
+                emp_summ_time_min = 0
                 buff_dict_item_3 = {"emp_name":employee, "summ_time_h":emp_summ_time_gen_h, "summ_time_m":emp_summ_time_gen_m}
                 buff_dict_item_2['list_of_emp'][i_e] = buff_dict_item_3
                 print('\t\t\t', employee, emp_summ_time_gen_h,emp_summ_time_gen_m)
