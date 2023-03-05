@@ -1,5 +1,6 @@
-import click
 import logging
+import click
+import datetime
 
 from flask import Flask, redirect, render_template, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +11,8 @@ db = SQLAlchemy()
 from config import Config
 
 # Импорт модели данных
-from models import *
+from models import Employees, Admins, Costs, Tasks, CostsProjectsTasks, GIPs
+from models import Records, Projects, Record_Keeping
 from forms import *
 # Создание таблиц в БД
 
@@ -39,13 +41,6 @@ def create_db():
     db.session.commit()
     print("End creating")
     
-@app.cli.command("show_file")
-@click.argument("filename")
-def init_emp_from(filename):
-    with open("static/files/"+filename,'r') as f:
-        for line in f:
-            print(line.split())
-
 @app.cli.command("init_emp")
 def init_emp():
     with open("static/files/employees.txt",'r') as f:
@@ -55,8 +50,8 @@ def init_emp():
             password = spl_line[1]
             emp = Employees(login=login, password=password)
             db.session.add(emp)
+            print(emp.login)
         db.session.commit()
-
 
 @app.cli.command("add_admin")
 @click.argument("admin_login")
@@ -67,16 +62,67 @@ def add_admin(admin_login):
         admin = Admins(admin_id)
         db.session.add(admin)
         db.session.commit()
+        print(admin_login, 'is added')
     else:
         print("No such employeer with login: " + admin_login)            
 
 @app.cli.command("init_costs")
-def init_emp():
-    with open("static/files/costs.txt",'r') as f:
-        for line in f:
+def init_costs():
+    with open("static/files/costs.txt",'r', encoding='utf-8') as f:
+        all_costs = f.read().splitlines()
+        for line in all_costs:
             cost = Costs(cost_name=line)
             db.session.add(cost)
+            print(cost.cost_name)
         db.session.commit()
+
+
+@app.cli.command("init_gips")
+def init_gips():
+    with open("static/files/gips.txt",'r') as f:
+        gips_logins = f.read().splitlines()
+        for gip_login in gips_logins:
+            print(gip_login)
+            try:
+                gip_id = Employees.query.filter_by(login=gip_login).first().id
+                db.session.add(GIPs(gip_id=gip_id))
+            except AttributeError:
+                print(gip_login, "has no in employees list")
+        db.session.commit()
+
+@app.cli.command("init_tasks")
+def init_tasks():
+    with open("static/files/tasks.txt",'r', encoding='utf-8') as f:
+        tasks = f.read().splitlines()
+        for line in tasks:
+            db.session.add(Tasks(line))
+            print(line)
+        db.session.commit()
+
+@app.cli.command("init_projects")
+def init_projects():
+    with open("static/files/projects.txt",'r', encoding='utf-8') as f:
+        projects_list = f.read().splitlines()
+        for p in projects_list:
+            try:
+                one_proj = p.split('|')
+                project_name = one_proj[0]
+                day, month, year = map(int, one_proj[1].split())
+                start_time = datetime.datetime(year, month, day)
+                day, month, year = map(int, one_proj[2].split())
+                end_time = datetime.datetime(year, month, day)
+                gip_login = one_proj[3] 
+                emp_id = Employees.query.filter_by(login=gip_login).first().id
+                gip_id = GIPs.query.filter_by(employee_id=emp_id).first().id
+                project = Projects(project_name, gip_id, start_time, end_time)
+                db.session.add(project)
+                db.session.commit()
+                print(project.id, project.project_name)
+            except Exception as e:
+                print(f"In init projects Exception occured: {e} ")
+
+
+
 
 # Конфигурация логгера
 def setup_logger():
@@ -98,19 +144,19 @@ def home():
         reportBtn = ProjectButton()
         if form.validate_on_submit():
             username = form.username.data
-            return redirect(url_for('record', uname=username))
+            return redirect(url_for('record', login=username))
         else:
             return render_template('home.html', form=form, reportBtn=reportBtn)
     except Exception as e:
         logger.warning(f"In Index page fail has been ocured: {e}")
 
-@app.route("/record/<uname>", methods=['GET', 'POST'])
-def record(uname):
+@app.route("/record/<login>", methods=['GET', 'POST'])
+def record(login):
     try:
         form = Record()        
         if form.validate_on_submit():
-            rec = Record_Keeping()
-            rec.employee = uname
+            rec = Records()
+            rec.employee = login
             rec.project_name = form.project_name.data
             rec.category_of_costs = form.category_of_costs.data
             rec.task = form.task.data
@@ -118,9 +164,9 @@ def record(uname):
             rec.minuts = form.minuts.data
             db.session.add(rec)
             db.session.commit()
-            return render_template('success.html', uname=uname)
+            return render_template('success.html', login=login)
         else:
-            return render_template('records.html', form=form, uname=uname)
+            return render_template('records.html', form=form, login=login)
     except Exception as e:
         logger.warning(f"In record page fail has been ocured: {e}")
 
