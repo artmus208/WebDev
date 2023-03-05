@@ -1,3 +1,6 @@
+import click
+import logging
+
 from flask import Flask, redirect, render_template, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
@@ -5,8 +8,7 @@ from reports_makers import make_query_to_dict_list, get_project_report_dict
 
 db = SQLAlchemy()
 from config import Config
-import click
-import logging
+
 # Импорт модели данных
 from models import *
 from forms import *
@@ -29,7 +31,6 @@ def drop_db():
     db.session.commit()
     print("End droping")
 
-
 @app.cli.command("create_db")
 def create_db():
     print("Start creating")
@@ -38,6 +39,26 @@ def create_db():
     db.session.commit()
     print("End creating")
     
+@app.cli.command("show_file")
+@click.argument("filename")
+def init_emp_from(filename):
+    with open("static/files/"+filename,'r') as f:
+        for line in f:
+            print(line.split())
+
+@app.cli.command("init_emp")
+def init_emp():
+    with open("static/files/employees.txt",'r') as f:
+        for line in f:
+            spl_line = line.split()
+            login = spl_line[0]
+            password = spl_line[1]
+            emp = Employees(login=login, password=password)
+            db.session.add(emp)
+        db.session.commit()
+            
+
+
 
 # Конфигурация логгера
 def setup_logger():
