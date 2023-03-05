@@ -78,6 +78,8 @@ class CostsProjectsTasks(db.Model):
 class Admins(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.Integer, db.ForeignKey("employees.id"))
+    def __init__(self, employee_id):
+        self.employee_id = employee_id
 
 
 

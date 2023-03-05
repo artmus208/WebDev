@@ -56,7 +56,19 @@ def init_emp():
             emp = Employees(login=login, password=password)
             db.session.add(emp)
         db.session.commit()
-            
+
+
+@app.cli.command("add_admin")
+@click.argument("admin_login")
+def add_admin(admin_login):
+    emp_logins = [emp.login for emp in db.session.execute(db.select(Employees)).scalars()]
+    if admin_login in emp_logins:
+        admin_id = Employees.query.filter_by(login=admin_login).first().id
+        admin = Admins(admin_id)
+        db.session.add(admin)
+        db.session.commit()
+    else:
+        print("No such employeer with login: " + admin_login)            
 
 
 
