@@ -13,15 +13,15 @@ db = SQLAlchemy()
 # Импорт модели данных
 from models import * # Employees, Admins, Costs, Tasks, CostsProjectsTasks, GIPs
 # from models import Records, Projects, Record_Keeping
-
 from forms import *
-# Создание таблиц в БД
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
-
+EMP_LOGINS = []
+# Создание таблиц в БД
 @app.cli.command("check")
 @click.argument("name")
 def create_user(name):
@@ -47,7 +47,7 @@ def init_emp():
     with open("static/files/employees.txt",'r') as f:
         for line in f:
             spl_line = line.split()
-            login = spl_line[0]
+            login = spl_line[0].split("@")[0]
             password = spl_line[1]
             emp = Employees(login=login, password=password)
             db.session.add(emp)
@@ -57,8 +57,8 @@ def init_emp():
 @app.cli.command("add_admin")
 @click.argument("admin_login")
 def add_admin(admin_login):
-    emp_logins = [emp.login for emp in db.session.execute(db.select(Employees)).scalars()]
-    if admin_login in emp_logins:
+    global EMP_LOGINS
+    if admin_login in EMP_LOGINS:
         admin_id = Employees.query.filter_by(login=admin_login).first().id
         admin = Admins(admin_id)
         db.session.add(admin)
@@ -131,7 +131,7 @@ def setup_logger():
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('WebDev/log/api.log') # WebDev/log/api.log
+    file_handler = logging.FileHandler('WevDev/log/api.log') # WebDev/log/api.log
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
@@ -140,17 +140,27 @@ logger = setup_logger()
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
+    class UserForm(FlaskForm):
+        username = StringField(label='Логин сотрудника', 
+                               validators=[
+                                            data_required(),length(min=3),
+                                            available_login(EMP_LOGINS)
+                                          ] 
+                                )
+        submit = SubmitField('Продолжить')
+
     try:
         form = UserForm()
+        # form = UserForm()
         reportBtn = ProjectButton()
         if form.validate_on_submit():
             username = form.username.data
             return redirect(url_for('record', login=username))
         else:
+            flash("Если не пускают дальше, возможно, логин не зарегистрирован")
             return render_template('home.html', form=form, reportBtn=reportBtn)
     except Exception as e:
         logger.warning(f"In Index page fail has been ocured: {e}")
-
 @app.route("/record/<login>", methods=['GET', 'POST'])
 def record(login):
     try:
@@ -193,6 +203,9 @@ def shutdown_session(exception=None):
 def create_database():
     with app.app_context():
         db.create_all()
+        global EMP_LOGINS
+        EMP_LOGINS = [emp.login for emp in db.session.execute(db.select(Employees)).scalars()]
+        
 
 
 def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:

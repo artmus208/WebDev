@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, SelectField, IntegerField
-from wtforms.validators import data_required, length
-
+from wtforms.validators import data_required, length, ValidationError
 
 class RecordsForm(FlaskForm):
     project_name = SelectField(u'Проект')
@@ -13,10 +12,20 @@ class RecordsForm(FlaskForm):
     minuts = IntegerField(label='Кол-во минут', validators=[data_required()])
     submit = SubmitField('Подтвердить')
 
-class UserForm(FlaskForm):
-    username = StringField(label='Логин сотрудника', validators=[data_required(), length(min=3)])
-    submit = SubmitField('Продолжить')
 
+def available_login(available_logins):
+
+    def _available_login(form, field):
+        
+        if field.data.lower() not in available_logins:
+            message = "Логин не зарегистрирован. Обратитесь к ЕАВ"
+            raise ValidationError(message)
+    return _available_login\
+    
+
+def my_length_check(form, field):
+    if len(field.data) > 50:
+        raise ValidationError('Field must be less than 50 characters')
 class ProjectButton(FlaskForm):
     submit = SubmitField('Отчет по проекту')
 

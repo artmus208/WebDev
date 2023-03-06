@@ -2,8 +2,16 @@
 
 {% block content %}
 
-
-<div>
+    <div class="space">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <br>
     <h2 align="centr"> </h2>
     <form method="POST" action="{{url_for('record', login=login)}}">
         {{form.csrf_token}}
@@ -45,15 +53,6 @@
             <p>{{returnBtn.submit(class=' btn btn-success Btn')}}</p>
         </div>
     </form>
-    <div class="space">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
-</div>
+
 
 {% endblock content %}
