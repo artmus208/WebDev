@@ -2,26 +2,58 @@
 
 {% block content %}
 
+
 <div>
     <h2 align="centr"> </h2>
     <form method="POST" action="{{url_for('record', login=login)}}">
         {{form.csrf_token}}
-        <div class="row p-5 justify-content-center">
-            <div class="col-2">
+        <div class="space line">
+            <div class="item">
                 <p>{{form.project_name.label(class="form-control-md")}}</p>
                 <p>{{form.project_name(class="form-control-sm")}} </p>
+            </div>
+            <div class="item">
                 <p>{{form.category_of_costs.label(class="form-control-md")}} </p>
                 <p>{{form.category_of_costs(class="form-control-sm")}} </p>
+            </div>
+            <div class="item">
                 <p>{{form.task.label(class="form-control-md")}} </p>
                 <p>{{form.task(class="form-control-sm")}} </p>
+            </div>
+            <div class="item">
                 <p>{{form.hours.label(class="form-control-md")}} </p>
                 <p>{{form.hours(class="form-control-sm")}} </p>
+            </div>
+            <div class="item">
                 <p>{{form.minuts.label(class="form-control-md")}} </p>
                 <p>{{form.minuts(class="form-control-sm")}} </p>
-                <p>{{form.submit(class=' btn btn-success')}}</p>
             </div>
         </div>
+                <p>{{form.submit(class=' btn btn-success space')}}</p>
+
     </form>
+    <form method="POST" action="{{url_for('project_report')}}">
+        {{reportBtn.csrf_token}}
+        <div class="space">            
+            <p>{{reportBtn.submit(class=' btn btn-success Btn')}}</p>
+        </div>
+    </form>
+
+    <form method="GET" action="{{url_for('home')}}">
+        {{reportBtn.csrf_token}}
+        <div class="space">
+            <p>{{returnBtn.submit(class=' btn btn-success Btn')}}</p>
+        </div>
+    </form>
+    <div class="space">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 </div>
 
 {% endblock content %}

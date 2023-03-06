@@ -1,5 +1,7 @@
 class Config:
+    FLASK_APP = "flask_app.py"
     SECRET_KEY = '8b2771f9bec9434f87d56749ccadad43'
+
     # SQLALCHEMY_DATABASE_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
     # connectorname="mariadb+mariadbconnector",
     # username="root",
@@ -7,6 +9,7 @@ class Config:
     # hostname="127.0.0.1:3306",
     # databasename="time_managment_web_app",
     # )
+
     SQLALCHEMY_DATABASE_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
     connectorname="mysql+mysqlconnector",
     username="artmus208",

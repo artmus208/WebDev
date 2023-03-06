@@ -11,8 +11,47 @@
         <!-- <link rel="stylesheet" href="{{url_for('static', filename='site.css' )}}"> -->
     </head>
     <body style="background-color:#ceeaf2">
+
+        <style>
+            @media only screen and (max-width:2000px) {
+                
+            .margin-left{
+                margin-left: 5%;
+            }
+            .space{
+                margin-left: 5%;
+                margin-right: 20%;
+            }
+            .line{
+                display: flex;
+                justify-content: space-between;
+            }
+            .item{
+                display: block;
+            }
+        }
+
+        @media only screen and (max-width:1080px) {
+            .margin-left{
+                margin-left: 5%;
+            }
+            .space{
+                margin-left: 5%;
+                margin-right: 20%;
+            }
+            .line{
+                display: block;
+            }
+            .item{
+                display: block;
+            }
+        }
+        </style>
+
         <div class="p-2" style="background-color:rgba(0, 255, 183, 0.21)">
-                <img src="/static/images/logow.png" height="150">
+                <img class="margin-left", src="/static/images/logow.png" height="80">
+                <img class="margin-left" src="/static/images/Main_logo.png" height="80">
+                <img class="margin-left" src="/static/images/logo_white.png" height="80">
             </div>
         {% block content %}
         {% endblock content %}

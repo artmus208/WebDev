@@ -2,7 +2,7 @@ import logging
 import click
 import datetime
 
-from flask import Flask, redirect, render_template, url_for, jsonify
+from flask import Flask, redirect, render_template, url_for, jsonify, flash
 from flask_sqlalchemy import SQLAlchemy
 
 from reports_makers import make_query_to_dict_list, get_project_report_dict
@@ -155,6 +155,8 @@ def home():
 def record(login):
     try:
         form = RecordsForm()
+        reportBtn = ProjectButton()
+        returnBtn = ReturnButton()
         costs_name_list = [
             c.cost_name for c in db.session.execute(db.select(Costs)).scalars()
             ]
@@ -173,9 +175,12 @@ def record(login):
             rec.minuts = form.minuts.data
             db.session.add(rec)
             db.session.commit()
+            flash('Запись добавлена. Несите следующую!')
             return redirect(url_for('record', login=login))
         else:
-            return render_template('records.html', form=form, login=login)
+            return render_template('records.html', form=form,
+                                    login=login, reportBtn=reportBtn,
+                                    returnBtn=returnBtn)
     except Exception as e:
         logger.warning(f"In record page fail has been ocured: {e}")
 
@@ -203,6 +208,9 @@ def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
 
 @app.route('/rep', methods=['GET', 'POST'])
 def project_report():
+    flash('Отчет будет показан в формате JSON. \n\
+          Для корректного отображения таких данных, возможно, понадобится дополнение\
+           к браузеру (например, JSONVue)')
     try:
         form = ReportProjectForm()
         projects_name_list = [
