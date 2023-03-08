@@ -13,9 +13,24 @@ from reports_makers import make_query_to_dict_list, get_project_report_dict
 
 
 from config import Config
+folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
+
 db = SQLAlchemy()
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Конфигурация логгера
+def setup_logger():
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(
+        '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
+    file_handler = logging.FileHandler(
+        str(folder_path_that_contains_this_file)+'/log/log.log') # WebDev/log/api.log
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    return logger
+logger = setup_logger()
 
 def choose_DB_URI():
     data_base_URI = None
@@ -145,25 +160,6 @@ def init_projects():
                 print(project.id, project.project_name)
             except Exception as e:
                 print(f"In init projects Exception occured: {e} ")
-
-
-
-
-folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
-# Конфигурация логгера
-def setup_logger():
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    formatter = logging.Formatter(
-        '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler(
-        str(folder_path_that_contains_this_file)+'/log/log.log') # WebDev/log/api.log
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-    return logger
-logger = setup_logger()
-
-logger = setup_logger()
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
