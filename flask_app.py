@@ -38,6 +38,7 @@ def choose_DB_URI():
         logger.info("Connection is MariaDB")
     return data_base_URI
 app.config['SQLALCHEMY_DATABASE_URI'] = choose_DB_URI()
+db.init_app(app)
 # Импорт модели данных
 from models import * # Employees, Admins, Costs, Tasks, CostsProjectsTasks, GIPs
 # from models import Records, Projects, Record_Keeping
