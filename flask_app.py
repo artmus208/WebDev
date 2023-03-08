@@ -2,6 +2,7 @@ import logging
 import click
 import datetime
 import time
+import pathlib
 from transliterate import translit
 
 from flask import Flask, redirect, render_template, url_for, jsonify, flash
@@ -127,16 +128,19 @@ def init_projects():
 
 
 
+folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 # Конфигурация логгера
 def setup_logger():
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('WebDev/log/api.log') # WebDev/log/api.log
+    file_handler = logging.FileHandler(
+        str(folder_path_that_contains_this_file)+'/log/log.log') # WebDev/log/api.log
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
+logger = setup_logger()
 
 logger = setup_logger()
 
