@@ -26,7 +26,7 @@ def setup_logger():
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
     file_handler = logging.FileHandler(
-        str(folder_path_that_contains_this_file)+'/log/log.log') # WebDev/log/api.log
+        str(folder_path_that_contains_this_file)+'/log/api.log') # WebDev/log/api.log
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
