@@ -8,20 +8,20 @@ class RecordsForm(FlaskForm):
     task = StringField(label='Задача',
                        default="blank_task",
                        render_kw={'disabled':''})
-    hours = IntegerField(label='Кол-во часов', validators=[data_required()])
-    minuts = IntegerField(label='Кол-во минут', validators=[data_required()])
+    hours = IntegerField(label='Кол-во часов', default=0)
+    minuts = IntegerField(label='Кол-во минут', default=0)
     submit = SubmitField('Подтвердить')
 
 
 def available_login(available_logins):
 
     def _available_login(form, field):
-        
+
         if field.data.lower() not in available_logins:
             message = "Логин не зарегистрирован. Обратитесь к ЕАВ"
             raise ValidationError(message)
     return _available_login\
-    
+
 
 def my_length_check(form, field):
     if len(field.data) > 50:

@@ -11,8 +11,8 @@ class Records(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     cost_id = db.Column(db.Integer, db.ForeignKey('costs.id'))
     task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
-    hours = db.Column(db.Integer)
-    minuts = db.Column(db.Integer)
+    hours = db.Column(db.Integer, default=0)
+    minuts = db.Column(db.Integer, default=0)
 
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

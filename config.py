@@ -11,13 +11,12 @@ class Config:
     # )
 
     SQLALCHEMY_DATABASE_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
-    connectorname="mysql+mysqlconnector",
-    username="artmus208",
-    password="pesk-2020",
-    hostname="artmus208.mysql.pythonanywhere-services.com",
-    databasename="artmus208$time_managment_web_app",
+        connectorname="mysql+mysqlconnector",
+        username="artmus208",
+        password="pesk-2020",
+        hostname="artmus208.mysql.pythonanywhere-services.com",
+        databasename="artmus208$time_managment_web_app",
     )
     SQLALCHEMY_POOL_RECYCLE = 299
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    DEBUG = True
     FLASK_APP = "flask_app"

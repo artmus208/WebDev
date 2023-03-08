@@ -1,6 +1,8 @@
 import logging
 import click
 import datetime
+import time
+from transliterate import translit
 
 from flask import Flask, redirect, render_template, url_for, jsonify, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -131,7 +133,7 @@ def setup_logger():
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         '%(asctime)s:%(name)s:%(levelname)s:%(message)s')
-    file_handler = logging.FileHandler('WevDev/log/api.log') # WebDev/log/api.log
+    file_handler = logging.FileHandler('WebDev/log/api.log') # WebDev/log/api.log
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
@@ -141,11 +143,11 @@ logger = setup_logger()
 @app.route("/", methods=['GET', 'POST'])
 def home():
     class UserForm(FlaskForm):
-        username = StringField(label='Логин сотрудника', 
+        username = StringField(label='Логин сотрудника',
                                validators=[
                                             data_required(),length(min=3),
                                             available_login(EMP_LOGINS)
-                                          ] 
+                                          ]
                                 )
         submit = SubmitField('Продолжить')
 
@@ -161,6 +163,8 @@ def home():
             return render_template('home.html', form=form, reportBtn=reportBtn)
     except Exception as e:
         logger.warning(f"In Index page fail has been ocured: {e}")
+
+
 @app.route("/record/<login>", methods=['GET', 'POST'])
 def record(login):
     try:
@@ -193,6 +197,8 @@ def record(login):
                                     returnBtn=returnBtn)
     except Exception as e:
         logger.warning(f"In record page fail has been ocured: {e}")
+        time.sleep(1)
+        return redirect(url_for('record', login=login))
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -205,7 +211,7 @@ def create_database():
         db.create_all()
         global EMP_LOGINS
         EMP_LOGINS = [emp.login for emp in db.session.execute(db.select(Employees)).scalars()]
-        
+
 
 
 def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
@@ -214,8 +220,9 @@ def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
         item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
         item["cost_id"] = db.session.get(Costs, item["cost_id"]).cost_name
         item["task_id"] = db.session.get(Tasks, item["task_id"]).task_name
+        cost_postfix = translit(item["cost_id"][:4], language_code='ru', reversed=True)
         if item["task_id"] == "blank_task":
-            item["task_id"] = item["employee_id"] + "_" + item["task_id"]
+            item["task_id"] = item["employee_id"] + "_" + item["task_id"] + "_" + cost_postfix
     return list_of_ditc
 
 
