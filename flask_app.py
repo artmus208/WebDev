@@ -13,15 +13,30 @@ from reports_makers import make_query_to_dict_list, get_project_report_dict
 
 from config import Config
 db = SQLAlchemy()
+app = Flask(__name__)
+app.config.from_object(Config)
+try:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
+        connectorname="mariadb+mariadbconnector",
+        username="root",
+        password="pesk-2020",
+        hostname="127.0.0.1:3306",
+        databasename="time_managment_web_app",
+    )
+    db.init_app(app)
+except Exception as e:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
+        connectorname="mysql+mysqlconnector",
+        username="artmus208",
+        password="pesk-2020",
+        hostname="artmus208.mysql.pythonanywhere-services.com",
+        databasename="artmus208$time_managment_web_app",
+    )
+    db.init_app(app)
 # Импорт модели данных
 from models import * # Employees, Admins, Costs, Tasks, CostsProjectsTasks, GIPs
 # from models import Records, Projects, Record_Keeping
 from forms import *
-
-
-app = Flask(__name__)
-app.config.from_object(Config)
-db.init_app(app)
 
 EMP_LOGINS = []
 # Создание таблиц в БД
