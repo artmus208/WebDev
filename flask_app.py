@@ -3,6 +3,7 @@ import click
 import datetime
 import time
 import pathlib
+import os
 from transliterate import translit
 
 from flask import Flask, redirect, render_template, url_for, jsonify, flash
@@ -15,24 +16,28 @@ from config import Config
 db = SQLAlchemy()
 app = Flask(__name__)
 app.config.from_object(Config)
-try:
-    app.config['SQLALCHEMY_DATABASE_URI'] = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
-        connectorname="mariadb+mariadbconnector",
-        username="root",
-        password="pesk-2020",
-        hostname="127.0.0.1:3306",
-        databasename="time_managment_web_app",
-    )
-    db.init_app(app)
-except Exception as e:
-    app.config['SQLALCHEMY_DATABASE_URI'] = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
-        connectorname="mysql+mysqlconnector",
-        username="artmus208",
-        password="pesk-2020",
-        hostname="artmus208.mysql.pythonanywhere-services.com",
-        databasename="artmus208$time_managment_web_app",
-    )
-    db.init_app(app)
+
+def choose_DB_URI():
+    data_base_URI = None
+    if os.name == 'posix':
+        data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
+            connectorname="mysql+mysqlconnector",
+            username="artmus208",
+            password="pesk-2020",
+            hostname="artmus208.mysql.pythonanywhere-services.com",
+            databasename="artmus208$time_managment_web_app",
+            )
+    else:
+        data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
+            connectorname="mariadb+mariadbconnector",
+            username="root",
+            password="pesk-2020",
+            hostname="127.0.0.1:3306",
+            databasename="time_managment_web_app",
+            )
+        logger.info("Connection is MariaDB")
+    return data_base_URI
+app.config['SQLALCHEMY_DATABASE_URI'] = choose_DB_URI()
 # Импорт модели данных
 from models import * # Employees, Admins, Costs, Tasks, CostsProjectsTasks, GIPs
 # from models import Records, Projects, Record_Keeping
