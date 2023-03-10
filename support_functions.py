@@ -40,7 +40,7 @@ def sorting_projects_names(projects_name_id_list):
             res_words.append((i[0],res_word))
         else:
             res_word = ' '.join([i[1], i[2]])
-            res_words.append(i[0],res_word)
+            res_words.append((i[0],res_word))
     return res_words
 
 if __name__ == "__main__":
