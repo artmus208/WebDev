@@ -11,7 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from reports_makers import make_query_to_dict_list, get_project_report_dict
 from reports_makers import make_report_that_andrews_like
-
+from support_functions import sorting_projects_names
 
 from config import Config
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
@@ -199,8 +199,9 @@ def record(login):
         projects_name_list = [
             p.project_name for p in db.session.execute(db.select(Projects)).scalars()
             ]
+        sorted_projects_name_list = sorting_projects_names(projects_name_list)
         form.category_of_costs.choices = costs_name_list
-        form.project_name.choices = projects_name_list
+        form.project_name.choices = sorted_projects_name_list
         if form.validate_on_submit():
             rec = Records()
             rec.employee_id = Employees.query.filter_by(login=login).first().id
