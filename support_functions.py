@@ -36,7 +36,7 @@ def sorting_projects_names(projects_name_list):
     sorted_list_of_2words = sorted(list_of_2words, key=itemgetter(0))
     for i in sorted_list_of_2words:
         if i[0] != "Разработка":
-            res_word = i[0] + " \t" + i[1]
+            res_word = i[0] + " 	" + i[1]
             res_words.append(res_word)
         else:
             res_word = ' '.join([i[0], i[1]])
