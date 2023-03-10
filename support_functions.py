@@ -27,13 +27,20 @@ projects_name_list = ["22П46 	Балтика СПб Термоупаковщи�
 
 def sorting_projects_names(projects_name_list):
     list_of_2words = []
+    res_words = []
     for i in projects_name_list:
         splitters = i.split()
         word1 = splitters[0]
         word2 = " ".join(splitters[1:])
         list_of_2words.append([word1,word2])
     sorted_list_of_2words = sorted(list_of_2words, key=itemgetter(0))
-    res_words = [" ".join(i) for i in sorted_list_of_2words]
+    for i in sorted_list_of_2words:
+        if i[0] != "Разработка":
+            res_word = i[0] + " \t" + i[1]
+            res_words.append(res_word)
+        else:
+            res_word = ' '.join([i[0], i[1]])
+            res_words.append(res_word)
     return res_words
 
 if __name__ == "__main__":
