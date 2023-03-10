@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="space">
+    <h2>Выберите проект для составления отчета:</h2>
+    <form method="POST" action="{{url_for('project_report')}}">
+        {{form.csrf_token}}
+        <p>{{form.project_name.label(class="form-control-md")}}</p>
+        <p>{{form.project_name(class="form-control-sm")}}</p>
+        <p>{{form.submit(class=' btn btn-success')}}</p>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+{% endblock content %}

@@ -10,6 +10,7 @@ from flask import Flask, redirect, render_template, url_for, jsonify, flash
 from flask_sqlalchemy import SQLAlchemy
 
 from reports_makers import make_query_to_dict_list, get_project_report_dict
+from reports_makers import make_report_that_andrews_like
 
 
 from config import Config
@@ -263,15 +264,16 @@ def project_report():
             proj_id = Projects.query.filter_by(project_name=selected_proj_name).first().id
             records = Records.query.filter_by(project_id=proj_id).all()
             rec_list_dict = make_query_to_dict_list(records)
-            print(rec_list_dict)
             rec_list_dict = replace_id_to_name_in_record_dict(rec_list_dict)
-            print(rec_list_dict)
-            res_dict = get_project_report_dict(all_records=rec_list_dict, p_name=selected_proj_name)
-            return jsonify(res_dict)
+            old_dict = get_project_report_dict(all_records=rec_list_dict, p_name=selected_proj_name)
+            new_dict = make_report_that_andrews_like(old_dict)
+            return render_template('project_report.html', data=new_dict)
         else:
-            return render_template('project_report.html', form=form)
+            return render_template('project_report_form.html', form=form)
     except Exception as e:
         logger.warning(f"In project_report fail has been ocured: {e}")
+        time.sleep(1)
+        return redirect(url_for('project_report'))
 
 @app.route('/rep/<selectedProj>', methods=['GET'])
 def show_report(selectedProj):

@@ -1,22 +1,44 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<div class="space">
-    <h2>Выберите проект для составления отчета:</h2>
-    <form method="POST" action="{{url_for('project_report')}}">
-        {{form.csrf_token}}
-        <p>{{form.project_name.label(class="form-control-md")}}</p>
-        <p>{{form.project_name(class="form-control-sm")}}</p>
-        <p>{{form.submit(class=' btn btn-success')}}</p>
-    </form>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
+
+<!-- <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style/style.css">
+    <title>Пример отчета</title>
+</head>
+<body> -->
+    <link rel="stylesheet" href="/static/style/style.css">
+    <div class="container">
+        {% if data == "None" %}
+            <h1>{{data["project_name"]}}</h1>
+
+            <div class="info">
+                <div class="text-info">Общие трудозатраты:</div>
+                <div class="general-hours">{{data["general_time"]}}ч</div>
+            </div>
+
+
+            
+            <div class="list-of-cat-cost">
+                {% for cat in data["list_of_cat_cos"] %}
+                    <div class="cat-cost-item">
+                        <div class="cost-name">{{cat["cat_name"]}}</div>
+                        <div class="time">
+                            <div class="time-h">{{cat["time"]//60}}ч</div>
+                            <div class="time-m">{{cat["time"]%60}}м</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Нет данных</p>
         {% endif %}
-    {% endwith %}
-</div>
+    </div>
 {% endblock content %}
+

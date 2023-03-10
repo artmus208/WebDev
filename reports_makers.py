@@ -67,7 +67,6 @@ def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
     emp_summ_time_h = 0
     emp_summ_time_min = 0
     list_of_category_of_costs = get_uniq_key_values(all_records, "cost_id")
-    print(p_name)
     buff_dict_item_0 = {"list_of_cat_cos": [0 for i in range(len(list_of_category_of_costs))]}
     if not buff_dict_item_0['list_of_cat_cos']:
         buff_dict_item_0['list_of_cat_cos'] = "No data available"
@@ -75,12 +74,10 @@ def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
         buff_dict_1 = filter_dict_by(all_records, ("cost_id", category_of_costs))
         list_uniq_tasks = get_uniq_key_values(buff_dict_1, "task_id")
         buff_dict_item_1 = {"cat_of_cost": category_of_costs, "list_of_tasks": [0 for i in range(len(list_uniq_tasks))]}
-        print('\t', category_of_costs)
         # reportDict[category_of_costs] = list()
         for i_t, task in enumerate(list_uniq_tasks): 
             buff_dict_2 = filter_dict_by(all_records, ("task_id", task))
             list_uniq_emp = get_uniq_key_values(buff_dict_2, "employee_id")
-            print('\t\t', task)
             buff_dict_item_2 = {"task_name": task, "list_of_emp": [0 for i in range(len(list_uniq_emp))]}
             for i_e, employee in enumerate(list_uniq_emp):                
                 buff_dict_3 = filter_dict_by(all_records, ("employee_id", employee))
@@ -93,11 +90,31 @@ def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
                 emp_summ_time_min = 0
                 buff_dict_item_3 = {"emp_name":employee, "summ_time_h":emp_summ_time_gen_h, "summ_time_m":emp_summ_time_gen_m}
                 buff_dict_item_2['list_of_emp'][i_e] = buff_dict_item_3
-                print('\t\t\t', employee, emp_summ_time_gen_h,emp_summ_time_gen_m)
             buff_dict_item_1['list_of_tasks'][i_t] = buff_dict_item_2 
         buff_dict_item_0['list_of_cat_cos'][i_c] = buff_dict_item_1
-        buff_dict_item_0["project_name"] = p_name
+    buff_dict_item_0["project_name"] = p_name
     return buff_dict_item_0
+
+
+def make_report_that_andrews_like(old_report: List[Dict]):
+    if old_report['list_of_cat_cos'] != "No data available":
+        new_report = {}
+        new_report["project_name"] = old_report["project_name"]
+        new_report["list_of_cat_cos"] = [{} for i in range(len(old_report["list_of_cat_cos"]))]
+        s = 0
+        g_s = 0
+        for cat_new, cat_old in zip(new_report["list_of_cat_cos"], old_report["list_of_cat_cos"]):
+            for t in cat_old["list_of_tasks"]:
+                for e in t["list_of_emp"]:
+                    s += e["summ_time_h"]*60 + e["summ_time_m"]
+            cat_new["time"] = s
+            cat_new["cat_name"] = cat_old["cat_of_cost"]
+            g_s += s
+            s = 0 
+        new_report["general_time"] = round(g_s/60,1)
+        return new_report
+    else:
+        return "None"
 
 
 if __name__ == "__main__":
