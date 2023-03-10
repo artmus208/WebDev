@@ -250,11 +250,9 @@ def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
 
 @app.route('/rep', methods=['GET', 'POST'])
 def project_report():
-    flash('Отчет будет показан в формате JSON. \n\
-          Для корректного отображения таких данных, возможно, понадобится дополнение\
-           к браузеру (например, JSONVue)')
     try:
         form = ReportProjectForm()
+        returnBtn = ReturnButton()
         projects_name_list = [
             p.project_name for p in db.session.execute(db.select(Projects)).scalars()
             ]
@@ -267,7 +265,7 @@ def project_report():
             rec_list_dict = replace_id_to_name_in_record_dict(rec_list_dict)
             old_dict = get_project_report_dict(all_records=rec_list_dict, p_name=selected_proj_name)
             new_dict = make_report_that_andrews_like(old_dict)
-            return render_template('project_report.html', data=new_dict)
+            return render_template('project_report.html', data=new_dict, returnBtn=returnBtn)
         else:
             return render_template('project_report_form.html', form=form)
     except Exception as e:
