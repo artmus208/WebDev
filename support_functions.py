@@ -25,22 +25,22 @@ projects_name_list = ["22П46 	Балтика СПб Термоупаковщи�
 
 
 
-def sorting_projects_names(projects_name_list):
-    list_of_2words = []
+def sorting_projects_names(projects_name_id_list):
+    list_of_3words = []
     res_words = []
-    for i in projects_name_list:
-        splitters = i.split()
+    for i in projects_name_id_list:
+        splitters = i[1].split()
         word1 = splitters[0]
         word2 = " ".join(splitters[1:])
-        list_of_2words.append([word1,word2])
-    sorted_list_of_2words = sorted(list_of_2words, key=itemgetter(0))
-    for i in sorted_list_of_2words:
-        if i[0] != "Разработка":
-            res_word = i[0] + " 	" + i[1]
-            res_words.append(res_word)
+        list_of_3words.append([i[0],word1,word2])
+    sorted_list_of_3words = sorted(list_of_3words, key=itemgetter(1))
+    for i in sorted_list_of_3words:
+        if i[1] != "Разработка":
+            res_word = i[1] + " 	" + i[2]
+            res_words.append((i[0],res_word))
         else:
-            res_word = ' '.join([i[0], i[1]])
-            res_words.append(res_word)
+            res_word = ' '.join([i[1], i[2]])
+            res_words.append(i[0],res_word)
     return res_words
 
 if __name__ == "__main__":

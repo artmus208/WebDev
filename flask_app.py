@@ -254,18 +254,18 @@ def project_report():
     try:
         form = ReportProjectForm()
         returnBtn = ReturnButton()
-        projects_name_list = [
-            p.project_name for p in db.session.execute(db.select(Projects)).scalars()
+        projects_name_id_list = [
+            (p.id, p.project_name) for p in db.session.execute(db.select(Projects)).scalars()
             ]
-        sorted_projects_name_list = sorting_projects_names(projects_name_list)
+        sorted_projects_name_list = sorting_projects_names(projects_name_id_list)
         form.project_name.choices = sorted_projects_name_list
         if form.validate_on_submit():
-            selected_proj_name = form.project_name.data
-            proj_id = Projects.query.filter_by(project_name=selected_proj_name).first().id
+            proj_id = int(form.project_name.data)
             records = Records.query.filter_by(project_id=proj_id).all()
             rec_list_dict = make_query_to_dict_list(records)
             rec_list_dict = replace_id_to_name_in_record_dict(rec_list_dict)
-            old_dict = get_project_report_dict(all_records=rec_list_dict, p_name=selected_proj_name)
+            old_dict = get_project_report_dict(all_records=rec_list_dict, 
+                                               p_name=Projects.query.get(proj_id).project_name)
             new_dict = make_report_that_andrews_like(old_dict)
             return render_template('project_report.html', data=new_dict, returnBtn=returnBtn)
         else:
