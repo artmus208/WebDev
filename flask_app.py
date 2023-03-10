@@ -257,7 +257,8 @@ def project_report():
         projects_name_list = [
             p.project_name for p in db.session.execute(db.select(Projects)).scalars()
             ]
-        form.project_name.choices = projects_name_list
+        sorted_projects_name_list = sorting_projects_names(projects_name_list)
+        form.project_name.choices = sorted_projects_name_list
         if form.validate_on_submit():
             selected_proj_name = form.project_name.data
             proj_id = Projects.query.filter_by(project_name=selected_proj_name).first().id
