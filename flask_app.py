@@ -196,12 +196,12 @@ def record(login):
         costs_name_list = [
             c.cost_name for c in db.session.execute(db.select(Costs)).scalars()
             ]
-        projects_name_list = [
-            p.project_name for p in db.session.execute(db.select(Projects)).scalars()
+        projects_name_id_list = [
+            (p.id, p.project_name) for p in db.session.execute(db.select(Projects)).scalars()
             ]
-        sorted_projects_name_list = sorting_projects_names(projects_name_list)
-        form.category_of_costs.choices = costs_name_list
+        sorted_projects_name_list = sorting_projects_names(projects_name_id_list)
         form.project_name.choices = sorted_projects_name_list
+        form.category_of_costs.choices = costs_name_list
         if form.validate_on_submit():
             rec = Records()
             rec.employee_id = Employees.query.filter_by(login=login).first().id
