@@ -13,7 +13,7 @@
     </div>
     <br>
     <h2 align="centr"> </h2>
-    <form method="POST" action="{{url_for('record', login=login)}}">
+    <form method="POST" action="{{url_for('main.record', login=login)}}">
         {{form.csrf_token}}
         <div class="space line">
             <div class="item">
@@ -40,14 +40,14 @@
                 <p>{{form.submit(class=' btn btn-success space')}}</p>
 
     </form>
-    <form method="POST" action="{{url_for('project_report')}}">
+    <form method="POST" action="{{url_for('main.project_report')}}">
         {{reportBtn.csrf_token}}
         <div class="space">            
             <p>{{reportBtn.submit(class=' btn btn-success Btn')}}</p>
         </div>
     </form>
 
-    <form method="GET" action="{{url_for('home')}}">
+    <form method="GET" action="{{url_for('main.home')}}">
         {{reportBtn.csrf_token}}
         <div class="space">
             <p>{{returnBtn.submit(class=' btn btn-success Btn')}}</p>

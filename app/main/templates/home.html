@@ -3,14 +3,14 @@
 {% block content %}
 
 <div style="margin-left: 5%;">
-        <form method="POST" action="{{url_for('home')}}">
+        <form method="POST" action="{{url_for('main.home')}}">
             {{form.csrf_token}}
                     <p>{{form.username.label(class="form-control-md")}}</p>
                     <p>{{form.username(class="form-control-sm")}} </p>
                     <p>{{form.submit(class=' btn btn-success')}}</p>
         </form>
 
-        <form method="POST" action="{{url_for('project_report')}}">
+        <form method="POST" action="{{url_for('main.project_report')}}">
             {{reportBtn.csrf_token}}
             <p>{{reportBtn.submit(class=' btn btn-success')}}</p>
         </form>

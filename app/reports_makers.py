@@ -1,7 +1,27 @@
+
 import datetime
 import json
 from typing import Dict, List
+from transliterate import translit
 
+from app import db
+from app.models import (
+    Records, Employees,
+    Projects, GIPs,
+    Costs, Tasks,
+    CostsProjectsTasks, Admins
+)
+
+def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
+    for item in list_of_ditc:
+        item["employee_id"] = db.session.get(Employees, item["employee_id"]).login
+        item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
+        item["cost_id"] = db.session.get(Costs, item["cost_id"]).cost_name
+        item["task_id"] = db.session.get(Tasks, item["task_id"]).task_name
+        cost_postfix = translit(item["cost_id"][:4], language_code='ru', reversed=True)
+        if item["task_id"] == "blank_task":
+            item["task_id"] = item["employee_id"] + "_" + item["task_id"] + "_" + cost_postfix
+    return list_of_ditc
 
 def make_query_to_dict_list(query_obj) -> List[Dict]:
     res = list()

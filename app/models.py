@@ -1,5 +1,4 @@
-
-from flask_app import db
+from app import db
 from sqlalchemy.sql import func
 from passlib.hash import bcrypt
 
@@ -17,6 +16,15 @@ class Records(db.Model):
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
+
+
 class Employees(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -30,6 +38,10 @@ class Employees(db.Model):
     def __init__(self, login, password):
         self.login = login
         self.password = bcrypt.hash(password)
+        
+    @classmethod
+    def get_all_logins(self):
+        return [emp.login for emp in db.session.execute(db.select(self)).scalars()]
 
 class Projects(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,6 +60,10 @@ class Projects(db.Model):
         self.gip_id = gip_id
         self.start_time = start_time
         self.end_time = end_time
+
+    @classmethod
+    def get_projects_id_name_list(self):
+        return [(p.id, p.project_name) for p in db.session.execute(db.select(Projects)).scalars()]
 
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -72,6 +88,10 @@ class Costs(db.Model):
                                 backref='Costs', lazy='dynamic')
     def __init__(self, cost_name):
         self.cost_name = cost_name
+
+    @classmethod
+    def get_costs_names(self):
+        return [c.cost_name for c in db.session.execute(db.select(self)).scalars()]
 
 class Tasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
