@@ -205,7 +205,7 @@ def record(login):
         if form.validate_on_submit():
             rec = Records()
             rec.employee_id = Employees.query.filter_by(login=login).first().id
-            rec.project_id = Projects.query.filter_by(project_name=form.project_name.data).first().id
+            rec.project_id = int(form.project_name.data)
             rec.cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
             rec.task_id = Tasks.query.filter_by(task_name=form.task.data).first().id
             rec.hours = form.hours.data
@@ -264,7 +264,7 @@ def project_report():
             records = Records.query.filter_by(project_id=proj_id).all()
             rec_list_dict = make_query_to_dict_list(records)
             rec_list_dict = replace_id_to_name_in_record_dict(rec_list_dict)
-            old_dict = get_project_report_dict(all_records=rec_list_dict, 
+            old_dict = get_project_report_dict(all_records=rec_list_dict,
                                                p_name=Projects.query.get(proj_id).project_name)
             new_dict = make_report_that_andrews_like(old_dict)
             return render_template('project_report.html', data=new_dict, returnBtn=returnBtn)
