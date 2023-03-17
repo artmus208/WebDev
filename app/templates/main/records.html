@@ -2,13 +2,15 @@
 
 {% block content %}
 
-    <div class="space">
-        {% for cat, msg in get_flashed_messages(True) %}
-            <div class="space flash {{cat}}">{{msg}}</div>
-        {% endfor %}
-    </div>
+
     <div class="container">
+
         <div class="content__inner">
+            <div class="space">
+                {% for cat, msg in get_flashed_messages(True) %}
+                    <div class="space flash {{cat}}">{{msg}}</div>
+                {% endfor %}
+            </div>
             <form method="POST" action="{{url_for('main.record', login=login)}}">
                 <div class="project">
                     <p>{{form.project_name.label(class="list_text")}}</p>

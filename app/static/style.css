@@ -208,6 +208,23 @@ content{
 }
 
 
+.flash.success {
+    border: 1px solid #21DB56;
+    background: #AEFFC5;
+    display: block;
+    text-align: center;
+    font-family: 'Inter';
+}
+.flash.error {
+    background: #FFA866;
+    text-align: center;
+    display: block;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 200;
+    font-size: 20px;
+    color: #171717;
+}
 
 
 /* Стили отчета */

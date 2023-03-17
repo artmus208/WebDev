@@ -54,15 +54,13 @@ def record():
     login = g.emp.login
     try:
         form = RecordsForm()
-        reportBtn = ProjectButton()
-        returnBtn = ReturnButton()
         rec = Records()
         costs_name_list = Costs.get_costs_names()
         projects_name_id_list = Projects.get_projects_id_name_list()
         sorted_projects_name_list = sorting_projects_names(projects_name_id_list)
         form.project_name.choices = sorted_projects_name_list
         form.category_of_costs.choices = costs_name_list
-        if form.validate_on_submit():
+        if form.is_submitted():
             rec.employee_id = Employees.query.filter_by(login=login).first().id
             rec.cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
             rec.task_id = Tasks.query.filter_by(task_name=form.task.data).first().id
@@ -74,9 +72,7 @@ def record():
             flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))
         else:
-            return render_template('main/records.html', form=form,
-                                    login=login, reportBtn=reportBtn,
-                                    returnBtn=returnBtn)
+            return render_template('main/records.html', form=form, login=login)
     except Exception as e:
         logger.warning(f"In record page fail has been ocured: {e}")
         flash('Что-то пошло не так...', category="error")
