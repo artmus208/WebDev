@@ -19,14 +19,21 @@ def register():
         password = request.form['password']
         error = None
         if not login:
-            error = 'login is required.'
+            error = 'Введите логин'
         elif not password:
-            error = 'Password is required.'
+            error = 'Введите пароль'
         if error is None:
             try:
-                hashed_password = generate_password_hash(password=password)
-                new_one = Employees(login, hashed_password)
-                new_one.register()
+                emp = Employees.get_by_login(login=login)
+                if emp is None:
+                    print("Такого пользователя не существует, добавляем...")
+                    hashed_password = generate_password_hash(password=password)
+                    new_one = Employees(login, hashed_password)
+                    new_one.register()
+                else:
+                    print("Пользователь найден, изменяем пароль...")
+                    emp.password = generate_password_hash(password=password)
+                    emp.commit()
             except Exception as e:
                 error = f"User {login} is fail registered."
                 logger.warning(f'In login andpoint fail: {e}')

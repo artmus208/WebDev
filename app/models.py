@@ -24,7 +24,7 @@ class Records(db.Model):
             db.session.rollback()
             raise
 
-
+        
 class Employees(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -40,6 +40,10 @@ class Employees(db.Model):
         self.password = password
         
     @classmethod
+    def commit(self):
+        db.session.commit()
+        
+    @classmethod
     def get_all_logins(cls):
         return [emp.login for emp in db.session.execute(db.select(cls)).scalars()]
 
@@ -50,6 +54,10 @@ class Employees(db.Model):
         except Exception:
             db.session.rollback()
             raise
+
+    @classmethod
+    def get_by_login(cls, login):
+        return cls.query.filter_by(login=login).first()
 
     def register(self):
         try:
