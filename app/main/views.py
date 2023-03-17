@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, session,
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import data_required, length
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import logger
 from app.forms import (
@@ -22,15 +23,15 @@ main = Blueprint('main', __name__, static_url_path="/static/main", static_folder
 
 @main.cli.command("init_emp")
 def init_emp():
-    with open("static/files/employees.txt",'r') as f:
+    with open("/files/employees.txt",'r') as f:
         for line in f:
             spl_line = line.split()
             login = spl_line[0].split("@")[0]
             password = spl_line[1]
-            emp = Employees(login=login, password=password)
-            db.session.add(emp)
-            print(emp.login)
-        db.session.commit()
+            hashed_password = generate_password_hash(password=password)
+            new_one = Employees(login, hashed_password)
+            new_one.register()
+
 
 @main.route("/", methods=['GET', 'POST'])
 def index():
