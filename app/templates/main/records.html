@@ -3,13 +3,9 @@
 {% block content %}
 
     <div class="space">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+        {% for cat, msg in get_flashed_messages(True) %}
+            <div class="space flash {{cat}}">{{msg}}</div>
+        {% endfor %}
     </div>
     <br>
     <h2 align="centr"> </h2>

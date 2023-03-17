@@ -1,5 +1,6 @@
 
 import time
+import pathlib
 
 from flask import Blueprint, render_template, redirect, url_for, flash, session, g
 from flask_wtf import FlaskForm
@@ -20,10 +21,10 @@ from app.reports_makers import (
     replace_id_to_name_in_record_dict)
 
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
-
+folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 @main.cli.command("init_emp")
 def init_emp():
-    with open("/files/employees.txt",'r') as f:
+    with open(str(folder_path_that_contains_this_file)+"/files/employees.txt",'r') as f:
         for line in f:
             spl_line = line.split()
             login = spl_line[0].split("@")[0]
@@ -42,7 +43,6 @@ def index():
         return redirect(url_for('auth.login'))
     else:
         print("Redirect to make record")
-        print(emp.login, type(emp.login))
         return redirect(url_for('.record', login=emp.login))
     
 
@@ -50,7 +50,7 @@ def index():
 
 @main.route("/record", methods=['GET', 'POST'])
 def record():
-    login = "mar"
+    login = g.emp.login
     try:
         form = RecordsForm()
         reportBtn = ProjectButton()
@@ -70,7 +70,7 @@ def record():
             rec.hours = form.hours.data
             rec.minuts = form.minuts.data
             rec.save()
-            flash('Запись добавлена. Несите следующую!')
+            flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))
         else:
             return render_template('main/records.html', form=form,
@@ -78,6 +78,7 @@ def record():
                                     returnBtn=returnBtn)
     except Exception as e:
         logger.warning(f"In record page fail has been ocured: {e}")
+        flash('Что-то пошло не так...', category="error")
         time.sleep(1)
         return redirect(url_for('main.record', login=login))
 
@@ -97,7 +98,6 @@ def project_report():
             rec_list_dict = replace_id_to_name_in_record_dict(rec_list_dict)
             old_dict = get_project_report_dict(all_records=rec_list_dict,
                                                p_name=Projects.query.get(proj_id).project_name)
-            print(old_dict)
             new_dict = make_report_that_andrews_like(old_dict)
             return render_template('main/project_report.html', data=new_dict, returnBtn=returnBtn)
         else:

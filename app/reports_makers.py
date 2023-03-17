@@ -15,7 +15,6 @@ from app import logger
 def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
     try:
         for item in list_of_ditc:
-            print(item["employee_id"])
             item["employee_id"] = db.session.get(Employees, item["employee_id"]).login
             item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
             item["cost_id"] = db.session.get(Costs, item["cost_id"]).cost_name

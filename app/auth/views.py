@@ -22,7 +22,6 @@ def register():
             error = 'login is required.'
         elif not password:
             error = 'Password is required.'
-        print(g.all_logins)
         if error is None:
             try:
                 hashed_password = generate_password_hash(password=password)
@@ -39,27 +38,27 @@ def register():
 @auth.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        login = request.form['login']
+        login = request.form['login'].lower()
         password = request.form['password']
         error = None
         employee = Employees.query.filter_by(login=login).first()
         if employee is None:
-            error = 'Incorrect login.'
+            error = 'Неверный логин'
         elif not check_password_hash(employee.password, password):
-            error = 'Incorrect password.'
+            error = 'Неверный пароль'
+
 
         if error is None:
             session.clear()
             session['emp_id'] = employee.id
             return redirect(url_for('main.index'))
         
-        flash(error)
+        flash(error, category='error')
 
     return render_template('auth/login.html')
 
 @auth.before_app_request
 def load_logged_in_emp():
-    g.all_logins = Employees.get_all_logins()
     emp_id = session.get('emp_id')
     if emp_id is None:
         g.emp = None
