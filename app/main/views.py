@@ -113,6 +113,6 @@ def project_report():
 def handle_error(err):
     headers = err.data.get('headers', None)
     messages = err.data.get('messages', ['Invalid Request.'])
-    logger.warning(f'Invalid input params: {messages}')
+    logger.warning(f'Error 500: {messages}')
     time.sleep(1)
     return redirect(url_for("main.index"))
