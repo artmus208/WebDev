@@ -61,4 +61,6 @@ def setup_logger():
 logger = setup_logger()
 app, db = create_app_db()
 from app.main.views import main
+from app.auth.views import auth
 app.register_blueprint(main)
+app.register_blueprint(auth)

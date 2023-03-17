@@ -30,18 +30,38 @@ class Employees(db.Model):
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     login = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
     records = db.relationship("Records", backref='Employees', lazy='dynamic')
     gip = db.relationship("GIPs", backref='Employees', lazy='dynamic')
     admin = db.relationship("Admins", backref='Employees', lazy='dynamic')
 
     def __init__(self, login, password):
         self.login = login
-        self.password = bcrypt.hash(password)
+        self.password = password
         
     @classmethod
-    def get_all_logins(self):
-        return [emp.login for emp in db.session.execute(db.select(self)).scalars()]
+    def get_all_logins(cls):
+        return [emp.login for emp in db.session.execute(db.select(cls)).scalars()]
+
+    @classmethod
+    def get(cls, id):
+        try:
+            return db.session.get(cls, id)
+        except Exception:
+            db.session.rollback()
+            raise
+
+    def register(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            print(self.login, "is sccuessfuly register.")
+        except Exception:
+            db.session.rollback()
+            print(self.login, "is does not register.")
+            raise
+
+
 
 class Projects(db.Model):
     id = db.Column(db.Integer, primary_key=True)

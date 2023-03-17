@@ -20,12 +20,14 @@ def available_login(available_logins):
         if field.data.lower() not in available_logins:
             message = "Логин не зарегистрирован. Обратитесь к ЕАВ"
             raise ValidationError(message)
-    return _available_login\
+    return _available_login
 
 
 def my_length_check(form, field):
     if len(field.data) > 50:
         raise ValidationError('Field must be less than 50 characters')
+    
+
 class ProjectButton(FlaskForm):
     submit = SubmitField('Отчет по проекту')
 
@@ -34,4 +36,4 @@ class ReportProjectForm(FlaskForm):
     submit = SubmitField('Создать отчет по проекту')
 
 class ReturnButton(FlaskForm):
-    submit = SubmitField('Назад')
+    submit = SubmitField('Выйти')

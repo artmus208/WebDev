@@ -13,7 +13,7 @@
     <title>Пример отчета</title>
 </head>
 <body> -->
-    <link rel="stylesheet" href="/static/style/style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <div class="container">
         {% if data != "None" %}
             <h1>{{data["project_name"]}}</h1>
@@ -22,9 +22,7 @@
                 <div class="text-info">Общие трудозатраты:</div>
                 <div class="general-hours">{{data["general_time"]}}ч</div>
             </div>
-
-
-            
+          
             <div class="list-of-cat-cost">
                 {% for cat in data["list_of_cat_cos"] %}
                     <div class="cat-cost-item">
@@ -40,7 +38,7 @@
             <p>Нет данных</p>
         {% endif %}
     </div>
-    <form method="GET" action="{{url_for('project_report')}}">
+    <form method="GET" action="{{url_for('main.project_report')}}">
         {{returnBtn.csrf_token}}
         <div class="space">
             <p>{{returnBtn.submit(class=' btn btn-success Btn')}}</p>

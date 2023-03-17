@@ -3,7 +3,7 @@
 {% block content %}
 
 <div style="margin-left: 5%;">
-        <form method="POST" action="{{url_for('main.home')}}">
+        <form method="POST" action="{{url_for('main.index')}}">
             {{form.csrf_token}}
                     <p>{{form.username.label(class="form-control-md")}}</p>
                     <p>{{form.username(class="form-control-sm")}} </p>

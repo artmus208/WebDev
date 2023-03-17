@@ -47,7 +47,7 @@
         </div>
     </form>
 
-    <form method="GET" action="{{url_for('main.home')}}">
+    <form method="GET" action="{{url_for('auth.logout')}}">
         {{reportBtn.csrf_token}}
         <div class="space">
             <p>{{returnBtn.submit(class=' btn btn-success Btn')}}</p>

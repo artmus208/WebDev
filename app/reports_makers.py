@@ -11,23 +11,30 @@ from app.models import (
     Costs, Tasks,
     CostsProjectsTasks, Admins
 )
-
+from app import logger
 def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
-    for item in list_of_ditc:
-        item["employee_id"] = db.session.get(Employees, item["employee_id"]).login
-        item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
-        item["cost_id"] = db.session.get(Costs, item["cost_id"]).cost_name
-        item["task_id"] = db.session.get(Tasks, item["task_id"]).task_name
-        cost_postfix = translit(item["cost_id"][:4], language_code='ru', reversed=True)
-        if item["task_id"] == "blank_task":
-            item["task_id"] = item["employee_id"] + "_" + item["task_id"] + "_" + cost_postfix
-    return list_of_ditc
+    try:
+        for item in list_of_ditc:
+            print(item["employee_id"])
+            item["employee_id"] = db.session.get(Employees, item["employee_id"]).login
+            item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
+            item["cost_id"] = db.session.get(Costs, item["cost_id"]).cost_name
+            item["task_id"] = db.session.get(Tasks, item["task_id"]).task_name
+            cost_postfix = translit(item["cost_id"][:4], language_code='ru', reversed=True)
+            if item["task_id"] == "blank_task":
+                item["task_id"] = item["employee_id"] + "_" + item["task_id"] + "_" + cost_postfix
+        return list_of_ditc
+    except Exception as e:
+        logger.warning(f"replace_id_to_name_in_record_dict fail has been ocured: {e}")
 
 def make_query_to_dict_list(query_obj) -> List[Dict]:
-    res = list()
-    for q_o in query_obj:
-        res.append(q_o.as_dict())
-    return res
+    try:
+        res = list()
+        for q_o in query_obj:
+            res.append(q_o.as_dict())
+        return res
+    except Exception as e:
+        logger.warning(f"replace_id_to_name_in_record_dict fail has been ocured: {e}")
 
 
 def filter_dict_by(list_of_dicts, dict_item):
@@ -84,37 +91,41 @@ def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
                         Работники  
                             Часы и минуты работника
     """
-    emp_summ_time_h = 0
-    emp_summ_time_min = 0
-    list_of_category_of_costs = get_uniq_key_values(all_records, "cost_id")
-    buff_dict_item_0 = {"list_of_cat_cos": [0 for i in range(len(list_of_category_of_costs))]}
-    if not buff_dict_item_0['list_of_cat_cos']:
-        buff_dict_item_0['list_of_cat_cos'] = "No data available"
-    for i_c, category_of_costs in enumerate(list_of_category_of_costs):
-        buff_dict_1 = filter_dict_by(all_records, ("cost_id", category_of_costs))
-        list_uniq_tasks = get_uniq_key_values(buff_dict_1, "task_id")
-        buff_dict_item_1 = {"cat_of_cost": category_of_costs, "list_of_tasks": [0 for i in range(len(list_uniq_tasks))]}
-        # reportDict[category_of_costs] = list()
-        for i_t, task in enumerate(list_uniq_tasks): 
-            buff_dict_2 = filter_dict_by(all_records, ("task_id", task))
-            list_uniq_emp = get_uniq_key_values(buff_dict_2, "employee_id")
-            buff_dict_item_2 = {"task_name": task, "list_of_emp": [0 for i in range(len(list_uniq_emp))]}
-            for i_e, employee in enumerate(list_uniq_emp):                
-                buff_dict_3 = filter_dict_by(all_records, ("employee_id", employee))
-                for d_item in buff_dict_3:
-                    emp_summ_time_h = emp_summ_time_h + d_item['hours']
-                    emp_summ_time_min = emp_summ_time_min + d_item['minuts']
-                emp_summ_time_gen_h = (60*emp_summ_time_h + emp_summ_time_min) // 60
-                emp_summ_time_gen_m = (60*emp_summ_time_h + emp_summ_time_min) % 60
-                emp_summ_time_h = 0
-                emp_summ_time_min = 0
-                buff_dict_item_3 = {"emp_name":employee, "summ_time_h":emp_summ_time_gen_h, "summ_time_m":emp_summ_time_gen_m}
-                buff_dict_item_2['list_of_emp'][i_e] = buff_dict_item_3
-            buff_dict_item_1['list_of_tasks'][i_t] = buff_dict_item_2 
-        buff_dict_item_0['list_of_cat_cos'][i_c] = buff_dict_item_1
-    buff_dict_item_0["project_name"] = p_name
-    return buff_dict_item_0
+    try:   
+            emp_summ_time_h = 0
+            emp_summ_time_min = 0
+            list_of_category_of_costs = get_uniq_key_values(all_records, "cost_id")
+            buff_dict_item_0 = {"list_of_cat_cos": [0 for i in range(len(list_of_category_of_costs))]}
+            if not buff_dict_item_0['list_of_cat_cos']:
+                buff_dict_item_0['list_of_cat_cos'] = "No data available"
+            for i_c, category_of_costs in enumerate(list_of_category_of_costs):
+                buff_dict_1 = filter_dict_by(all_records, ("cost_id", category_of_costs))
+                list_uniq_tasks = get_uniq_key_values(buff_dict_1, "task_id")
+                buff_dict_item_1 = {"cat_of_cost": category_of_costs, "list_of_tasks": [0 for i in range(len(list_uniq_tasks))]}
+                # reportDict[category_of_costs] = list()
+                for i_t, task in enumerate(list_uniq_tasks): 
+                    buff_dict_2 = filter_dict_by(all_records, ("task_id", task))
+                    list_uniq_emp = get_uniq_key_values(buff_dict_2, "employee_id")
+                    buff_dict_item_2 = {"task_name": task, "list_of_emp": [0 for i in range(len(list_uniq_emp))]}
+                    for i_e, employee in enumerate(list_uniq_emp):                
+                        buff_dict_3 = filter_dict_by(all_records, ("employee_id", employee))
+                        for d_item in buff_dict_3:
+                            emp_summ_time_h = emp_summ_time_h + d_item['hours']
+                            emp_summ_time_min = emp_summ_time_min + d_item['minuts']
+                        emp_summ_time_gen_h = (60*emp_summ_time_h + emp_summ_time_min) // 60
+                        emp_summ_time_gen_m = (60*emp_summ_time_h + emp_summ_time_min) % 60
+                        emp_summ_time_h = 0
+                        emp_summ_time_min = 0
+                        buff_dict_item_3 = {"emp_name":employee, "summ_time_h":emp_summ_time_gen_h, "summ_time_m":emp_summ_time_gen_m}
+                        buff_dict_item_2['list_of_emp'][i_e] = buff_dict_item_3
+                    buff_dict_item_1['list_of_tasks'][i_t] = buff_dict_item_2 
+                buff_dict_item_0['list_of_cat_cos'][i_c] = buff_dict_item_1
+            buff_dict_item_0["project_name"] = p_name
+            return buff_dict_item_0
+    except Exception as e:
+            logger.warning(f"replace_id_to_name_in_record_dict fail has been ocured: {e}")
 
+            
 
 def make_report_that_andrews_like(old_report: List[Dict]):
     if old_report['list_of_cat_cos'] != "No data available":
