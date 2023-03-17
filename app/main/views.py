@@ -107,3 +107,12 @@ def project_report():
         logger.warning(f"In project_report fail has been ocured: {e} with new dict {new_dict}")
         time.sleep(1)
         return redirect(url_for('main.project_report'))
+    
+
+@main.errorhandler(500)
+def handle_error(err):
+    headers = err.data.get('headers', None)
+    messages = err.data.get('messages', ['Invalid Request.'])
+    logger.warning(f'Invalid input params: {messages}')
+    time.sleep(1)
+    return redirect(url_for("main.index"))
