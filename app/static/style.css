@@ -208,3 +208,36 @@ content{
 }
 
 
+
+
+/* Стили отчета */
+
+.container-report{
+    border: 4px double black;
+    padding: 10px;
+    background-color: aliceblue;
+}
+
+.time{
+    padding-left: 2%;
+    display: flex;
+}
+
+.time-m{
+    padding-left: 2%;
+}
+
+.info{
+    display: flex;
+    padding-bottom: 1%;
+    border-bottom: 2px solid black;
+}
+
+.general-hours{
+    padding-left: 1%;
+    font-weight: bold;
+}
+
+.cat-cost-item{
+    padding-bottom: 1%;
+}
