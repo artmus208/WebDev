@@ -20,6 +20,18 @@ from app.reports_makers import (
 
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
 
+@main.cli.command("init_emp")
+def init_emp():
+    with open("static/files/employees.txt",'r') as f:
+        for line in f:
+            spl_line = line.split()
+            login = spl_line[0].split("@")[0]
+            password = spl_line[1]
+            emp = Employees(login=login, password=password)
+            db.session.add(emp)
+            print(emp.login)
+        db.session.commit()
+
 @main.route("/", methods=['GET', 'POST'])
 def index():
     emp = g.emp
