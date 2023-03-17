@@ -8,14 +8,14 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import data_required, length
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app import logger
+from app import logger, db
 from app.forms import (
-    ProjectButton, RecordsForm, 
+    ProjectButton, RecordsForm,
     ReturnButton, ReportProjectForm, available_login)
 from app.models import Records, Employees, Costs, Tasks, Projects
 from app.support_functions import sorting_projects_names
 from app.reports_makers import (
-    make_query_to_dict_list, 
+    make_query_to_dict_list,
     make_report_that_andrews_like,
     get_project_report_dict,
     replace_id_to_name_in_record_dict)
@@ -24,6 +24,7 @@ main = Blueprint('main', __name__, static_url_path="/static/main", static_folder
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 @main.cli.command("init_emp")
 def init_emp():
+    db.create_all()
     with open(str(folder_path_that_contains_this_file)+"/files/employees.txt",'r') as f:
         for line in f:
             spl_line = line.split()
@@ -44,7 +45,7 @@ def index():
     else:
         print("Redirect to make record")
         return redirect(url_for('.record', login=emp.login))
-    
+
 
 """Что-то непонятное творится в логике предстваления ниже"""
 
