@@ -4,7 +4,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-from app.models import Employees
+from app.models import Employees, GIPs, Admins
 from app import logger
 auth = Blueprint('auth', __name__, 
                url_prefix="/auth", 
@@ -64,6 +64,11 @@ def login():
             if error is None:
                 session.clear()
                 session['emp_id'] = employee.id
+                session['emp_role'] = 'common'
+                if GIPs.query.filter_by(employee_id=employee.id).first() is not None:
+                    session['emp_role'] = 'gip'
+                if Admins.query.filter_by(employee_id=employee.id).first() is not None:
+                    session['emp_role'] = 'admin'
                 return redirect(url_for('main.index'))
             
             flash(error, category='error')

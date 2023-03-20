@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <p>
+        Форма редактирования статей расходов в проекте 
+        {{project_name}}
+    </p>
+
+    {% if prev_cost is not none -%}
+        <p> Ранее добавленные статьи расходов (статья, чел/день)</p>
+        {% for prev_cat in prev_cost -%}
+            <pre> {{prev_cat.cost_name}} {{prev_cat.man_days}} </pre> <br>
+        {% endfor %}
+    {% endif %}
+
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div class="space flash {{cat}}">{{msg}}</div>
+    {% endfor %}
+
+    <form action="{{ url_for('gip.edit_cat_cost') }}" method="POST">
+        <label for="cost_name"><b>Статья расходов</b></label>
+        <input type="text" placeholder="Имя статьи расходов" name="cost_name" required>
+
+        <label for="man_days"><b>Человеко-дни</b></label>
+        <input type="number" min="1" placeholder="Трудозатраты" name="man_days" required>
+
+        <input type="submit" value="Сохранить">
+    </form> 
+</div>
+{% endblock content %}

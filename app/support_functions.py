@@ -1,5 +1,5 @@
 from operator import itemgetter
-
+from app.models import CustomCosts, Costs
 
 projects_name_list = ["22П46 	Балтика СПб Термоупаковщик 2 (банки)",
 "22П47 	Балтика СПб Термоупаковщик 3 (ПЭТ)",
@@ -22,7 +22,12 @@ projects_name_list = ["22П46 	Балтика СПб Термоупаковщи�
 "22П29       СтройЭнергоКом Диспетчеризация котельных",
 "Разработка этого сайта"]
 
-
+def concatenate_costs(project_id):
+    """Функция возвращает объединение стандартных статей расходов и новых (добавленные ГИПом)"""
+    old_costs = Costs.get_costs_id_name_in_project()
+    new_costs = CustomCosts.get_costs_id_name_in_project(project_id)
+    all_costs = old_costs + new_costs
+    return all_costs
 
 
 def sorting_projects_names(projects_name_id_list):

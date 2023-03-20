@@ -41,7 +41,12 @@
                 </div>
             </form>
         </div>
+        {% if session.get("emp_role", "Нет роли") == 'gip' -%}
+            <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
+        {% endif %}
+        <p>Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
     </div>
 
+    
 
 {% endblock content %}

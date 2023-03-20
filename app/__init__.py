@@ -62,5 +62,7 @@ logger = setup_logger()
 app, db = create_app_db()
 from app.main.views import main
 from app.auth.views import auth
+from app.gip.views import gip
 app.register_blueprint(main)
 app.register_blueprint(auth)
+app.register_blueprint(gip)

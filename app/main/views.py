@@ -12,7 +12,7 @@ from app import logger, db
 from app.forms import (
     ProjectButton, RecordsForm,
     ReturnButton, ReportProjectForm, available_login)
-from app.models import Records, Employees, Costs, Tasks, Projects
+from app.models import Records, Employees, Costs, Tasks, Projects, GIPs
 from app.support_functions import sorting_projects_names
 from app.reports_makers import (
     make_query_to_dict_list,
@@ -34,11 +34,14 @@ def init_emp():
             new_one = Employees(login, hashed_password)
             new_one.register()
 
+@main.cli.command("create_db")
+def init_emp():
+    db.create_all()
+
 
 @main.route("/", methods=['GET', 'POST'])
 def index():
     emp = g.emp
-    redirect_ = None
     if emp is None:
         print("Redirect to login")
         return redirect(url_for('auth.login'))
@@ -46,8 +49,6 @@ def index():
         print("Redirect to make record")
         return redirect(url_for('.record', login=emp.login))
 
-
-"""Что-то непонятное творится в логике предстваления ниже"""
 
 @main.route("/record", methods=['GET', 'POST'])
 def record():
@@ -104,6 +105,8 @@ def project_report():
         time.sleep(1)
         return redirect(url_for('main.project_report'))
     
+
+
 
 @main.errorhandler(500)
 def handle_error(err):
