@@ -38,9 +38,9 @@ def filter_dict_by(list_of_dicts, dict_item):
     """Only those that have a dict_item pair remain in the list of dictionaries."""
     filtered_list = list_of_dicts.copy()
     for i in range(len(list_of_dicts)):
-        dOne = list_of_dicts[i]
-        if not dict_item in dOne.items():
-            filtered_list.remove(dOne)
+        d_One = list_of_dicts[i]
+        if not dict_item in d_One.items():
+            filtered_list.remove(d_One)
     return filtered_list
 
 

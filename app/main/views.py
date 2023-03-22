@@ -12,7 +12,7 @@ from app import logger, db
 from app.forms import (
     ProjectButton, RecordsForm,
     ReturnButton, ReportProjectForm, available_login)
-from app.models import Records, Employees, Costs, Tasks, Projects, GIPs
+from app.models import Records, Employees, Costs, Tasks, Projects, GIPs, ProjectCosts, CostsTasks
 from app.helper_functions import sorting_projects_names
 from app.reports_makers import (
     make_query_to_dict_list,
@@ -53,7 +53,7 @@ def do_records_backup():
 @main.cli.command("reload_records_from_records_txt")
 def load_records():
     db.create_all()
-    Records.__table__.drop(db.engine)
+    # Records.__table__.drop(db.engine)
     db.create_all()
     with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "r") as f:
         for line in f:
@@ -66,6 +66,17 @@ def load_records():
                               need_info[4],
                               need_info[5])
             new_rec.save()
+
+@main.cli.command("reload_costs_tasks")
+def init_cost_task_blank():
+    # db.create_all()
+    # CostsTasks.__table__.drop(db.engine)
+    db.create_all()
+    project_costs = Costs.query.all()
+    for cost in project_costs:
+        new_costs_task = CostsTasks(1, 1, cost.id)
+        new_costs_task.save()
+
 
 
 
@@ -85,7 +96,6 @@ def record():
     login = g.emp.login
     try:
         form = RecordsForm()
-        rec = Records()
         # TODO: 
         # [ ]: В costs_name_list д. б. список только тех статей затрат, 
         #      которые относятся к этому проекту
@@ -96,15 +106,18 @@ def record():
         form.project_name.choices = sorted_projects_name_list
         form.category_of_costs.choices = costs_name_list
         if form.is_submitted():
-            # TODO: 
-            # [ ]: Правильно заносить записи с учётом новой таблицы ProjectsCosts
-            rec.employee_id = Employees.query.filter_by(login=login).first().id
-            rec.cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
-            rec.task_id = Tasks.query.filter_by(task_name=form.task.data).first().id
-
-            rec.project_id = int(form.project_name.data)
-            rec.hours = form.hours.data
-            rec.minuts = form.minuts.data
+            project_id = int(form.project_name.data)
+            employee_id = Employees.query.filter_by(login=login).first().id
+            # TODO:Правильно заносить записи с учётом новой таблицы ProjectsCosts 
+            # [ ]: 
+            cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
+            cost_id_ = ProjectCosts.query.filter_by(cost_name_fk=cost_id, project_id=project_id).first().id
+            task_id = Tasks.query.filter_by(task_name=form.task.data).first().id     
+            task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id).first().id
+            print(project_id, cost_id, cost_id_, task_id, task_id_)
+            hours = form.hours.data
+            minuts = form.minuts.data
+            rec = Records(employee_id, project_id, cost_id_, task_id_, hours, minuts)
             rec.save()
             flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))

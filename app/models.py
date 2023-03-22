@@ -3,8 +3,8 @@ from sqlalchemy.sql import func
 from passlib.hash import bcrypt
 
 
-# TODO: 
-# [ ]: Обновить эту модель в БД с учетом измененного fk в cost_id
+# DONE: 
+# [x]: Обновить эту модель в БД с учетом измененного fk в cost_id
 class Records(db.Model):
     __tablename__ = 'records'
     id = db.Column(db.Integer, primary_key=True)
@@ -253,8 +253,8 @@ class CostsTasks(db.Model):
     man_days = db.Column(db.Float, nullable=False)
     cost_id = db.Column(db.Integer, db.ForeignKey('project_costs.id'))
     
-    def __init__(self, task_name, man_days, cost_id):
-        self.task_name = task_name
+    def __init__(self, task_name_fk, man_days, cost_id):
+        self.task_name_fk = task_name_fk
         self.man_days = man_days
         self.cost_id = cost_id
 
