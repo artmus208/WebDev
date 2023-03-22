@@ -1,5 +1,5 @@
 from operator import itemgetter
-from app.models import ProjectCosts, Costs
+from app.models import ProjectCosts, Costs, Records
 
 projects_name_list = ["22П46 	Балтика СПб Термоупаковщик 2 (банки)",
 "22П47 	Балтика СПб Термоупаковщик 3 (ПЭТ)",
@@ -29,7 +29,6 @@ def concatenate_costs(project_id):
     all_costs = old_costs + new_costs
     return all_costs
 
-
 def sorting_projects_names(projects_name_id_list):
     list_of_3words = []
     res_words = []
@@ -47,6 +46,49 @@ def sorting_projects_names(projects_name_id_list):
             res_word = ' '.join([i[1], i[2]])
             res_words.append((i[0],res_word))
     return res_words
+
+# DONE: 
+# [x]: 1) Выгружаем все записи в единный список
+# [x]: 2) Составить множество уникальных id проектов
+# [x]: 3) В разрезе одного уникального проекта составить
+#         множество уникальных id статей затрат
+# [x]: 4) Для каждой уникальной статьи затрат в проекте, добавляем 
+#         эту запись в ProjectCosts
+# [x]: 5) Меняем cost_id на id из ProjectCosts
+
+def revise_records_for_ProjectCosts():
+    """
+        Функция добавляет  в таблицу ProjectCosts те статьи расходов для проектов,
+        кторые есть на данный момент в таблице Records.
+    """
+    all_records = Records.query.all()
+    uniq_proj_id = {}
+    # Для каждой записи
+    for record in all_records:
+        # Если id проекта есть, то проверям
+        if record.project_id in uniq_proj_id:
+            if record.cost_id not in uniq_proj_id[record.project_id]:
+                uniq_proj_id[record.project_id].append(record.cost_id)
+        # Если в ключах словаря нет id проекта, то добавляем к этому ключу 
+        # список пока из одного элемента
+        else:
+            uniq_proj_id[record.project_id] = [record.cost_id]
+    # Добавляем статьи расходов в ProjectCosts
+    for proj_id in uniq_proj_id:
+        for cost_id in uniq_proj_id[proj_id]:
+            new_project_cost = ProjectCosts(cost_id=cost_id,
+                                            man_days=100,
+                                            project_id=proj_id)
+            new_project_cost.save()
+            on_change_records = Records.query.filter_by(project_id=proj_id,
+                                                        cost_id=cost_id).all()
+            # Обновляем cost_id в Records
+            for record in on_change_records:
+                record.cost_id = new_project_cost.id
+            Records.commit()
+# BUG: IDK what bug, but bug is there
+    return uniq_proj_id
+    
 
 if __name__ == "__main__":
     sorted_list = sorting_projects_names(projects_name_list)

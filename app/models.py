@@ -24,6 +24,9 @@ class Records(db.Model):
             db.session.rollback()
             raise
 
+    @classmethod
+    def commit(self):
+        db.session.commit()
         
 class Employees(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -167,12 +170,25 @@ class ProjectCosts(db.Model):
             raise
 
     @classmethod
+    def commit(self):
+        db.session.commit()
+
+    @classmethod
     def get_costs_info(cls, project_id):
         """Возвращает список списков, который состоит из id, id статьи расходов и чел.днями"""
         r = None
         q = cls.query.filter_by(project_id=project_id).all()
         if q is not None:
             r = [[c.id, c.cost_name_fk, str(c.man_days)] for c in q] 
+        return r
+
+    @classmethod
+    def get_costs_names_only(cls, project_id):
+        """Возвращает список, который состоит из имён категорий затрат данного проекта"""
+        r = None
+        q = cls.query.filter_by(project_id=project_id).all()
+        if q is not None:
+            r = [c.name for c in q]
         return r
 
     @classmethod

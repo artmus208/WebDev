@@ -3,7 +3,7 @@ from flask import (
 )
 from app.models import GIPs, Projects, ProjectCosts, Tasks, Costs
 from app import logger
-from app.helper_functions import concatenate_costs
+
 gip = Blueprint('gip', __name__, 
                url_prefix="/gip", 
                template_folder="templates/gip", 

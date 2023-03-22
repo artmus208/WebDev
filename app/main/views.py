@@ -56,6 +56,10 @@ def record():
     try:
         form = RecordsForm()
         rec = Records()
+        # TODO: 
+        # [ ]: В costs_name_list д. б. список только тех статей затрат, 
+        #      которые относятся к этому проекту
+        # TIPS: Это задача создания динамичских выпадающих списков
         costs_name_list = Costs.get_costs_names()
         projects_name_id_list = Projects.get_projects_id_name_list()
         sorted_projects_name_list = sorting_projects_names(projects_name_id_list)
