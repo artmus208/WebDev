@@ -50,7 +50,7 @@ def do_records_backup():
             f.write(record.__repr__())
             f.write('\n')
 
-@main.cli.command("drop_load_records_from_records_txt")
+@main.cli.command("reload_records_from_records_txt")
 def load_records():
     db.create_all()
     Records.__table__.drop(db.engine)

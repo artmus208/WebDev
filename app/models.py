@@ -12,7 +12,7 @@ class Records(db.Model):
     employee_id = db.Column(db.Integer, db.ForeignKey("employees.id"))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     cost_id = db.Column(db.Integer, db.ForeignKey('project_costs.id'))
-    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
+    task_id = db.Column(db.Integer, db.ForeignKey('costs_tasks.id'))
     hours = db.Column(db.Integer, default=0)
     minuts = db.Column(db.Integer, default=0)
 
