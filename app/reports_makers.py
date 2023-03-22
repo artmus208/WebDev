@@ -6,10 +6,8 @@ from transliterate import translit
 
 from app import db
 from app.models import (
-    Records, Employees,
-    Projects, GIPs,
-    Costs, Tasks,
-    CostsProjectsTasks, Admins
+    Employees, Projects,
+    Costs, Tasks
 )
 from app import logger
 def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
@@ -30,7 +28,7 @@ def make_query_to_dict_list(query_obj) -> List[Dict]:
     try:
         res = list()
         for q_o in query_obj:
-            res.append(q_o.as_dict())
+            res.append(q_o.as_dict_name())
         return res
     except Exception as e:
         logger.warning(f"replace_id_to_name_in_record_dict fail has been ocured: {e}")

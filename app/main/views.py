@@ -13,7 +13,7 @@ from app.forms import (
     ProjectButton, RecordsForm,
     ReturnButton, ReportProjectForm, available_login)
 from app.models import Records, Employees, Costs, Tasks, Projects, GIPs
-from app.support_functions import sorting_projects_names
+from app.helper_functions import sorting_projects_names
 from app.reports_makers import (
     make_query_to_dict_list,
     make_report_that_andrews_like,

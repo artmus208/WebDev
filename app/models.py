@@ -13,7 +13,7 @@ class Records(db.Model):
     hours = db.Column(db.Integer, default=0)
     minuts = db.Column(db.Integer, default=0)
 
-    def as_dict(self):
+    def as_dict_name(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def save(self):
@@ -38,7 +38,10 @@ class Employees(db.Model):
     def __init__(self, login, password):
         self.login = login
         self.password = password
-        
+    
+    def as_dict_name(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     @classmethod
     def commit(self):
         db.session.commit()
@@ -80,9 +83,7 @@ class Projects(db.Model):
     start_time = db.Column(db.DateTime(timezone=True))
     end_time = db.Column(db.DateTime(timezone=True))
     end_time_fact = db.Column(db.DateTime(timezone=True))
-    costs_tasks = db.relationship("CostsProjectsTasks",
-                                backref='Projects', lazy='dynamic')
-    custom_tasks = db.relationship("CustomCosts",
+    project_costs = db.relationship("ProjectCosts",
                                 backref='Projects', lazy='dynamic')
 
     def __init__(self, p_name, gip_id, start_time, end_time):
@@ -95,7 +96,7 @@ class Projects(db.Model):
     def get_projects_id_name_list(self):
         return [(p.id, p.project_name) for p in db.session.execute(db.select(Projects)).scalars()]
 
-    def as_dict(self):
+    def as_dict_name(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class GIPs(db.Model):
@@ -114,30 +115,46 @@ class Costs(db.Model):
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     cost_name = db.Column(db.String(85), nullable=False, unique=True)
-    projects_tasks = db.relationship("CostsProjectsTasks",
-                                backref='Costs', lazy='dynamic')
+    project_costs_rel = db.relationship("ProjectCosts", backref="Costs", lazy='dynamic')
+    
     def __init__(self, cost_name):
         self.cost_name = cost_name
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
+
+    @classmethod
+    def commit(self):
+        db.session.commit()
 
     @classmethod
     def get_costs_names(self):
         return [c.cost_name for c in db.session.execute(db.select(self)).scalars()]
-
+    
     @classmethod
-    def get_costs_id_name_in_project(cls):
-        return [(c.id, c.cost_name) for c in cls.query.all()] 
+    def get_name_by_id(cls, fk_id):
+        return cls.query.filter_by(id=fk_id).first().cost_name    
+    @classmethod
+    def get_id_by_name(cls, name):
+        return cls.query.filter_by(cost_name=name).first().id
 
-class CustomCosts(db.Model):
+
+
+class ProjectCosts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
-    cost_name = db.Column(db.String(85), nullable=False, unique=True)
+    cost_name_fk = db.Column(db.Integer, db.ForeignKey('costs.id'))
     man_days = db.Column(db.Integer, nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    tasks = db.relationship("Tasks", backref='CustomCosts', lazy='dynamic')
     
-    def __init__(self, cost_name, man_days, project_id):
-        self.cost_name = cost_name
+    def __init__(self, cost_id, man_days, project_id):
+        self.cost_name_fk = cost_id
         self.man_days = man_days
         self.project_id = project_id
 
@@ -150,36 +167,52 @@ class CustomCosts(db.Model):
             raise
 
     @classmethod
-    def get_costs_id_name_in_project(cls, project_id):
-        return [(c.id, c.cost_name) for c in cls.query.filter_by(project_id=project_id).all()] 
+    def get_costs_info(cls, project_id):
+        """Возвращает список списков, который состоит из id, id статьи расходов и чел.днями"""
+        r = None
+        q = cls.query.filter_by(project_id=project_id).all()
+        if q is not None:
+            r = [[c.id, c.cost_name_fk, str(c.man_days)] for c in q] 
+        return r
 
     @classmethod
-    def get_costs_names(self):
-        return [c.cost_name for c in db.session.execute(db.select(self)).scalars()]
+    def get_id_and_man_days_by_project_id(cls, project_id):
+        r = None
+        q = cls.query.filter_by(project_id=project_id).all()
+        if q is not None:
+            r = [[c.id, c.man_days] for c in q] 
+        return r
 
 
-class CostsProjectsTasks(db.Model):
-    """Соответсвие задач в статьях расходов, a статьи расходов по проектам
-
-        Для фиксации человеко-дней в статье расходов не нужно указывать задачу.
-        Если задача указана, то человеко-дни относятся к ней.
-    """
-    __tablename__ = "costs_projects_tasks"
-    id = db.Column(db.Integer, primary_key=True)
-    time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    cost_id = db.Column(db.Integer, db.ForeignKey('costs.id'))
-    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
-    man_days = db.Column(db.Integer)
-    man_days_fact = db.Column(db.Integer)
 
 class Tasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
-    task_name = db.Column(db.String(85), nullable=False)
+    task_name = db.Column(db.String(85), nullable=False, unique=True)
+    costs_tasks_rel = db.relationship("CostsTasks", backref='Tasks', lazy='dynamic')
+    
+    
+    def __init__(self, task_name, man_days, cost_id):
+        self.task_name = task_name
+        self.man_days = man_days
+        self.cost_id = cost_id
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
+
+class CostsTasks(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    task_name_fk = db.Column(db.Integer, db.ForeignKey('tasks.id'))
     man_days = db.Column(db.Float, nullable=False)
-    cost_id = db.Column(db.Integer, db.ForeignKey('custom_costs.id'))
+    cost_id = db.Column(db.Integer, db.ForeignKey('project_costs.id'))
     
     def __init__(self, task_name, man_days, cost_id):
         self.task_name = task_name

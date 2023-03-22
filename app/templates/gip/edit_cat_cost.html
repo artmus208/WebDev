@@ -3,28 +3,39 @@
 <div class="container">
     <p>
         Форма редактирования статей расходов в проекте 
-        {{project_name}}
+        <strong>{{ project_name }}</strong>
     </p>
-
-    {% if prev_cost is not none -%}
-        <p> Ранее добавленные статьи расходов (статья, чел/день)</p>
-        {% for prev_cat in prev_cost -%}
-            <pre> {{prev_cat.cost_name}} {{prev_cat.man_days}} </pre> <br>
-        {% endfor %}
-    {% endif %}
 
     {% for cat, msg in get_flashed_messages(True) %}
         <div class="space flash {{cat}}">{{msg}}</div>
     {% endfor %}
 
     <form action="{{ url_for('gip.edit_cat_cost') }}" method="POST">
-        <label for="cost_name"><b>Статья расходов</b></label>
-        <input type="text" placeholder="Имя статьи расходов" name="cost_name" required>
 
-        <label for="man_days"><b>Человеко-дни</b></label>
-        <input type="number" min="1" placeholder="Трудозатраты" name="man_days" required>
+        <p>Если вы хотите изменить существующую статью расходов:<br>
+        Выберете имя существующей статьи из списка и измените трудозатраты</p>
 
-        <input type="submit" value="Сохранить">
+        <label for="old_cost_list" style="display: block;"><b>Добавленные статьи расходов</b></label>
+        <select name="old_cost_list" style="display: block;" multiple>
+            <option selected value="default">Выберите добавленную ранее статью расходов</option>
+            {% for cat in added_cost -%}
+                <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+"чел/день"+")" }}</option>
+            {% endfor %}
+        </select> 
+
+        <label style="display: block;" for="updated_man_days"><b>Человеко-дни добавленной статьи расходов</b></label>
+        <input style="display: block;" type="number" min="1" placeholder="чел/день" name="updated_man_days" value="default">
+
+        <p>Введите новое имя для статьи расходов и ключевой показатель:</p>
+
+        <label for="cost_name" style="display: block;"><b>Новая статья расходов</b></label>
+        <input type="text" placeholder="Имя статьи расходов" name="cost_name" style="display: block;">
+
+        <label for="man_days" style="display: block;"><b>Человеко-дни новой статьи расходов</b></label>
+        <input type="number" min="1" placeholder="чел/день" name="man_days" style="display: block;" value="default">
+
+
+        <input style="display: block;" type="submit" value="Сохранить">
     </form> 
 </div>
 {% endblock content %}
