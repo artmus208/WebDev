@@ -78,6 +78,10 @@ example = \
     ]
 }
 
+# TIPS:
+# TODO: 
+# [ ] Можно сделать рефактор этой функции с использованием словаря
+
 def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
     """Из all_records получается словарь заданной структуры. См example в этом модуле
     

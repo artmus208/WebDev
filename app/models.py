@@ -2,16 +2,28 @@ from app import db
 from sqlalchemy.sql import func
 from passlib.hash import bcrypt
 
+
+# TODO: 
+# [ ]: Обновить эту модель в БД с учетом измененного fk в cost_id
 class Records(db.Model):
     __tablename__ = 'records'
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     employee_id = db.Column(db.Integer, db.ForeignKey("employees.id"))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    cost_id = db.Column(db.Integer, db.ForeignKey('costs.id'))
+    cost_id = db.Column(db.Integer, db.ForeignKey('project_costs.id'))
     task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
     hours = db.Column(db.Integer, default=0)
     minuts = db.Column(db.Integer, default=0)
+
+    def __init__(self, employee_id, project_id, cost_id, task_id, hours, minuts):
+        self.employee_id = employee_id
+        self.project_id = project_id
+        self.cost_id = cost_id
+        self.task_id = task_id
+        self.hours = hours
+        self.minuts = minuts
+
 
     def as_dict_name(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -27,6 +39,17 @@ class Records(db.Model):
     @classmethod
     def commit(self):
         db.session.commit()
+
+    def __repr__(self) -> str:
+        s = f"{self.id},\
+{self.time_created},\
+{self.employee_id},\
+{self.project_id},\
+{self.cost_id},\
+{self.task_id},\
+{self.hours},\
+{self.minuts}"
+        return s
         
 class Employees(db.Model):
     id = db.Column(db.Integer, primary_key=True)

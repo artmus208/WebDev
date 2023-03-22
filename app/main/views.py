@@ -22,6 +22,10 @@ from app.reports_makers import (
 
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
+
+# TODO:
+#  [ ]: Реструктурировать все таблицы с Costs, главным образом в отчетах
+
 @main.cli.command("init_emp")
 def init_emp():
     db.create_all()
@@ -37,6 +41,32 @@ def init_emp():
 @main.cli.command("create_db")
 def init_emp():
     db.create_all()
+
+@main.cli.command("records_backup")
+def do_records_backup():
+    all_records = Records.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "w") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+
+@main.cli.command("drop_load_records_from_records_txt")
+def load_records():
+    db.create_all()
+    Records.__table__.drop(db.engine)
+    db.create_all()
+    with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "r") as f:
+        for line in f:
+            splited_list = line.split(",")
+            need_info = list(map(int, splited_list[2:]))
+            new_rec = Records(need_info[0],
+                              need_info[1],
+                              need_info[2],
+                              need_info[3],
+                              need_info[4],
+                              need_info[5])
+            new_rec.save()
+
 
 
 @main.route("/", methods=['GET', 'POST'])
@@ -59,13 +89,15 @@ def record():
         # TODO: 
         # [ ]: В costs_name_list д. б. список только тех статей затрат, 
         #      которые относятся к этому проекту
-        # TIPS: Это задача создания динамичских выпадающих списков
+        #      TIPS: Это задача создания динамичских выпадающих списков
         costs_name_list = Costs.get_costs_names()
         projects_name_id_list = Projects.get_projects_id_name_list()
         sorted_projects_name_list = sorting_projects_names(projects_name_id_list)
         form.project_name.choices = sorted_projects_name_list
         form.category_of_costs.choices = costs_name_list
         if form.is_submitted():
+            # TODO: 
+            # [ ]: Правильно заносить записи с учётом новой таблицы ProjectsCosts
             rec.employee_id = Employees.query.filter_by(login=login).first().id
             rec.cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
             rec.task_id = Tasks.query.filter_by(task_name=form.task.data).first().id
