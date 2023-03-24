@@ -38,5 +38,10 @@
         <input style="display: block;" type="submit" value="Сохранить">
     </form> 
     <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
+
+    {% if session.get("emp_role", "Нет роли") == 'gip' -%}
+        <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
+    {% endif %}
+
 </div>
 {% endblock content %}
