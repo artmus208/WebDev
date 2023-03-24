@@ -189,7 +189,7 @@ def edit_task():
             is_all_empty = (is_edit_empty == True) and (is_add_empty == True)
             print("is_all_empty:",is_all_empty, "is_edit_empty:", is_edit_empty, "is_add_empty:",is_add_empty)
             if is_all_empty:
-                flash("Смысл нажатия кнопки 'Сохранить'?", category="error")
+                flash("Никаких данных заполнено не было", category="error")
 
             return redirect(url_for("gip.edit_task"))
 
