@@ -59,8 +59,10 @@ def edit_cat_cost():
                 return redirect(url_for("gip.edit_cat_cost"))
             # Для новой статьи расходов:
             if cost_name:
-                new_cost = Costs(cost_name)
-                new_cost.save()
+                costs_names = Costs.get_costs_names()
+                if cost_name not in costs_names:
+                    new_cost = Costs(cost_name)
+                    new_cost.save()
                 new_cost_id = Costs.get_id_by_name(cost_name)
                 new_cost_in_project = ProjectCosts(new_cost_id, man_days, project.id)
                 new_cost_in_project.save()
@@ -105,9 +107,9 @@ def print_type_and_repr(list_):
 
 
 
-# TODO:
-# [ ]: Редактирование задач
-# [ ]: Добавление задач
+# DONE:
+# [x]: Редактирование задач
+# [x]: Добавление задач
 @gip.route('/task', methods=['GET', 'POST'])
 def edit_task():
     try:
@@ -123,7 +125,7 @@ def edit_task():
         # Получаем список ранее добавленных задач в этом проекте в виде (id, task_name, man_days)
         tasks_id_name_list = CostsTasks.get_tasks_info(project.id)
         # print_type_and_repr(tasks_id_name_list)
-# TODO:
+# DONE:
 # [x] Проверить данные с формы
         if request.method == 'POST':
             # Данные для редактирования
@@ -136,9 +138,9 @@ def edit_task():
             new_task_name = request.form.get("new_task_name")
             new_man_days = request.form.get("new_man_days")
 
-            # TODO:
-            # [ ]: Делаю обработку данных редактируемой задачи 
-            # [ ]: Делаю обработку данных добавляемой вновь задачи
+            # DONE:
+            # [x]: Делаю обработку данных редактируемой задачи 
+            # [x]: Делаю обработку данных добавляемой вновь задачи
             is_edit_empty = is_empty_default_or_none([for_upd_cots_id,
                                                    upd_task_id,
                                                    upd_task_name,
