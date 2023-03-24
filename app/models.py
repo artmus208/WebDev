@@ -211,6 +211,10 @@ class ProjectCosts(db.Model):
                 r.append([c.id, cost.cost_name, str(c.man_days)])
         return r
 
+    @classmethod
+    def add_one_record(cls):
+        new_one = cls(1,1,1)
+        new_one.save()
 
     @classmethod
     def get_costs_id_name(cls, project_id):

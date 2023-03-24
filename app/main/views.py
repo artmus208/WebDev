@@ -78,7 +78,9 @@ def init_cost_task_blank():
         new_costs_task.save()
 
 
-
+@main.cli.command("add_one_rec_to_ProjectsCosts")
+def add_one_cost_proj():
+    ProjectCosts.add_one_record()
 
 @main.route("/", methods=['GET', 'POST'])
 def index():
