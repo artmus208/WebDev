@@ -26,6 +26,9 @@ folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 # DONE:
 #  [x]: Реструктурировать все таблицы с Costs, главным образом в отчетах
 
+# TODO:
+# [ ]: Добавить реальных ГИПов в реальные проекты на проде
+# [ ]: Заняться динамическими выпадающими списками 
 
 @main.cli.command("revise_records")
 def rev_rec():
