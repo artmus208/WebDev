@@ -1,7 +1,7 @@
 <!-- Входные элементы для этой страницы: -->
 <!-- project_name - имя проекта -->
 <!-- added_cost - статьи расходов в проекте ГИПа -->
-<!-- added_task - все добавленные ранее задачи для этого проекта -->
+<!-- added_tasks - все добавленные ранее задачи для этого проекта -->
 
 
 {% extends "base.html" %}
@@ -23,7 +23,7 @@
 
         <!-- Редактирование задачи -->
         <!-- Выбор статьи расходов, для которой нужно редактировать задачу -->
-        <label for="old_cost_list" style="display: block;"><b>Добавленные статьи расходов</b></label>
+        <label for="old_cost_list" style="display: block;"><b>Статья расходов</b></label>
         <select name="old_cost_list" style="display: block;" multiple>
             <option selected value="default">Выберите добавленную ранее статью расходов</option>
             {% for cat in added_cost -%}
@@ -34,7 +34,7 @@
         <label for="old_task_list" style="display: block;"><b>Добавленные задачи</b></label>
         <select name="old_task_list" style="display: block;" multiple>
             <option selected value="default">Выберите добавленную ранее задачу</option>
-            {% for task in added_task -%}
+            {% for task in added_tasks -%}
                 <option value="{{ task[0] }}">{{ task[1]+" "+"("+task[2]+"чел/день"+")" }}</option>
             {% endfor %}
         </select> 
@@ -50,7 +50,7 @@
         <p>Введите новое имя для задачи и ключевой показатель:</p>
 
         <!-- Выбор статьи расходов, для которой нужно редактировать задачу -->
-        <label for="for_add_cost_list" style="display: block;"><b>Добавленные статьи расходов</b></label>
+        <label for="for_add_cost_list" style="display: block;"><b>Статья расходов</b></label>
         <select name="for_add_cost_list" style="display: block;" multiple>
             <option selected value="default">Выберите добавленную ранее статью расходов</option>
             {% for cat in added_cost -%}

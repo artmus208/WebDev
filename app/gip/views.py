@@ -7,6 +7,7 @@ from app.models import (
     Costs, CostsTasks 
     )
 from app import logger
+from app.helper_functions import is_empty_default_or_none
 
 gip = Blueprint('gip', __name__, 
                url_prefix="/gip", 
@@ -94,10 +95,14 @@ def print_repr(list_):
         print(l.__repr__(), end='|\t')
 
 def print_type_and_repr(list_):
-    for l in list_:
+    for x,l in enumerate(list_):
+        print(x, end=" ")
         for l_ in l:
-            print(type(l_), l_.__repr__(), end='|\t')
+            print(type(l_), l_.__repr__())
     print()
+
+
+
 
 
 # TODO:
@@ -114,37 +119,80 @@ def edit_task():
         project = Projects.query.filter_by(gip_id=gip_id).first()
         # Получаем список добавленных статей расходов в виде (id, cost_name, man_days)
         costs_id_name_list = ProjectCosts.get_costs_info(project.id)
-        print_type_and_repr(costs_id_name_list)
+        # print_type_and_repr(costs_id_name_list)
         # Получаем список ранее добавленных задач в этом проекте в виде (id, task_name, man_days)
         tasks_id_name_list = CostsTasks.get_tasks_info(project.id)
-        print_type_and_repr(tasks_id_name_list)
+        # print_type_and_repr(tasks_id_name_list)
 # TODO:
-# [ ] Проверить данные с формы
+# [x] Проверить данные с формы
         if request.method == 'POST':
             # Данные для редактирования
             for_upd_cots_id = request.form.get("old_cost_list")
             upd_task_id = request.form.get("old_task_list")
-            new_task_name = request.form.get("upd_task_name")
-            updated_man_days = request.form.get("updated_man_days")
+            upd_task_name = request.form.get("upd_task_name")
+            upd_man_days = request.form.get("updated_man_days")
             # Данные для добавления
             for_add_cost_id = request.form.get("for_add_cost_list")
             new_task_name = request.form.get("new_task_name")
-            new_man_days = request.form.get("new_man_name")
+            new_man_days = request.form.get("new_man_days")
 
-            print_repr([for_upd_cots_id,
-                        upd_task_id,
-                        updated_man_days,
-                        for_add_cost_id,
-                        new_task_name,
-                        new_man_days])
+            # TODO:
+            # [ ]: Делаю обработку данных редактируемой задачи 
+            # [ ]: Делаю обработку данных добавляемой вновь задачи
+            is_edit_empty = is_empty_default_or_none([for_upd_cots_id,
+                                                   upd_task_id,
+                                                   upd_task_name,
+                                                   upd_man_days])
+            is_add_empty = is_empty_default_or_none([
+                                                 for_add_cost_id,
+                                                 new_task_name,
+                                                 new_man_days])
+            # print(
+            #     "for_add_cost_id:", for_add_cost_id,
+            #     "new_task_name:",new_task_name,
+            #     "new_man_days:", new_man_days
+            # )
+            
+            # Обработка данных редактируемой задачи
+            if not is_edit_empty:
+                print("HEY in edit check!", is_edit_empty)
+                edit_CostTask = CostsTasks.query.filter_by(
+                                                        task_name_fk=upd_task_id,
+                                                        cost_id=for_upd_cots_id
+                                                          ).first()
+                edit_task = Tasks.query.filter_by(
+                                id=edit_CostTask.task_name_fk
+                            ).first()
+                edit_task.task_name = upd_task_name
+                Tasks.commit()
+                edit_CostTask.man_days = float(upd_man_days)
+                CostsTasks.commit()
+                flash("Задача отредактирована!", category="success")
 
-            # man_days = float(request.form.get('man_days'))
-            # cost_id = request.form.get('cost_list')
-            # prev_tasks = Tasks.query.filter_by(cost_id=cost_id).all()
-            # new_one = Tasks(task_name, man_days, cost_id)
-            # new_one.save()
-            flash("Задача добавлена!", category="success")
+            # Обработка данных новой задачи
+            if not is_add_empty:
+                print("HEY in add check!", is_add_empty)
+                new_task = Tasks(
+                    task_name = new_task_name
+                )
+                new_task.save()
+                # TIPS: Можно не запрашивать только что добавленную запись (наверное)
+                new_id = Tasks.get_task_by_name_use_careful(new_task_name).id
+                new_CostTask = CostsTasks(
+                    task_name_fk=new_id,
+                    man_days=new_man_days,
+                    cost_id=for_add_cost_id
+                )
+                new_CostTask.save()       
+                flash("Задача добавлена!", category="success")
         
+            is_all_empty = (is_edit_empty == True) and (is_add_empty == True)
+            print("is_all_empty:",is_all_empty, "is_edit_empty:", is_edit_empty, "is_add_empty:",is_add_empty)
+            if is_all_empty:
+                flash("Смысл нажатия кнопки 'Сохранить'?", category="error")
+
+            return redirect(url_for("gip.edit_task"))
+
         return render_template('gip/edit_task.html', 
                                 project_name=project.project_name,
                                 added_cost=costs_id_name_list,
@@ -152,7 +200,7 @@ def edit_task():
                                 )
     except Exception as e:
         logger.warning(f"In edit_tasks fail: {e}")
-        flash("Что-то пошло не по плану...", category="error")
+        flash("В редакторе задач что-то пошло не по плану...", category="error")
         return redirect(url_for('main.index'))
 
 

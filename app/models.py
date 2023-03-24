@@ -242,10 +242,8 @@ class Tasks(db.Model):
     costs_tasks_rel = db.relationship("CostsTasks", backref='Tasks', lazy='dynamic')
     
     
-    def __init__(self, task_name, man_days, cost_id):
+    def __init__(self, task_name):
         self.task_name = task_name
-        self.man_days = man_days
-        self.cost_id = cost_id
 
     def save(self):
         try:
@@ -254,6 +252,20 @@ class Tasks(db.Model):
         except Exception:
             db.session.rollback()
             raise
+
+    @classmethod
+    def commit(self):
+        db.session.commit()
+
+    @classmethod
+    def get_task_by_name_use_careful(cls, task_name):
+        """Возвращает объект Tasks по её имени, но имя д.б. уникально.
+            Если имя неуникально -- нельзя использоватьэту функцию.
+        """
+        q = cls.query.filter_by(task_name=task_name).first() 
+        return q
+        
+    
 
 class CostsTasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -275,6 +287,10 @@ class CostsTasks(db.Model):
         except Exception:
             db.session.rollback()
             raise
+
+    @classmethod
+    def commit(self):
+        db.session.commit()
     
     # Чтобы выбрать все задачи данного проекта, нужно
     # выбрать все статьи данного проекта и для каждой статьи
@@ -296,7 +312,9 @@ class CostsTasks(db.Model):
             for c_t in costs_tasks:
                 task = Tasks.query.filter_by(id=c_t.task_name_fk).one()
                 task_name = task.task_name
-                tasks_id.append([c_t.id, task_name, str(c_t.man_days)])
+                if task_name != "blank_task":
+                    tasks_id.append([c_t.id, task_name, str(c_t.man_days)])
+        r = tasks_id
         return r
 
 
