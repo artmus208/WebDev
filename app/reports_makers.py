@@ -7,15 +7,19 @@ from transliterate import translit
 from app import db
 from app.models import (
     Employees, Projects,
-    Costs, Tasks
+    Costs, Tasks, ProjectCosts
 )
 from app import logger
+
+# 
+
 def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
     try:
         for item in list_of_ditc:
             item["employee_id"] = db.session.get(Employees, item["employee_id"]).login
             item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
-            item["cost_id"] = db.session.get(Costs, item["cost_id"]).cost_name
+            project_cost_id = db.session.get(ProjectCosts, item["cost_id"]).cost_name_fk
+            item["cost_id"] = db.session.get(Costs, project_cost_id).cost_name
             item["task_id"] = db.session.get(Tasks, item["task_id"]).task_name
             cost_postfix = translit(item["cost_id"][:4], language_code='ru', reversed=True)
             if item["task_id"] == "blank_task":
@@ -31,7 +35,7 @@ def make_query_to_dict_list(query_obj) -> List[Dict]:
             res.append(q_o.as_dict_name())
         return res
     except Exception as e:
-        logger.warning(f"replace_id_to_name_in_record_dict fail has been ocured: {e}")
+        logger.warning(f"make_query_to_dict_list fail has been ocured: {e}")
 
 
 def filter_dict_by(list_of_dicts, dict_item):
