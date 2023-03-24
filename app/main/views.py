@@ -58,7 +58,7 @@ def do_records_backup():
 @main.cli.command("reload_records_from_records_txt")
 def load_records():
     db.create_all()
-    # Records.__table__.drop(db.engine)
+    Records.__table__.drop(db.engine)
     db.create_all()
     with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "r") as f:
         for line in f:
