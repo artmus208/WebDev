@@ -13,7 +13,7 @@ from app.forms import (
     ProjectButton, RecordsForm,
     ReturnButton, ReportProjectForm, available_login)
 from app.models import Records, Employees, Costs, Tasks, Projects, GIPs, ProjectCosts, CostsTasks
-from app.helper_functions import sorting_projects_names
+from app.helper_functions import sorting_projects_names, revise_records_for_ProjectCosts
 from app.reports_makers import (
     make_query_to_dict_list,
     make_report_that_andrews_like,
@@ -25,6 +25,11 @@ folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 
 # DONE:
 #  [x]: Реструктурировать все таблицы с Costs, главным образом в отчетах
+
+
+@main.cli.command("revise_records")
+def rev_rec():
+    res = revise_records_for_ProjectCosts()
 
 @main.cli.command("init_emp")
 def init_emp():
