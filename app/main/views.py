@@ -23,8 +23,8 @@ from app.reports_makers import (
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 
-# TODO:
-#  [ ]: Реструктурировать все таблицы с Costs, главным образом в отчетах
+# DONE:
+#  [x]: Реструктурировать все таблицы с Costs, главным образом в отчетах
 
 @main.cli.command("init_emp")
 def init_emp():
@@ -99,7 +99,7 @@ def record():
         # TODO: 
         # [ ]: В costs_name_list д. б. список только тех статей затрат, 
         #      которые относятся к этому проекту
-        #      TIPS: Это задача создания динамичских выпадающих списков
+        # TIPS: Это задача создания динамичских выпадающих списков
         costs_name_list = Costs.get_costs_names()
         projects_name_id_list = Projects.get_projects_id_name_list()
         sorted_projects_name_list = sorting_projects_names(projects_name_id_list)
@@ -108,8 +108,8 @@ def record():
         if form.is_submitted():
             project_id = int(form.project_name.data)
             employee_id = Employees.query.filter_by(login=login).first().id
-            # TODO:Правильно заносить записи с учётом новой таблицы ProjectsCosts 
-            # [ ]: 
+            # DONE:Правильно заносить записи с учётом новой таблицы ProjectsCosts 
+            # [x]: 
             cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
             cost_id_ = ProjectCosts.query.filter_by(cost_name_fk=cost_id, project_id=project_id).first().id
             task_id = Tasks.query.filter_by(task_name=form.task.data).first().id     

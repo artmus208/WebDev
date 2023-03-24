@@ -1,7 +1,11 @@
 from flask import (
     Blueprint, flash, redirect, render_template, request, session, url_for, g
 )
-from app.models import GIPs, Projects, ProjectCosts, Tasks, Costs
+from app.models import (
+    GIPs, Projects,
+    ProjectCosts, Tasks,
+    Costs, CostsTasks 
+    )
 from app import logger
 
 gip = Blueprint('gip', __name__, 
@@ -33,16 +37,10 @@ def edit_cat_cost():
         # Определяется ГИП и его проект
         gip_id = GIPs.query.filter_by(employee_id=session.get("emp_id")).first().id
         project = Projects.query.filter_by(gip_id=gip_id).first()
-        # Получаем список добавленных статей расходов в виде (id, cost_name_fk)
-        added_costs_list_id_namefk = ProjectCosts.get_costs_info(project.id)
-        if added_costs_list_id_namefk:
-            # Заменяем foreign key cost name на name
-            for old_cat in added_costs_list_id_namefk:
-                old_cat[1] = Costs.get_name_by_id(old_cat[1])
-        else:
-            added_costs_list_id_namefk = [[0,"Нет данных"]]
+        # Получаем список добавленных статей расходов в виде (id, cost_name, man_days)
+        added_costs_list_id_name = ProjectCosts.get_costs_info(project.id)
         # Только список имен для последующей проверки
-        list_of_cats_name = [c[1] for c in added_costs_list_id_namefk]
+        list_of_cats_name = [c[1] for c in added_costs_list_id_name]
 
         if request.method == 'POST':
             cost_name = request.form.get('cost_name')
@@ -82,37 +80,76 @@ def edit_cat_cost():
                 flash("Статья добавлена!", category="success")  
             return redirect(url_for("gip.edit_cat_cost"))
         return render_template('gip/edit_cat_cost.html',
-                               added_cost=added_costs_list_id_namefk,
+                               added_cost=added_costs_list_id_name,
                                project_name=project.project_name)
     except Exception as e:
         logger.warning(f"In edit_cat_cost fail: {e}")
         flash("Что-то пошло не по плану...", category="error")
         return redirect(url_for('main.index'))
-    
+
+
+def print_repr(list_):
+    print("upd_cost_id", "upd_task_id", "upd_man_days", "add_cost_id", "new_task_name", "new_man_days", sep=" | ")
+    for l in list_:
+        print(l.__repr__(), end='|\t')
+
+def print_type_and_repr(list_):
+    for l in list_:
+        for l_ in l:
+            print(type(l_), l_.__repr__(), end='|\t')
+    print()
+
+
+# TODO:
+# [ ]: Редактирование задач
+# [ ]: Добавление задач
 @gip.route('/task', methods=['GET', 'POST'])
 def edit_task():
-    prev_tasks = None
     try:
         # Если пользователь не является ГИПом
         if session.get("emp_role", "Нет роли") != 'gip':
             return redirect(url_for('main.index'))
-        
+        # Определяется ГИП и его проект
         gip_id = GIPs.query.filter_by(employee_id=session.get("emp_id")).first().id
         project = Projects.query.filter_by(gip_id=gip_id).first()
-        costs_id_name_list = ProjectCosts.get_costs_id_name_in_project(project.id)
-        
+        # Получаем список добавленных статей расходов в виде (id, cost_name, man_days)
+        costs_id_name_list = ProjectCosts.get_costs_info(project.id)
+        print_type_and_repr(costs_id_name_list)
+        # Получаем список ранее добавленных задач в этом проекте в виде (id, task_name, man_days)
+        tasks_id_name_list = CostsTasks.get_tasks_info(project.id)
+        print_type_and_repr(tasks_id_name_list)
+# TODO:
+# [ ] Проверить данные с формы
         if request.method == 'POST':
-            task_name = request.form.get('task_name')
-            man_days = float(request.form.get('man_days'))
-            cost_id = request.form.get('cost_list')
-            prev_tasks = Tasks.query.filter_by(cost_id=cost_id).all()
-            new_one = Tasks(task_name, man_days, cost_id)
-            new_one.save()
+            # Данные для редактирования
+            for_upd_cots_id = request.form.get("old_cost_list")
+            upd_task_id = request.form.get("old_task_list")
+            new_task_name = request.form.get("upd_task_name")
+            updated_man_days = request.form.get("updated_man_days")
+            # Данные для добавления
+            for_add_cost_id = request.form.get("for_add_cost_list")
+            new_task_name = request.form.get("new_task_name")
+            new_man_days = request.form.get("new_man_name")
+
+            print_repr([for_upd_cots_id,
+                        upd_task_id,
+                        updated_man_days,
+                        for_add_cost_id,
+                        new_task_name,
+                        new_man_days])
+
+            # man_days = float(request.form.get('man_days'))
+            # cost_id = request.form.get('cost_list')
+            # prev_tasks = Tasks.query.filter_by(cost_id=cost_id).all()
+            # new_one = Tasks(task_name, man_days, cost_id)
+            # new_one.save()
             flash("Задача добавлена!", category="success")
+        
         return render_template('gip/edit_task.html', 
-                                prev_tasks=prev_tasks,
-                                cat_list=costs_id_name_list,
-                                project_name=project.project_name)
+                                project_name=project.project_name,
+                                added_cost=costs_id_name_list,
+                                added_tasks=tasks_id_name_list
+                                )
     except Exception as e:
         logger.warning(f"In edit_tasks fail: {e}")
         flash("Что-то пошло не по плану...", category="error")

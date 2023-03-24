@@ -3,6 +3,9 @@ from sqlalchemy.sql import func
 from passlib.hash import bcrypt
 
 
+# TIPS:
+# Должен быть способ через relationship получить данные из связанной таблицы
+
 # DONE: 
 # [x]: Обновить эту модель в БД с учетом измененного fk в cost_id
 class Records(db.Model):
@@ -199,24 +202,31 @@ class ProjectCosts(db.Model):
     @classmethod
     def get_costs_info(cls, project_id):
         """Возвращает список списков, который состоит из id, id статьи расходов и чел.днями"""
-        r = None
+        r = [[0,"Нет данных"]]
         q = cls.query.filter_by(project_id=project_id).all()
         if q is not None:
-            r = [[c.id, c.cost_name_fk, str(c.man_days)] for c in q] 
+            r = []
+            for c in q:
+                cost = Costs.query.filter_by(id=c.cost_name_fk).one()
+                r.append([c.id, cost.cost_name, str(c.man_days)])
         return r
 
+
     @classmethod
-    def get_costs_names_only(cls, project_id):
+    def get_costs_id_name(cls, project_id):
         """Возвращает список, который состоит из имён категорий затрат данного проекта"""
-        r = None
+        r = [[0,"Нет данных"]]
         q = cls.query.filter_by(project_id=project_id).all()
         if q is not None:
-            r = [c.name for c in q]
+            for c in q:
+                cost_id_fk = c.cost_name_fk
+                cost_name = db.session.get(Costs, cost_id_fk).cost_name
+                r.append([c.id, cost_name])
         return r
 
     @classmethod
     def get_id_and_man_days_by_project_id(cls, project_id):
-        r = None
+        r = [[0,"Нет данных"]]
         q = cls.query.filter_by(project_id=project_id).all()
         if q is not None:
             r = [[c.id, c.man_days] for c in q] 
@@ -265,6 +275,29 @@ class CostsTasks(db.Model):
         except Exception:
             db.session.rollback()
             raise
+    
+    # Чтобы выбрать все задачи данного проекта, нужно
+    # выбрать все статьи данного проекта и для каждой статьи
+    # нужно изъять задачу и добавить в результат
+    @classmethod
+    def get_tasks_info(cls, project_id):
+        """Возвращает список элементов [task_id, task_name]
+        
+        Метод извлекает из БД все статьи расходов в проекте, затем
+        для каждой статьи расходов извлекаются задачи.
+        Далее мы получаем имена задачи по её ID.
+        """
+        all_costs = ProjectCosts.query.filter_by(project_id=project_id).all()
+        tasks_id = []
+        
+        r = [[0,"Нет данных", "Нет чел/день"]]
+        for c in all_costs:
+            costs_tasks = cls.query.filter_by(cost_id=c.id).all()
+            for c_t in costs_tasks:
+                task = Tasks.query.filter_by(id=c_t.task_name_fk).one()
+                task_name = task.task_name
+                tasks_id.append([c_t.id, task_name, str(c_t.man_days)])
+        return r
 
 
 class Admins(db.Model):

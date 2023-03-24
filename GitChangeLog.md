@@ -1,3 +1,6 @@
+Artur Mustafin: 2023-03-24 09:34:57 +0300 
+ docs: Add Pretty git changelog
+
 Artur Mustafin: 2023-03-24 09:20:34 +0300 
  fix: Small fixes for report makers functions
 
