@@ -39,7 +39,7 @@
 
     {% if session.get("emp_role", "Нет роли") == 'gip' -%}
         <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
-        <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a>
+        <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
     {% endif %}
 
 </div>
