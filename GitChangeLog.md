@@ -1,3 +1,30 @@
+Artur Mustafin: 2023-03-24 18:01:22 +0300 
+ docs: add TODO
+
+Artur Mustafin: 2023-03-24 17:57:02 +0300 
+ fix: Fix in add category of cost, that added before
+
+Artur Mustafin: 2023-03-24 17:12:21 +0300 
+ fix: try to fix problems in prod server
+
+Artur Mustafin: 2023-03-24 16:53:12 +0300 
+ fix: small fix in CLI command
+
+Artur Mustafin: 2023-03-24 16:41:34 +0300 
+ fix: small fix in CLI command
+
+Artur Mustafin: 2023-03-24 16:08:27 +0300 
+ fix: Small fix on flash message
+
+Artur Mustafin: 2023-03-24 15:35:19 +0300 
+ refactor: add hyperlink to my telegram
+
+Artur Mustafin: 2023-03-24 15:20:40 +0300 
+ feat: added edit_task functional
+
+Artur Mustafin: 2023-03-24 13:00:06 +0300 
+ feat: Form on edit_task are correcting view
+
 Artur Mustafin: 2023-03-24 09:34:57 +0300 
  docs: Add Pretty git changelog
 
