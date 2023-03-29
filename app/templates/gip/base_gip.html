@@ -1,25 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-
-
-
 <div class="container">
-
-    {% for cat, msg in get_flashed_messages(True) %}
-        <div class="space flash {{cat}}">{{msg}}</div>
-    {% endfor %}
-
-    <form action="{{ url_for('gip.gips_project') }}">
-        <p>Выберете проект:</p>
-        <label for="project_list" style="display: block;"><b>Cтатьи расходов</b></label>
-        <select name="project_list"  multiple>
-            <option selected value="default">Не выбрано</option>
-            {% for cat in added_cost -%}
-                <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+" чел/день"+")" }}</option>
-            {% endfor %}
-        </select> 
-    </form>
-    
+    <p>Проект:  <strong>{{project_name}}</strong></p>
     <a href="{{ url_for('gip.edit_cat_cost') }}" class="">Радактировать статьи расходов</a>
     <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
     <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>

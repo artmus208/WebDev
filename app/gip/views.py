@@ -24,16 +24,12 @@ gip = Blueprint('gip', __name__,
 @gip.route('/', methods=['GET', 'POST'])
 def gips_project():
     try:
-        selected_name = "none"
         if session.get("emp_role", "Нет роли") != 'gip':
             return redirect(url_for('main.index'))
         emp_id = session.get("emp_id")
         gip_id = GIPs.query.filter_by(employee_id=emp_id).first().id
-        projects = Projects.query.filter_by(gip_id=gip_id).all()
-        sereliased_projects = [p.as_dict_name for p in projects]
-        if request.method == "POST":
-            pass
-        return render_template('gip/base_gip.html', projects=sereliased_projects, project_name=selected_name)
+        project = Projects.query.filter_by(gip_id=gip_id).first()
+        return render_template('gip/base_gip.html', project_name=project.project_name)
     except Exception as e:
         logger.warning(f"In gips_project fail: {e}")
         return redirect(url_for('main.index'))
