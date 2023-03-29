@@ -67,6 +67,7 @@ def login():
                 session['emp_role'] = 'common'
                 if GIPs.query.filter_by(employee_id=employee.id).first() is not None:
                     session['emp_role'] = 'gip'
+                    session['gip_project'] = None
                 if Admins.query.filter_by(employee_id=employee.id).first() is not None:
                     session['emp_role'] = 'admin'
                 return redirect(url_for('main.index'))

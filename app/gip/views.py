@@ -1,13 +1,16 @@
 from flask import (
     Blueprint, flash, redirect, render_template, request, session, url_for, g
 )
+
+
+
 from app.models import (
     GIPs, Projects,
     ProjectCosts, Tasks,
     Costs, CostsTasks 
     )
 from app import logger
-from app.helper_functions import is_empty_default_or_none
+from app.helper_functions import is_empty_default_or_none, sorting_projects_names
 
 gip = Blueprint('gip', __name__, 
                url_prefix="/gip", 
@@ -28,8 +31,14 @@ def gips_project():
             return redirect(url_for('main.index'))
         emp_id = session.get("emp_id")
         gip_id = GIPs.query.filter_by(employee_id=emp_id).first().id
-        project = Projects.query.filter_by(gip_id=gip_id).first()
-        return render_template('gip/base_gip.html', project_name=project.project_name)
+        projects = Projects.get_projects_id_name_list_gip(gip_id)
+        sorted_projects_name_list = sorting_projects_names(projects)
+        if request.method == "POST":
+            session["gip_project"] = Projects.get(request.form.get('gips_project_list')).project_name
+            session["gip_project_id"] = request.form.get('gips_project_list')
+        return render_template('gip/base_gip.html', 
+                               project_list=sorted_projects_name_list,
+                               )
     except Exception as e:
         logger.warning(f"In gips_project fail: {e}")
         return redirect(url_for('main.index'))
@@ -45,11 +54,12 @@ def edit_cat_cost():
         # Определяется ГИП и его проект
         gip_id = GIPs.query.filter_by(employee_id=session.get("emp_id")).first().id
         project = Projects.query.filter_by(gip_id=gip_id).first()
+        selected_project_id = session.get("gip_project_id", project.id)
         # Получаем список добавленных статей расходов в виде (id, cost_name, man_days)
-        added_costs_list_id_name = ProjectCosts.get_costs_info(project.id)
+        added_costs_list_id_name = ProjectCosts.get_costs_info(selected_project_id)
         # Только список имен для последующей проверки
         list_of_cats_name = [c[1] for c in added_costs_list_id_name]
-
+        
         if request.method == 'POST':
             cost_name = request.form.get('cost_name')
             man_days = request.form.get('man_days')
@@ -68,10 +78,10 @@ def edit_cat_cost():
             if cost_name:
                 costs_names = Costs.get_costs_names()
                 if cost_name not in costs_names:
-                    new_cost = Costs(cost_name)
+                    new_cost = Costs(cost_name=cost_name)
                     new_cost.save()
                 new_cost_id = Costs.get_id_by_name(cost_name)
-                new_cost_in_project = ProjectCosts(new_cost_id, man_days, project.id)
+                new_cost_in_project = ProjectCosts(new_cost_id, man_days, selected_project_id)
                 new_cost_in_project.save()
             # Если пытаются отредактировать старую статью
             print("Элемент из списка:", old_cost_name_id)
@@ -94,8 +104,8 @@ def edit_cat_cost():
                                project_name=project.project_name)
     except Exception as e:
         logger.warning(f"In edit_cat_cost fail: {e}")
-        flash("Что-то пошло не по плану...", category="error")
-        return redirect(url_for('main.index'))
+        flash("Что-то пошло не по плану в редакторе статей расходов...", category="error")
+        return redirect(url_for("gip.edit_cat_cost"))
 
 
 def print_repr(list_):

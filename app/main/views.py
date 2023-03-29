@@ -283,13 +283,21 @@ def record():
         if form.is_submitted():
             project_id = int(form.project_name.data)
             employee_id = Employees.query.filter_by(login=login).first().id
+            print("employee_id:",employee_id)
             # DONE:Правильно заносить записи с учётом новой таблицы ProjectsCosts 
             # [x]: 
+# BUG:      Все данные в БД записаны так '\nУправление проектом\n', то есть присутствуют лишние символы
+            print(form.category_of_costs.data.__repr__())
+            print(Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id)
             cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
+            print("cost_id:",cost_id)
             cost_id_ = ProjectCosts.query.filter_by(cost_name_fk=cost_id, project_id=project_id).first().id
+            print("cost_id_:",cost_id_)
             task_id = Tasks.query.filter_by(task_name=form.task.data).first().id     
+            print("task_id:", task_id)
             task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id).first().id
-            print(project_id, cost_id, cost_id_, task_id, task_id_)
+            print("task_id:",task_id_)
+            # print(project_id, cost_id, cost_id_, task_id, task_id_)
             hours = form.hours.data
             minuts = form.minuts.data
             rec = Records(employee_id, project_id, cost_id_, task_id_, hours, minuts)
@@ -325,7 +333,7 @@ def project_report():
         else:
             return render_template('main/project_report_form.html', form=form)
     except Exception as e:
-        logger.warning(f"In project_report fail has been ocured: {e} with new dict {new_dict}")
+        logger.warning(f"In project_report fail has been ocured: {e}")
         time.sleep(1)
         return redirect(url_for('main.project_report'))
     

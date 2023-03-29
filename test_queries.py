@@ -1,7 +1,12 @@
 from app import app, db, text
-from app.models import Projects, GIPs
+from app.models import Projects, GIPs, Costs
 from app import helper_functions
 
+
+with app.app_context():
+    cost_name = Costs.query.filter_by(id=1).first().cost_name
+    print(Costs.query.filter_by(cost_name=cost_name).first().cost_name.__repr__())
+    
 
 # Проверка текстового запроса
 with app.app_context():

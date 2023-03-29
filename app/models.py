@@ -136,6 +136,10 @@ class Projects(db.Model, MyBaseClass):
     def get_projects_id_name_list(self):
         return [(p.id, p.project_name) for p in db.session.execute(db.select(Projects)).scalars()]
 
+    @classmethod
+    def get_projects_id_name_list_gip(self, gip_id):
+        return [(p.id, p.project_name) for p in db.session.execute(db.select(Projects).where(Projects.gip_id == gip_id)).scalars()]
+
     def as_dict_name(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}        
     
@@ -166,8 +170,9 @@ class Costs(db.Model, MyBaseClass):
         s = f"{self.id}, {self.cost_name}"
         return s
 
-    def __init__(self, id, cost_name):
-        self.id = id
+    def __init__(self, cost_name, id=None):
+        if id is not None:
+            self.id = id
         self.cost_name = cost_name
 
     @classmethod
@@ -194,12 +199,19 @@ class ProjectCosts(db.Model, MyBaseClass):
     def __repr__(self) -> str:
         return f"{self.id}, {self.cost_name_fk}, {self.man_days}, {self.project_id}"
 
-    def __init__(self, id, cost_id, man_days, project_id):
-        self.id = id
+    def __init__(self, cost_id, man_days, project_id, id=None):
+        if id is not None:
+            self.id = id
         self.cost_name_fk = cost_id
         self.man_days = man_days
         self.project_id = project_id
 
+    @classmethod
+    def add(cls, new_cost_id, man_days, project_id):
+        cls.cost_name_fk = new_cost_id
+        cls.man_days = man_days
+        cls.project_id = project_id
+        return cls
 
     @classmethod
     def get_costs_info(cls, project_id):
