@@ -300,7 +300,7 @@ def record():
             return render_template('main/records.html', form=form, login=login)
     except Exception as e:
         logger.warning(f"In record page fail has been ocured: {e}")
-        flash('Что-то пошло не так...', category="error")
+        flash('Что-то пошло не так при добавлении записи...', category="error")
         time.sleep(1)
         return redirect(url_for('main.record', login=login))
 
