@@ -1,13 +1,10 @@
 import logging
-import click
-import datetime
 
 import pathlib
 import os
 
 from flask import Flask, redirect, render_template, url_for, jsonify, flash
 from flask_sqlalchemy import SQLAlchemy
-
 from app.config import Config
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 
@@ -33,9 +30,9 @@ def create_app_db():
             databasename="time_managment_web_app",
             )
     app.config['SQLALCHEMY_DATABASE_URI'] = data_base_URI
-    @app.teardown_appcontext
-    def shutdown_session(exception=None):
-        db.session.remove()
+    # @app.teardown_appcontext
+    # def shutdown_session(exception=None):
+    #     db.session.remove()
 
     @app.before_first_request
     def create_database():
