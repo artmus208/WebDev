@@ -23,17 +23,17 @@
                 <label for="login" class="text">Логин</label>
             </div>
             <div class="input_login">
-                <input name="login" placeholder="Инициалы на латинице как в почте" class="input_log"></input>
+                <input name="login" placeholder="Инициалы на латинице" class="input_log"></input>
             </div>
             <div class="password">
                 <img class="password_icon" src="{{url_for('static', filename='images/password.png')}}"></img>
                 <label for="password" class="text">Пароль</label>
             </div>
             <div class="input_password">
-                <input type="password" placeholder="Пароль от почты @pesk.spb.ru" name="password" class="input_pas"></input>
+                <input type="password" placeholder="Пароль от рабочей почты" name="password" class="input_pas"></input>
             </div>
             <button type="submit" class="enter">Вход</button>
-            <a class="reg-btn" href="{{ url_for('auth.register') }}">Регистрация</a>
+            <button class="reg-btn" href="{{ url_for('auth.register') }}">Регистрация</button>
         </form>
     </div>
 
