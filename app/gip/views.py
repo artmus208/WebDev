@@ -15,12 +15,19 @@ gip = Blueprint('gip', __name__,
                static_folder="static/gip")
 
 
+
+# TODO: Выбор проекта для ГИПа (если он ГИП в нескольких проектах)
+# [ ]:  Написать запрос, который достает проекты, которые числятся за этим ГИПом
+# [ ]:  Составить список, который будет состоять из пар: (id, имя проекта)
+# [ ]:  Отобразить этот список в select на форме
+
 @gip.route('/', methods=['GET', 'POST'])
 def gips_project():
     try:
         if session.get("emp_role", "Нет роли") != 'gip':
             return redirect(url_for('main.index'))
-        gip_id = GIPs.query.filter_by(employee_id=session.get("emp_id")).first().id
+        emp_id = session.get("emp_id")
+        gip_id = GIPs.query.filter_by(employee_id=emp_id).first().id
         project = Projects.query.filter_by(gip_id=gip_id).first()
         return render_template('gip/base_gip.html', project_name=project.project_name)
     except Exception as e:
@@ -149,11 +156,6 @@ def edit_task():
                                                  for_add_cost_id,
                                                  new_task_name,
                                                  new_man_days])
-            # print(
-            #     "for_add_cost_id:", for_add_cost_id,
-            #     "new_task_name:",new_task_name,
-            #     "new_man_days:", new_man_days
-            # )
             
             # Обработка данных редактируемой задачи
             if not is_edit_empty:

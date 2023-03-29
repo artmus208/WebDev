@@ -12,8 +12,15 @@ from app import logger, db
 from app.forms import (
     ProjectButton, RecordsForm,
     ReturnButton, ReportProjectForm, available_login)
-from app.models import Records, Employees, Costs, Tasks, Projects, GIPs, ProjectCosts, CostsTasks
-from app.helper_functions import sorting_projects_names, revise_records_for_ProjectCosts
+from app.models import (
+    Records, Employees,
+    Costs, Tasks, Projects,
+    GIPs, ProjectCosts, CostsTasks,
+    Admins)
+from app.helper_functions import (
+    sorting_projects_names, revise_records_for_ProjectCosts, 
+    none_or_value)
+
 from app.reports_makers import (
     make_query_to_dict_list,
     make_report_that_andrews_like,
@@ -30,40 +37,214 @@ folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 # [x]: Добавить реальных ГИПов в реальные проекты на проде
 # [ ]: Заняться динамическими выпадающими списками 
 
-@main.cli.command("revise_records")
-def rev_rec():
-    res = revise_records_for_ProjectCosts()
-
-@main.cli.command("init_emp")
-def init_emp():
-    db.create_all()
-    with open(str(folder_path_that_contains_this_file)+"/files/employees.txt",'r') as f:
-        for line in f:
-            spl_line = line.split()
-            login = spl_line[0].split("@")[0]
-            password = spl_line[1]
-            hashed_password = generate_password_hash(password=password)
-            new_one = Employees(login, hashed_password)
-            new_one.register()
-
 @main.cli.command("create_db")
 def init_emp():
     db.create_all()
 
-@main.cli.command("records_backup")
-def do_records_backup():
-    all_records = Records.query.all()
-    with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "w") as f:
+@main.cli.command("drop_db")
+def init_emp():
+    db.drop_all()
+
+@main.cli.command("revise_records")
+def rev_rec():
+    res = revise_records_for_ProjectCosts()
+
+
+
+
+
+### BACKUPS STARTS 
+@main.cli.command("admins_backup")
+def admins_backup():
+    all_records = Admins.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/admins.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
             f.write(record.__repr__())
             f.write('\n')
+    print(admins_backup.name, "done.")
 
-@main.cli.command("reload_records_from_records_txt")
+@main.cli.command("costs_backup")
+def costs_backup():
+    all_records = Costs.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/costs.txt", "w+", encoding="utf-8") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+    print(costs_backup.name, "done.")
+
+@main.cli.command("costs_tasks_backup")
+def costs_tasks_backup():
+    all_records = CostsTasks.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/costs_tasks.txt", "w+", encoding="utf-8") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+    print(costs_tasks_backup.name, "done.")
+
+@main.cli.command("employees_backup")
+def employees_backup():
+    all_records = Employees.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/employees.txt", "w+", encoding="utf-8") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+    print(employees_backup.name, "done.")
+
+@main.cli.command("gips_backup")
+def gips_backup():
+    all_records = GIPs.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/gips.txt", "w+", encoding="utf-8") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+    print(gips_backup.name, "done.")
+
+@main.cli.command("projects_backup")
+def projects_backup():
+    all_records = Projects.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/projects.txt", "w+", encoding="utf-8") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+    print(projects_backup.name, "done.")
+
+
+
+@main.cli.command("project_costs_backup")
+def project_costs_backup():
+    all_records = ProjectCosts.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/project_costs.txt", "w+", encoding="utf-8") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+    print(project_costs_backup.name, "done.")
+
+
+@main.cli.command("records_backup")
+def records_backup():
+    all_records = Records.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "w+", encoding="utf-8") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+    print(records_backup.name, "done.")
+
+@main.cli.command("tasks_backup")
+def tasks_backup():
+    all_records = Tasks.query.all()
+    with open(str(folder_path_that_contains_this_file)+"/files/tasks.txt", "w+", encoding="utf-8") as f:
+        for record in all_records:
+            f.write(record.__repr__())
+            f.write('\n')
+    print(tasks_backup.name, "done.")
+### BACKUPS ENDS ###################################################################
+
+### LOAD STARTS ####################################################################
+@main.cli.command("load_projects")
+def load_projects():
+    with open(str(folder_path_that_contains_this_file)+"/files/projects.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            splited_list = line.split(",")
+            new_rec = Projects(id=splited_list[0],
+                               p_name=splited_list[1],
+                               gip_id=int(splited_list[2])
+                              )
+            new_rec.save()
+    print(load_projects.name, "done.")
+
+@main.cli.command("load_gips")
+def load_gips():
+    with open(str(folder_path_that_contains_this_file)+"/files/gips.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            splited_list = line.split(",")
+            new_rec = GIPs(
+                id=splited_list[0],
+                emp_id=splited_list[1]
+              )
+            new_rec.save()
+    print(load_gips.name, "done.")
+
+@main.cli.command("load_employees")
+def load_employees():
+    with open(str(folder_path_that_contains_this_file)+"/files/employees.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            splited_list = line.split(",")
+            new_rec = Employees(
+                id=splited_list[0],
+                login=splited_list[1],
+                password=splited_list[2]
+              )
+            new_rec.save()
+    print(load_employees.name, "done.")
+
+
+@main.cli.command("load_admins")
+def load_admins():
+    with open(str(folder_path_that_contains_this_file)+"/files/admins.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            splited_list = line.split(",")
+            new_rec = Admins(
+                id=splited_list[0],
+                employee_id=splited_list[1]
+              )
+            new_rec.save()
+    print(load_admins.name, "done.")
+
+@main.cli.command("load_project_costs")
+def load_project_costs():
+    with open(str(folder_path_that_contains_this_file)+"/files/project_costs.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            splited_list = line.split(",")
+            new_rec = ProjectCosts(
+                id=splited_list[0],
+                cost_id=splited_list[1],
+                man_days=splited_list[2],
+                project_id=splited_list[3]
+              )
+            new_rec.save()
+    print(load_project_costs.name, "done.")
+
+@main.cli.command("load_tasks")
+def load_tasks():
+    with open(str(folder_path_that_contains_this_file)+"/files/tasks.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            splited_list = line.split(",")
+            new_rec = Tasks(
+                id=splited_list[0],
+                task_name=splited_list[1]
+              )
+            new_rec.save()
+    print(load_tasks.name, "done.")
+
+@main.cli.command("load_costs_tasks")
+def load_costs_tasks():
+    with open(str(folder_path_that_contains_this_file)+"/files/costs_tasks.txt", "r",encoding="utf-8") as f:
+        for line in f:
+            splited_list = line.split(",")
+            new_rec = CostsTasks(
+                id=splited_list[0],
+                task_name_fk=splited_list[1],
+                man_days=splited_list[2],
+                cost_id=splited_list[3]
+              )
+            new_rec.save()
+    print(load_costs_tasks.name, "done.")
+
+@main.cli.command("load_costs")
+def load_costs():
+    with open(str(folder_path_that_contains_this_file)+"/files/costs.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            splited_list = line.split(",")
+            new_rec = Costs(
+                id=splited_list[0],
+                cost_name=splited_list[1]
+              )
+            new_rec.save()
+    print(load_costs.name, "done.")
+
+@main.cli.command("load_records")
 def load_records():
-    db.create_all()
-    Records.__table__.drop(db.engine)
-    db.create_all()
-    with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "r") as f:
+    with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "r", encoding="utf-8") as f:
         for line in f:
             splited_list = line.split(",")
             need_info = list(map(int, splited_list[2:]))
@@ -74,21 +255,9 @@ def load_records():
                               need_info[4],
                               need_info[5])
             new_rec.save()
+    print(load_records.name, "done.")
+### LOAD ENDS ######################################################################
 
-@main.cli.command("reload_costs_tasks")
-def init_cost_task_blank():
-    # db.create_all()
-    # CostsTasks.__table__.drop(db.engine)
-    db.create_all()
-    project_costs = Costs.query.all()
-    for cost in project_costs:
-        new_costs_task = CostsTasks(1, 1, cost.id)
-        new_costs_task.save()
-
-
-@main.cli.command("add_one_rec_to_ProjectsCosts")
-def add_one_cost_proj():
-    ProjectCosts.add_one_record()
 
 @main.route("/", methods=['GET', 'POST'])
 def index():
@@ -106,10 +275,6 @@ def record():
     login = g.emp.login
     try:
         form = RecordsForm()
-        # TODO: 
-        # [ ]: В costs_name_list д. б. список только тех статей затрат, 
-        #      которые относятся к этому проекту
-        # TIPS: Это задача создания динамичских выпадающих списков
         costs_name_list = Costs.get_costs_names()
         projects_name_id_list = Projects.get_projects_id_name_list()
         sorted_projects_name_list = sorting_projects_names(projects_name_id_list)

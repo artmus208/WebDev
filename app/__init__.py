@@ -4,7 +4,9 @@ import pathlib
 import os
 
 from flask import Flask, redirect, render_template, url_for, jsonify, flash
+
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
 from app.config import Config
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 

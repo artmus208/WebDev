@@ -8,7 +8,28 @@ from passlib.hash import bcrypt
 
 # DONE: 
 # [x]: Обновить эту модель в БД с учетом измененного fk в cost_id
-class Records(db.Model):
+
+class MyBaseClass:
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
+
+    @classmethod
+    def commit(self):
+        db.session.commit()
+
+    @classmethod
+    def get(cls, id):
+        try:
+            return db.session.get(cls, id)
+        except Exception:
+            db.session.rollback()
+            raise
+class Records(db.Model, MyBaseClass):
     __tablename__ = 'records'
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -31,18 +52,6 @@ class Records(db.Model):
     def as_dict_name(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    def save(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            raise
-
-    @classmethod
-    def commit(self):
-        db.session.commit()
-
     def __repr__(self) -> str:
         s = f"{self.id},\
 {self.time_created},\
@@ -54,7 +63,7 @@ class Records(db.Model):
 {self.minuts}"
         return s
         
-class Employees(db.Model):
+class Employees(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
@@ -64,28 +73,27 @@ class Employees(db.Model):
     gip = db.relationship("GIPs", backref='Employees', lazy='dynamic')
     admin = db.relationship("Admins", backref='Employees', lazy='dynamic')
 
-    def __init__(self, login, password):
+    def __repr__(self) -> str:
+        s = f"{self.id},\
+{self.login},\
+{self.password}"
+        return s
+
+    def __init__(self, id, login, password):
+        self.id = id
         self.login = login
         self.password = password
     
     def as_dict_name(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    @classmethod
-    def commit(self):
-        db.session.commit()
+
         
     @classmethod
     def get_all_logins(cls):
         return [emp.login for emp in db.session.execute(db.select(cls)).scalars()]
 
-    @classmethod
-    def get(cls, id):
-        try:
-            return db.session.get(cls, id)
-        except Exception:
-            db.session.rollback()
-            raise
+
 
     @classmethod
     def get_by_login(cls, login):
@@ -103,7 +111,7 @@ class Employees(db.Model):
 
 
 
-class Projects(db.Model):
+class Projects(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
@@ -115,51 +123,52 @@ class Projects(db.Model):
     project_costs = db.relationship("ProjectCosts",
                                 backref='Projects', lazy='dynamic')
 
-    def __init__(self, p_name, gip_id, start_time, end_time):
+    def __repr__(self) -> str:
+        s = f"{self.id}, {self.project_name}, {self.gip_id}"
+        return s
+    
+    def __init__(self, id, p_name, gip_id):
+        self.id = id
         self.project_name = p_name
         self.gip_id = gip_id
-        self.start_time = start_time
-        self.end_time = end_time
 
     @classmethod
     def get_projects_id_name_list(self):
         return [(p.id, p.project_name) for p in db.session.execute(db.select(Projects)).scalars()]
 
     def as_dict_name(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}        
+    
 
-class GIPs(db.Model):
+class GIPs(db.Model, MyBaseClass):
     __tablename__ = "gips"
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))
     project = db.relationship("Projects", backref='gips', lazy='dynamic')
 
-    def __init__(self, gip_id):
-        self.employee_id = gip_id
+    def __repr__(self) -> str:
+        return f"{self.id}, {self.employee_id}"
+
+    def __init__(self, id, emp_id):
+        self.id = id
+        self.employee_id = emp_id
 
 
-class Costs(db.Model):
+class Costs(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     cost_name = db.Column(db.String(85), nullable=False, unique=True)
     project_costs_rel = db.relationship("ProjectCosts", backref="Costs", lazy='dynamic')
     
-    def __init__(self, cost_name):
+    def __repr__(self) -> str:
+        s = f"{self.id}, {self.cost_name}"
+        return s
+
+    def __init__(self, id, cost_name):
+        self.id = id
         self.cost_name = cost_name
-
-    def save(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            raise
-
-    @classmethod
-    def commit(self):
-        db.session.commit()
 
     @classmethod
     def get_costs_names(self):
@@ -174,7 +183,7 @@ class Costs(db.Model):
 
 
 
-class ProjectCosts(db.Model):
+class ProjectCosts(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
@@ -182,22 +191,15 @@ class ProjectCosts(db.Model):
     man_days = db.Column(db.Integer, nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     
-    def __init__(self, cost_id, man_days, project_id):
+    def __repr__(self) -> str:
+        return f"{self.id}, {self.cost_name_fk}, {self.man_days}, {self.project_id}"
+
+    def __init__(self, id, cost_id, man_days, project_id):
+        self.id = id
         self.cost_name_fk = cost_id
         self.man_days = man_days
         self.project_id = project_id
 
-    def save(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            raise
-
-    @classmethod
-    def commit(self):
-        db.session.commit()
 
     @classmethod
     def get_costs_info(cls, project_id):
@@ -238,28 +240,21 @@ class ProjectCosts(db.Model):
 
 
 
-class Tasks(db.Model):
+class Tasks(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     task_name = db.Column(db.String(85), nullable=False, unique=True)
     costs_tasks_rel = db.relationship("CostsTasks", backref='Tasks', lazy='dynamic')
     
-    
-    def __init__(self, task_name):
+    def __repr__(self) -> str:
+        return f"{self.id}, {self.task_name}"
+
+    def __init__(self, id, task_name):
+        self.id = id
         self.task_name = task_name
 
-    def save(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            raise
 
-    @classmethod
-    def commit(self):
-        db.session.commit()
 
     @classmethod
     def get_task_by_name_use_careful(cls, task_name):
@@ -271,7 +266,7 @@ class Tasks(db.Model):
         
     
 
-class CostsTasks(db.Model):
+class CostsTasks(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
@@ -279,22 +274,16 @@ class CostsTasks(db.Model):
     man_days = db.Column(db.Float, nullable=False)
     cost_id = db.Column(db.Integer, db.ForeignKey('project_costs.id'))
     
-    def __init__(self, task_name_fk, man_days, cost_id):
+    def __repr__(self) -> str:
+        return f"{self.id}, {self.task_name_fk}, {self.man_days}, {self.cost_id}"
+
+    def __init__(self, id, task_name_fk, man_days, cost_id):
+        self.id = id
         self.task_name_fk = task_name_fk
         self.man_days = man_days
         self.cost_id = cost_id
 
-    def save(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            raise
 
-    @classmethod
-    def commit(self):
-        db.session.commit()
     
     # Чтобы выбрать все задачи данного проекта, нужно
     # выбрать все статьи данного проекта и для каждой статьи
@@ -322,8 +311,13 @@ class CostsTasks(db.Model):
         return r
 
 
-class Admins(db.Model):
+class Admins(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.Integer, db.ForeignKey("employees.id"))
-    def __init__(self, employee_id):
+
+    def __repr__(self) -> str:
+        return f"{self.id}, {self.employee_id}"
+    
+    def __init__(self, id, employee_id):
+        self.id = id
         self.employee_id = employee_id
