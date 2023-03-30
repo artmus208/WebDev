@@ -2,22 +2,24 @@
 
 {% block content %}
 
-<div class="space">
-    <h2>Выберите проект для составления отчета:</h2>
-    <form method="POST" action="{{url_for('main.project_report')}}">
-        {{form.csrf_token}}
-        <p>{{form.project_name.label(class="form-control-md")}}</p>
-        <p>{{form.project_name(class="form-control-sm")}}</p>
-        <p>{{form.submit(class=' btn btn-success')}}</p>
-    </form>
+<div class="container">
+    <div class="content__inner">
+        <h2 class="content__h">Выберите проект для составления отчета:</h2>
+        <form method="POST" action="{{url_for('main.project_report')}}">
+            {{form.csrf_token}}
+            <p class="content__p">{{form.project_name.label(class="form-control-md")}}</p>
+            <p class="content__list">{{form.project_name(class="form-control-sm")}}</p>
+            <p class="content__btn">{{form.submit(class=' btn btn-success')}}</p>
+        </form>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <a class="about-button" href="{{ url_for('main.index') }}">Назад</a>
+    </div>
 </div>
 {% endblock content %}

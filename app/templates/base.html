@@ -11,13 +11,13 @@
       <div class="container">
         <div class="header_content">
           <img class="logo" 
-               src="{{ url_for('static', filename='/images/taskpesk.svg') }}"height="68"/>
-            <div class="header_project">
-                <p class="header_text"> </p>
-            </div>
-            <div class="header_otchet">
-                <p class="header_text"> </p>
-            </div>
+               src="{{ url_for('static', filename='/images/taskpesk.svg') }}"/>
+          <div class="header_project">
+              <a class="header_text" href="{{url_for('main.record')}}"> Проект </a>
+          </div>
+          <div class="header_otchet">
+              <a class="header_text" href="{{url_for('main.project_report')}}"> Отчет </a>
+          </div>
           <a href="https://t.me/artmus208" class="my-link">Связь с разработчиком</a>
         </div>
     </div>

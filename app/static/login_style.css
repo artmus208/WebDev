@@ -10,8 +10,6 @@ body{
     background: #FFFFFF;
 }
 
-
-
 .content{
     justify-content: center;
     margin-left: auto;
@@ -25,7 +23,7 @@ body{
 }
 
 .logo{
-    margin-top: 95px;
+    margin-top: 140px;
     width: 300px;
     height: 68px;
 }
@@ -39,7 +37,7 @@ body{
 .password{
     display: flex;
     margin-left: 0px;
-    margin-top: 26px;
+    margin-top: 35px;
 } 
 
 .password_icon{
@@ -47,30 +45,32 @@ body{
     height: 30px;
 }
 
-
+::placeholder {
+    color:#dad7d7;
+    font-size: 18px;
+  }
 
 .enter:hover {
-    background: rgba(40, 85, 247, 0.5);
-    color:rgb(0, 0, 0);
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
 }
 
 .enter{
-    margin-top: 26px;
+    margin-top: 45px;
     width: 350px;
     height: 65px;
     border: 0;
-    background: rgba(40, 85, 247, 0.888);
+    background: #4786FF;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 24px;
     line-height: 27px;
     border-radius: 5px;
     text-align: center;
     color: #ffffff;
-    transition: background-color 0.2s linear;
     transition: color 0.2s linear;
 }
-
 
 .input_log{
     font-family: 'Inter';
@@ -111,23 +111,22 @@ body{
     height: 65px;
     border: 0;
     display: block;
-    background: rgba(40, 85, 247, 0.888);
+    background: #4786FF;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 24px;
     line-height: 27px;
     border-radius: 5px;
     text-align: center;
     color: #ffffff;
-    transition: background-color 0.2s linear;
     transition: color 0.2s linear;
 }
 
 .reg-btn:hover {
-    background: rgba(40, 85, 247, 0.5);
-    color:rgb(0, 0, 0);
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
 }
-
 
 .flash.success {
     border: 1px solid #21DB56;
@@ -136,6 +135,7 @@ body{
     text-align: center;
     font-family: 'Inter';
 }
+
 .flash.error {
     background: #FFA866;
     text-align: center;
@@ -231,8 +231,9 @@ body{
         }
         
         .enter:hover {
-            background: rgba(40, 85, 247, 0.5);
-            color:rgb(0, 0, 0);
+            background-color: #FFFFFF;
+            border: 2px solid #4786FF;
+            color:#4786FF;
         }
 
         .input_log{
@@ -265,7 +266,7 @@ body{
             font-family: 'Inter';
             font-style: normal;
             font-weight: 500;
-            font-size: 22px;
+            font-size: 20px;
             line-height: 27px;
         }
 
@@ -284,10 +285,10 @@ body{
             height: 60px;
             border: 0;
             display: block;
-            background: rgba(40, 85, 247, 0.888);
+            background: #4786FF;
             text-decoration: none;
-            font-weight: 700;
-            font-size: 24px;
+            font-weight: 500;
+            font-size: 20px;
             line-height: 27px;
             border-radius: 5px;
             text-align: center;
@@ -297,8 +298,9 @@ body{
         }
         
         .reg-btn:hover {
-            background: rgba(40, 85, 247, 0.5);
-            color:rgb(0, 0, 0);
+            background-color: #FFFFFF;
+            border: 2px solid #4786FF;
+            color:#4786FF;
         }
         
         
@@ -309,6 +311,7 @@ body{
             text-align: center;
             font-family: 'Inter';
         }
+
         .flash.error {
             background: #FFA866;
             text-align: center;

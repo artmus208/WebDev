@@ -6,6 +6,12 @@
     <div class="container">
 
         <div class="content__inner">
+            <div class="records__gip">
+                <p class="list_text">Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
+                {% if session.get("emp_role", "Нет роли") == 'gip' -%}
+                <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
+                {% endif %}
+            </div>
             <div class="space">
                 {% for cat, msg in get_flashed_messages(True) %}
                     <div class="space flash {{cat}}">{{msg}}</div>
@@ -37,14 +43,10 @@
                 <div class="buttons">
                     <p>{{form.submit(class="done")}}</p>
                     <a class="otchet" href="{{url_for('main.project_report')}}">Отчет по проектам</a>
-                    <a class="back" href="{{url_for('auth.logout')}}">Выйти</a>
                 </div>
+                <a class="back" href="{{url_for('auth.logout')}}">Выйти</a>
             </form>
         </div>
-        {% if session.get("emp_role", "Нет роли") == 'gip' -%}
-            <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
-        {% endif %}
-        <p>Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
     </div>
 
     
