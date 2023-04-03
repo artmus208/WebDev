@@ -280,8 +280,9 @@ class CostsTasks(db.Model, MyBaseClass):
     def __repr__(self) -> str:
         return f"{self.id},{self.task_name_fk},{self.man_days},{self.cost_id}"
 
-    def __init__(self, id, task_name_fk, man_days, cost_id):
-        self.id = id
+    def __init__(self, task_name_fk, man_days, cost_id, id=None):
+        if id is not None:
+            self.id = id
         self.task_name_fk = task_name_fk
         self.man_days = man_days
         self.cost_id = cost_id

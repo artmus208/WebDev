@@ -49,6 +49,20 @@ def init_emp():
 def rev_rec():
     res = revise_records_for_ProjectCosts()
 
+@main.cli.command("init_costs_tasks")
+def init_cost_task():
+    all_p_costs = ProjectCosts.query.all()
+    all_costs_tasks = CostsTasks.query.all()
+    ex_cost_id = [i.id for i in all_costs_tasks]
+    print(ex_cost_id)
+    for ix, p_costs in enumerate(all_p_costs):
+        if p_costs.id not in ex_cost_id:
+            new_task = CostsTasks(cost_id=p_costs.id, task_name_fk=1, man_days=1)
+            new_task.save()
+        
+    
+
+
 # TIPS: Убрать в help funcs
 def clear_strings(str_list):
     for i in range(len(str_list)):
@@ -329,11 +343,12 @@ def record():
             print("cost_id_:",cost_id_)
             task_id = Tasks.query.filter_by(task_name=form.task.data).first().id     
             print("task_id:", task_id)
-            task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id).first().id
-            print("task_id:",task_id_)
+            task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id_).first().id
+            print("task_id_:",task_id_)
             # print(project_id, cost_id, cost_id_, task_id, task_id_)
             hours = form.hours.data
             minuts = form.minuts.data
+            print("Hours:", hours, "Minuts:", minuts)
             rec = Records(employee_id, project_id, cost_id_, task_id_, hours, minuts)
             rec.save()
             flash('Запись добавлена. Несите следующую!', category="success")
