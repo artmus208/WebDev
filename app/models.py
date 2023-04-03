@@ -50,17 +50,10 @@ class Records(db.Model, MyBaseClass):
 
 
     def as_dict_name(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def __repr__(self) -> str:
-        s = f"{self.id},\
-{self.time_created},\
-{self.employee_id},\
-{self.project_id},\
-{self.cost_id},\
-{self.task_id},\
-{self.hours},\
-{self.minuts}"
+        s = f"{self.id},{self.time_created},{self.employee_id},{self.project_id},{self.cost_id},{self.task_id},{self.hours},{self.minuts}"
         return s
         
 class Employees(db.Model, MyBaseClass):
@@ -74,9 +67,7 @@ class Employees(db.Model, MyBaseClass):
     admin = db.relationship("Admins", backref='Employees', lazy='dynamic')
 
     def __repr__(self) -> str:
-        s = f"{self.id},\
-{self.login},\
-{self.password}"
+        s = f"{self.id},{self.login},{self.password}"
         return s
 
     def __init__(self, id, login, password):
@@ -124,7 +115,7 @@ class Projects(db.Model, MyBaseClass):
                                 backref='Projects', lazy='dynamic')
 
     def __repr__(self) -> str:
-        s = f"{self.id}, {self.project_name}, {self.gip_id}"
+        s = f"{self.id},{self.project_name},{self.gip_id}"
         return s
     
     def __init__(self, id, p_name, gip_id):
@@ -152,7 +143,7 @@ class GIPs(db.Model, MyBaseClass):
     project = db.relationship("Projects", backref='gips', lazy='dynamic')
 
     def __repr__(self) -> str:
-        return f"{self.id}, {self.employee_id}"
+        return f"{self.id},{self.employee_id}"
 
     def __init__(self, id, emp_id):
         self.id = id
@@ -167,7 +158,7 @@ class Costs(db.Model, MyBaseClass):
     project_costs_rel = db.relationship("ProjectCosts", backref="Costs", lazy='dynamic')
     
     def __repr__(self) -> str:
-        s = f"{self.id}, {self.cost_name}"
+        s = f"{self.id},{self.cost_name}"
         return s
 
     def __init__(self, cost_name, id=None):
@@ -197,7 +188,7 @@ class ProjectCosts(db.Model, MyBaseClass):
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     
     def __repr__(self) -> str:
-        return f"{self.id}, {self.cost_name_fk}, {self.man_days}, {self.project_id}"
+        return f"{self.id},{self.cost_name_fk},{self.man_days},{self.project_id}"
 
     def __init__(self, cost_id, man_days, project_id, id=None):
         if id is not None:
@@ -260,7 +251,7 @@ class Tasks(db.Model, MyBaseClass):
     costs_tasks_rel = db.relationship("CostsTasks", backref='Tasks', lazy='dynamic')
     
     def __repr__(self) -> str:
-        return f"{self.id}, {self.task_name}"
+        return f"{self.id},{self.task_name}"
 
     def __init__(self, id, task_name):
         self.id = id
@@ -287,7 +278,7 @@ class CostsTasks(db.Model, MyBaseClass):
     cost_id = db.Column(db.Integer, db.ForeignKey('project_costs.id'))
     
     def __repr__(self) -> str:
-        return f"{self.id}, {self.task_name_fk}, {self.man_days}, {self.cost_id}"
+        return f"{self.id},{self.task_name_fk},{self.man_days},{self.cost_id}"
 
     def __init__(self, id, task_name_fk, man_days, cost_id):
         self.id = id
@@ -328,7 +319,7 @@ class Admins(db.Model, MyBaseClass):
     employee_id = db.Column(db.Integer, db.ForeignKey("employees.id"))
 
     def __repr__(self) -> str:
-        return f"{self.id}, {self.employee_id}"
+        return f"{self.id},{self.employee_id}"
     
     def __init__(self, id, employee_id):
         self.id = id
