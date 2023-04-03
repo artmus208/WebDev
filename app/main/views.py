@@ -49,10 +49,6 @@ def init_emp():
 def rev_rec():
     res = revise_records_for_ProjectCosts()
 
-
-
-
-
 ### BACKUPS STARTS 
 @main.cli.command("admins_backup")
 def admins_backup():
@@ -139,12 +135,19 @@ def tasks_backup():
     print(tasks_backup.name, "done.")
 ### BACKUPS ENDS ###################################################################
 
+def clear_strings(str_list):
+    for i in range(len(str_list)):
+        str_list[i] = str_list[i].replace('\n', '')
+        str_list[i] = str_list[i].replace('\t', '')
+        str_list[i] = str_list[i].replace(' ', '', 1)
+    return str_list
+
 ### LOAD STARTS ####################################################################
 @main.cli.command("load_projects")
 def load_projects():
     with open(str(folder_path_that_contains_this_file)+"/files/projects.txt", "r", encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             new_rec = Projects(id=splited_list[0],
                                p_name=splited_list[1],
                                gip_id=int(splited_list[2])
@@ -156,7 +159,7 @@ def load_projects():
 def load_gips():
     with open(str(folder_path_that_contains_this_file)+"/files/gips.txt", "r", encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             new_rec = GIPs(
                 id=splited_list[0],
                 emp_id=splited_list[1]
@@ -168,7 +171,7 @@ def load_gips():
 def load_employees():
     with open(str(folder_path_that_contains_this_file)+"/files/employees.txt", "r", encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             new_rec = Employees(
                 id=splited_list[0],
                 login=splited_list[1],
@@ -182,7 +185,7 @@ def load_employees():
 def load_admins():
     with open(str(folder_path_that_contains_this_file)+"/files/admins.txt", "r", encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             new_rec = Admins(
                 id=splited_list[0],
                 employee_id=splited_list[1]
@@ -194,7 +197,7 @@ def load_admins():
 def load_project_costs():
     with open(str(folder_path_that_contains_this_file)+"/files/project_costs.txt", "r", encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             new_rec = ProjectCosts(
                 id=splited_list[0],
                 cost_id=splited_list[1],
@@ -208,7 +211,7 @@ def load_project_costs():
 def load_tasks():
     with open(str(folder_path_that_contains_this_file)+"/files/tasks.txt", "r", encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             new_rec = Tasks(
                 id=splited_list[0],
                 task_name=splited_list[1]
@@ -220,7 +223,7 @@ def load_tasks():
 def load_costs_tasks():
     with open(str(folder_path_that_contains_this_file)+"/files/costs_tasks.txt", "r",encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             new_rec = CostsTasks(
                 id=splited_list[0],
                 task_name_fk=splited_list[1],
@@ -234,7 +237,7 @@ def load_costs_tasks():
 def load_costs():
     with open(str(folder_path_that_contains_this_file)+"/files/costs.txt", "r", encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             new_rec = Costs(
                 id=splited_list[0],
                 cost_name=splited_list[1]
@@ -246,7 +249,7 @@ def load_costs():
 def load_records():
     with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "r", encoding="utf-8") as f:
         for line in f:
-            splited_list = line.split(",")
+            splited_list = clear_strings(line.split(","))
             need_info = list(map(int, splited_list[2:]))
             new_rec = Records(need_info[0],
                               need_info[1],
