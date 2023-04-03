@@ -49,13 +49,32 @@ def init_emp():
 def rev_rec():
     res = revise_records_for_ProjectCosts()
 
+# TIPS: Убрать в help funcs
+def clear_strings(str_list):
+    for i in range(len(str_list)):
+        str_list[i] = str_list[i].replace('\n', '')
+        str_list[i] = str_list[i].replace('\t', '')
+        if str_list[i][0] == ' ': 
+            str_list[i] = str_list[i].replace(' ', '', 1)
+    return str_list
+
+def delete_spaces_in(list_of_str:list):
+    while True:
+        try:
+            space_idx = list_of_str.index("")
+            list_of_str.pop(space_idx)
+        except Exception as e:
+            return " ".join(list_of_str)
+
 ### BACKUPS STARTS 
 @main.cli.command("admins_backup")
 def admins_backup():
     all_records = Admins.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/admins.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(admins_backup.name, "done.")
 
@@ -64,7 +83,9 @@ def costs_backup():
     all_records = Costs.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/costs.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(costs_backup.name, "done.")
 
@@ -73,7 +94,9 @@ def costs_tasks_backup():
     all_records = CostsTasks.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/costs_tasks.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(costs_tasks_backup.name, "done.")
 
@@ -82,7 +105,9 @@ def employees_backup():
     all_records = Employees.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/employees.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(employees_backup.name, "done.")
 
@@ -91,7 +116,9 @@ def gips_backup():
     all_records = GIPs.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/gips.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(gips_backup.name, "done.")
 
@@ -100,7 +127,10 @@ def projects_backup():
     all_records = Projects.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/projects.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            splited_list[1] = delete_spaces_in(splited_list[1].split(' '))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(projects_backup.name, "done.")
 
@@ -111,7 +141,9 @@ def project_costs_backup():
     all_records = ProjectCosts.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/project_costs.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(project_costs_backup.name, "done.")
 
@@ -121,7 +153,9 @@ def records_backup():
     all_records = Records.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(records_backup.name, "done.")
 
@@ -130,17 +164,14 @@ def tasks_backup():
     all_records = Tasks.query.all()
     with open(str(folder_path_that_contains_this_file)+"/files/tasks.txt", "w+", encoding="utf-8") as f:
         for record in all_records:
-            f.write(record.__repr__())
+            splited_list = clear_strings(record.__repr__().split(","))
+            joined_str = ','.join(splited_list)
+            f.write(joined_str)
             f.write('\n')
     print(tasks_backup.name, "done.")
 ### BACKUPS ENDS ###################################################################
 
-def clear_strings(str_list):
-    for i in range(len(str_list)):
-        str_list[i] = str_list[i].replace('\n', '')
-        str_list[i] = str_list[i].replace('\t', '')
-        str_list[i] = str_list[i].replace(' ', '', 1)
-    return str_list
+
 
 ### LOAD STARTS ####################################################################
 @main.cli.command("load_projects")
