@@ -7,7 +7,7 @@ from transliterate import translit
 from app import db
 from app.models import (
     Employees, Projects,
-    Costs, Tasks, ProjectCosts
+    Costs, Tasks, ProjectCosts, CostsTasks
 )
 from app import logger
 
@@ -18,9 +18,18 @@ def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
         for item in list_of_ditc:
             item["employee_id"] = db.session.get(Employees, item["employee_id"]).login
             item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
-            project_cost_id = db.session.get(ProjectCosts, item["cost_id"]).cost_name_fk
-            item["cost_id"] = db.session.get(Costs, project_cost_id).cost_name
-            item["task_id"] = db.session.get(Tasks, item["task_id"]).task_name
+            logger.info(f"item['cost_id']:{item['cost_id']}")
+            project_cost_id = db.session.get(ProjectCosts, item["cost_id"]).id
+            logger.info(f"project_cost_id:{project_cost_id}")
+            
+            CostTasks_id = CostsTasks.query.filter_by(cost_id=project_cost_id).first().task_name_fk
+            project_cost_name_id = db.session.get(ProjectCosts, item["cost_id"]).cost_name_fk
+            logger.info(f" CostTasks_id:{CostTasks_id}")
+            item["cost_id"] = db.session.get(Costs, project_cost_name_id).cost_name
+            
+            
+            logger.info(f" CostTasks_id:{CostTasks_id}")
+            item["task_id"] = db.session.get(Tasks, CostTasks_id).task_name
             cost_postfix = translit(item["cost_id"][:4], language_code='ru', reversed=True)
             if item["task_id"] == "blank_task":
                 item["task_id"] = item["employee_id"] + "_" + item["task_id"] + "_" + cost_postfix
