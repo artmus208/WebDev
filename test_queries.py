@@ -14,13 +14,14 @@ with app.app_context():
 
 with app.app_context():
     res:List[Records] = Records.get_last_5_records()
-    print("Before replacement:\n", res[0], sep="")
-    record_with_names = res[0].replace_ids_to_names(
-        EmployeesObj=Employees, ProjectsObj=Projects,
-        ProjectCostObj=ProjectCosts, CostsTasksObj=CostsTasks,
-        CostsObj=Costs, TasksObj=Tasks
-    )
-    print("After replacement:\n", record_with_names,sep='')
+    for r in res:
+        # print("Before replacement:\n", r, sep="")
+        record_with_names = r.replace_ids_to_names(
+            EmployeesObj=Employees, ProjectsObj=Projects,
+            ProjectCostObj=ProjectCosts, CostsTasksObj=CostsTasks,
+            CostsObj=Costs, TasksObj=Tasks
+        )
+        print("After replacement:\n", record_with_names,sep='')
 
 # with app.app_context():
 #     cost_name = Costs.query.filter_by(id=1).first().cost_name

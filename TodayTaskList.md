@@ -81,11 +81,13 @@ COLUMNS
             CostsTasksObj, CostsObj, TasksObj):
         emp_login = db.session.get(EmployeesObj, self.employee_id).login
         project_name = db.session.get(ProjectsObj, self.project_id).project_name
-        project_cost_name_fk_id = db.session.get(ProjectCostObj, self.cost_id).cost_name_fk
+        project_cost_name_fk_id = ProjectCostObj.query.filter_by(id=self.cost_id).first().cost_name_fk
         cost_name = db.session.get(CostsObj, project_cost_name_fk_id).cost_name
-        project_cost_tasks_name_fk_id = db.session.get(CostsTasksObj, project_cost_name_fk_id).task_name_fk
+        project_cost_tasks_name_fk_id = CostsTasksObj.query.filter_by(cost_id=self.cost_id).first().task_name_fk
         task_name = db.session.get(TasksObj, project_cost_tasks_name_fk_id).task_name
         return (self.id, self.time_created, emp_login, project_name, cost_name, task_name, self.hours, self.minuts)
+
+`blank_task` - это костыль!
 
 
 

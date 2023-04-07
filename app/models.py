@@ -69,19 +69,14 @@ class Records(db.Model, MyBaseClass):
             ProjectsObj, ProjectCostObj, 
             CostsTasksObj, CostsObj, TasksObj):
         emp_login = db.session.get(EmployeesObj, self.employee_id).login
-        print("emp_login", emp_login, sep=': ')
         project_name = db.session.get(ProjectsObj, self.project_id).project_name
-        print("project_name", project_name, sep=': ')
         project_cost_name_fk_id = ProjectCostObj.query.filter_by(id=self.cost_id).first().cost_name_fk
-        print("self.cost_id: ", self.cost_id)
-        print("project_cost_name_fk_id", project_cost_name_fk_id, sep=': ')
         cost_name = db.session.get(CostsObj, project_cost_name_fk_id).cost_name
-        print("cost_name", cost_name, sep=': ')
         project_cost_tasks_name_fk_id = CostsTasksObj.query.filter_by(cost_id=self.cost_id).first().task_name_fk
-        print("project_cost_tasks_name_fk_id", project_cost_tasks_name_fk_id, sep=': ')
         task_name = db.session.get(TasksObj, project_cost_tasks_name_fk_id).task_name
-        print("task_name", task_name, sep=': ')
-        return (self.id, self.time_created, emp_login, project_name, cost_name, task_name, self.hours, self.minuts)
+        return (self.id,
+                self.time_created.strftime("%d.%m.%Y %H:%M"),
+                emp_login, project_name, cost_name, task_name, self.hours, self.minuts)
         
 class Employees(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
