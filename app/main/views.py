@@ -323,7 +323,7 @@ def record():
     login = g.emp.login
     try:
         last_5_records = []
-        res:List[Records] = Records.get_last_5_records()
+        res:List[Records] = Records.get_last_5_records(emp_id=g.emp.id)
         for r in res:
             record_with_names = r.replace_ids_to_names(
                 EmployeesObj=Employees, ProjectsObj=Projects,

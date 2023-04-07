@@ -56,11 +56,14 @@ class Records(db.Model, MyBaseClass):
         return s
     
     @classmethod  
-    def get_last_5_records(cls):
+    def get_last_5_records(cls, emp_id=None):
         session = db.session
         select = db.select
         execute = session.execute
-        stmt = select(cls).order_by(cls.id.desc(), cls.time_created).limit(5)
+        if emp_id is None:
+            stmt = select(cls).order_by(cls.id.desc(), cls.time_created).limit(5)
+        else: 
+            stmt = select(cls).where(cls.employee_id == emp_id).order_by(cls.id.desc(), cls.time_created).limit(5)
         res = execute(stmt).scalars().fetchmany()
         return res
         

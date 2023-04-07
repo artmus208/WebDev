@@ -23,6 +23,16 @@ with app.app_context():
         print("After replacement:\n", record_with_names,sep='')
         
 
+with app.app_context():
+    res:List[Records] = Records.get_last_5_records(emp_id=34)
+    for r in res:
+        # print("Before replacement:\n", r, sep="")
+        record_with_names = r.replace_ids_to_names(
+            EmployeesObj=Employees, ProjectsObj=Projects,
+            ProjectCostObj=ProjectCosts,  CostsObj=Costs
+        )
+        print("After replacement:\n", record_with_names,sep='')
+
 # with app.app_context():
 #     cost_name = Costs.query.filter_by(id=1).first().cost_name
 #     print(Costs.query.filter_by(cost_name=cost_name).first().cost_name.__repr__())
