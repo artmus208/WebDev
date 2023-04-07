@@ -17,30 +17,30 @@ body{
     display: flex;
 }
 
-.login{
+.auth__login{
     display: flex;
     margin-top: 70px;
 }
 
-.logo{
+.auth__logo{
     margin-top: 140px;
     width: 300px;
     height: 68px;
 }
 
-.login_icon{
+.auth__login_icon{
     margin-right: 9px;
     width: 25px;
     height: 25px;
 }
 
-.password{
+.auth__password{
     display: flex;
     margin-left: 0px;
     margin-top: 35px;
 } 
 
-.password_icon{
+.auth__password_icon{
     width: 30px;
     height: 30px;
 }
@@ -50,13 +50,13 @@ body{
     font-size: 18px;
   }
 
-.enter:hover {
+.auth__enter:hover {
     background-color: #FFFFFF;
     border: 2px solid #4786FF;
     color:#4786FF;
 }
 
-.enter{
+.auth__enter{
     margin-top: 45px;
     width: 350px;
     height: 65px;
@@ -72,7 +72,7 @@ body{
     transition: color 0.2s linear;
 }
 
-.input_log{
+.auth__input_log{
     font-family: 'Inter';
     font-style: normal;
     font-size: 22px;
@@ -85,7 +85,7 @@ body{
     border-radius: 5px;
 }
 
-.input_pas{
+.auth__input_pas{
     font-family: 'Inter';
     font-style: normal;
     font-size: 22px;
@@ -98,14 +98,14 @@ body{
     border-radius: 5px;
 }
 
-.text{
+.auth__text{
     font-weight: 400;
     font-size: 22px;
     line-height: 27px;
     color: #69696A;
 }
 
-.reg-btn{
+.auth__reg-btn{
     margin-top: 20px;
     width: 350px;
     height: 65px;
@@ -122,7 +122,7 @@ body{
     transition: color 0.2s linear;
 }
 
-.reg-btn:hover {
+.auth__reg-btn:hover {
     background-color: #FFFFFF;
     border: 2px solid #4786FF;
     color:#4786FF;
@@ -183,36 +183,36 @@ body{
             display: flex;
         }
 
-        .login{
+        .auth__login{
             display: flex;
-            margin-top: 65px;
+            margin-top: 15%;
         }
 
-        .logo{
+        .auth__logo{
             margin-left: 55px;
-            margin-top: 143px;
+            margin-top: 35%;
             width: 165px;
             height: 55px;
         }
 
-        .login_icon{
+        .auth__login_icon{
             margin-right: 9px;
             width: 20px;
             height: 20px;
         }
 
-        .password{
+        .auth__password{
             display: flex;
             margin-left: 0px;
             margin-top: 20px;
         } 
 
-        .password_icon{
+        .auth__password_icon{
             width: 25px;
             height: 25px;
         }
 
-        .enter{
+        .auth__enter{
             margin-top: 30px;
             width: 300px;
             height: 60px;
@@ -230,13 +230,13 @@ body{
             color: #FFFFFF; 
         }
         
-        .enter:hover {
+        .auth__enter:hover {
             background-color: #FFFFFF;
             border: 2px solid #4786FF;
             color:#4786FF;
         }
 
-        .input_log{
+        .auth__input_log{
             display: block;
             margin-top: 7px;
             box-sizing: border-box;
@@ -253,7 +253,7 @@ body{
             line-height: 24px;
         }
 
-        .input_pas{
+        .auth__input_pas{
             display: block;
             margin-top: 7px;
             box-sizing: border-box;
@@ -270,7 +270,7 @@ body{
             line-height: 27px;
         }
 
-        .text{
+        .auth__text{
             font-family: 'Inter';
             font-style: normal;
             font-weight: 400;
@@ -279,7 +279,7 @@ body{
             color: #69696A;
         }
 
-        .reg-btn{
+        .auth__reg-btn{
             margin-top: 20px;
             width: 300px;
             height: 60px;
@@ -297,7 +297,7 @@ body{
             transition: color 0.2s linear;
         }
         
-        .reg-btn:hover {
+        .auth__reg-btn:hover {
             background-color: #FFFFFF;
             border: 2px solid #4786FF;
             color:#4786FF;

@@ -10,27 +10,27 @@
 <body>
     <div class="content">
         <form class="form-container" method="POST">
-            <img class="logo" src="{{url_for('static', filename='images/taskpesk.svg')}}"></img>
+            <img class="auth__logo" src="{{url_for('static', filename='images/taskpesk.svg')}}"></img>
 
             {% for cat, msg in get_flashed_messages(True) %}
                 <div class="space flash {{cat}}">{{msg}}</div>
             {% endfor %}
 
-            <div class="login">
-                <img class="login_icon" src="{{url_for('static', filename='images/user.png')}}"></img>
-                <label for="login" class="text">Логин</label>
+            <div class="auth__login">
+                <img class="auth__login_icon" src="{{url_for('static', filename='images/user.png')}}"></img>
+                <label for="login" class="auth__text">Логин</label>
             </div>
-            <div class="input_login">
-                <input name="login" placeholder="Инициалы на латинице" class="input_log"></input>
+            <div class="auth__input_login">
+                <input name="login" placeholder="Инициалы на латинице" class="auth__input_log"></input>
             </div>
-            <div class="password">
-                <img class="password_icon" src="{{url_for('static', filename='images/password.png')}}"></img>
-                <label for="password" class="text">Пароль</label>
+            <div class="auth__password">
+                <img class="auth__password_icon" src="{{url_for('static', filename='images/password.png')}}"></img>
+                <label for="password" class="auth__text">Пароль</label>
             </div>
-            <div class="input_password">
-                <input type="password" placeholder="Пароль от рабочей почты" name="password" class="input_pas"></input>
+            <div class="auth__input_password">
+                <input type="password" placeholder="Пароль от рабочей почты" name="password" class="auth__input_pas"></input>
             </div>
-            <button type="submit" class="enter">Регистрация</button>
+            <button type="submit" class="auth__enter">Регистрация</button>
         </form>
     </div>
 

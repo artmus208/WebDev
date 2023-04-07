@@ -536,3 +536,4 @@
 2023-03-30 17:26:39,713:app:WARNING:replace_id_to_name_in_record_dict fail has been ocured: 'NoneType' object has no attribute 'task_name'
 2023-03-30 17:26:39,714:app:WARNING:replace_id_to_name_in_record_dict fail has been ocured: 'NoneType' object is not iterable
 2023-03-30 18:07:38,426:app:WARNING:In edit_cat_cost fail: __init__() missing 1 required positional argument: 'cost_name'
+2023-03-31 19:29:27,258:app:WARNING:In record page fail has been ocured: 'NoneType' object has no attribute 'id'
