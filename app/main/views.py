@@ -193,10 +193,10 @@ def load_projects():
     with open(str(folder_path_that_contains_this_file)+"/files/projects.txt", "r", encoding="utf-8") as f:
         for line in f:
             splited_list = clear_strings(line.split(","))
-            new_rec = Projects(id=splited_list[0],
-                               p_name=splited_list[1],
-                               gip_id=int(splited_list[2])
-                              )
+            new_rec = Projects( id=splited_list[0],
+                                p_name=splited_list[1],
+                                gip_id=int(splited_list[2])
+                                )
             new_rec.save()
     print(load_projects.name, "done.")
 
@@ -208,7 +208,7 @@ def load_gips():
             new_rec = GIPs(
                 id=splited_list[0],
                 emp_id=splited_list[1]
-              )
+                )
             new_rec.save()
     print(load_gips.name, "done.")
 
@@ -221,7 +221,7 @@ def load_employees():
                 id=splited_list[0],
                 login=splited_list[1],
                 password=splited_list[2]
-              )
+                )
             new_rec.save()
     print(load_employees.name, "done.")
 
@@ -234,7 +234,7 @@ def load_admins():
             new_rec = Admins(
                 id=splited_list[0],
                 employee_id=splited_list[1]
-              )
+                )
             new_rec.save()
     print(load_admins.name, "done.")
 
@@ -248,7 +248,7 @@ def load_project_costs():
                 cost_id=splited_list[1],
                 man_days=splited_list[2],
                 project_id=splited_list[3]
-              )
+                )
             new_rec.save()
     print(load_project_costs.name, "done.")
 
@@ -260,7 +260,7 @@ def load_tasks():
             new_rec = Tasks(
                 id=splited_list[0],
                 task_name=splited_list[1]
-              )
+                )
             new_rec.save()
     print(load_tasks.name, "done.")
 
@@ -274,7 +274,7 @@ def load_costs_tasks():
                 task_name_fk=splited_list[1],
                 man_days=splited_list[2],
                 cost_id=splited_list[3]
-              )
+                )
             new_rec.save()
     print(load_costs_tasks.name, "done.")
 
@@ -286,7 +286,7 @@ def load_costs():
             new_rec = Costs(
                 id=splited_list[0],
                 cost_name=splited_list[1]
-              )
+                )
             new_rec.save()
     print(load_costs.name, "done.")
 
@@ -296,12 +296,12 @@ def load_records():
         for line in f:
             splited_list = clear_strings(line.split(","))
             need_info = list(map(int, splited_list[2:]))
-            new_rec = Records(need_info[0],
-                              need_info[1],
-                              need_info[2],
-                              need_info[3],
-                              need_info[4],
-                              need_info[5])
+            new_rec = Records(  need_info[0],
+                                need_info[1],
+                                need_info[2],
+                                need_info[3],
+                                need_info[4],
+                                need_info[5])
             new_rec.save()
     print(load_records.name, "done.")
 ### LOAD ENDS ######################################################################
@@ -334,7 +334,6 @@ def record():
             print("employee_id:",employee_id)
             # DONE:Правильно заносить записи с учётом новой таблицы ProjectsCosts 
             # [x]: 
-# BUG:      Все данные в БД записаны так '\nУправление проектом\n', то есть присутствуют лишние символы
             print(form.category_of_costs.data.__repr__())
             print(Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id)
             cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
@@ -376,7 +375,7 @@ def project_report():
             rec_list_dict = make_query_to_dict_list(records)
             rec_list_dict = replace_id_to_name_in_record_dict(rec_list_dict)
             old_dict = get_project_report_dict(all_records=rec_list_dict,
-                                               p_name=Projects.query.get(proj_id).project_name)
+                                                p_name=Projects.query.get(proj_id).project_name)
             new_dict = make_report_that_andrews_like(old_dict)
             return render_template('main/project_report.html', data=new_dict, returnBtn=returnBtn)
         else:
@@ -386,7 +385,6 @@ def project_report():
         time.sleep(1)
         return redirect(url_for('main.project_report'))
     
-
 
 
 @main.errorhandler(500)

@@ -4,3 +4,5 @@ venv
 log/
 docs/
 Backups/
+*.log
+test.txt

@@ -48,13 +48,40 @@ class Records(db.Model, MyBaseClass):
         self.hours = hours
         self.minuts = minuts
 
-
     def as_dict_name(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def __repr__(self) -> str:
         s = f"{self.id},{self.time_created},{self.employee_id},{self.project_id},{self.cost_id},{self.task_id},{self.hours},{self.minuts}"
         return s
+    
+    @classmethod  
+    def get_last_5_records(cls):
+        session = db.session
+        select = db.select
+        execute = session.execute
+        stmt = select(cls).order_by(cls.id.desc(), cls.time_created).limit(5)
+        res = execute(stmt).scalars().fetchmany()
+        return res
+        
+    def replace_ids_to_names(
+            self, EmployeesObj,
+            ProjectsObj, ProjectCostObj, 
+            CostsTasksObj, CostsObj, TasksObj):
+        emp_login = db.session.get(EmployeesObj, self.employee_id).login
+        print("emp_login", emp_login, sep=': ')
+        project_name = db.session.get(ProjectsObj, self.project_id).project_name
+        print("project_name", project_name, sep=': ')
+        project_cost_name_fk_id = ProjectCostObj.query.filter_by(id=self.cost_id).first().cost_name_fk
+        print("self.cost_id: ", self.cost_id)
+        print("project_cost_name_fk_id", project_cost_name_fk_id, sep=': ')
+        cost_name = db.session.get(CostsObj, project_cost_name_fk_id).cost_name
+        print("cost_name", cost_name, sep=': ')
+        project_cost_tasks_name_fk_id = CostsTasksObj.query.filter_by(cost_id=self.cost_id).first().task_name_fk
+        print("project_cost_tasks_name_fk_id", project_cost_tasks_name_fk_id, sep=': ')
+        task_name = db.session.get(TasksObj, project_cost_tasks_name_fk_id).task_name
+        print("task_name", task_name, sep=': ')
+        return (self.id, self.time_created, emp_login, project_name, cost_name, task_name, self.hours, self.minuts)
         
 class Employees(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
@@ -118,8 +145,9 @@ class Projects(db.Model, MyBaseClass):
         s = f"{self.id},{self.project_name},{self.gip_id}"
         return s
     
-    def __init__(self, id, p_name, gip_id):
-        self.id = id
+    def __init__(self, p_name, gip_id, id=None):
+        if id is not None:
+            self.id = id
         self.project_name = p_name
         self.gip_id = gip_id
 
@@ -132,7 +160,7 @@ class Projects(db.Model, MyBaseClass):
         return [(p.id, p.project_name) for p in db.session.execute(db.select(Projects).where(Projects.gip_id == gip_id)).scalars()]
 
     def as_dict_name(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}        
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}        
     
 
 class GIPs(db.Model, MyBaseClass):
