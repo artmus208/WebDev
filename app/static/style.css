@@ -3,13 +3,6 @@ body{
     height: 100%;
 }
 
-.container {
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 10px;
-    padding-right: 10px;
-    max-width: 1200px;
-}
 header{
     box-sizing: border-box;
     width: 100%;
@@ -257,4 +250,29 @@ content{
 
 .cat-cost-item{
     padding-bottom: 1%;
+}
+
+.container {
+    margin-left: 200px;
+    padding-left: 10px;
+    padding-right: 10px;
+    max-width: 1200px;
+}
+
+.main-container{
+    display: flex;
+}
+
+.last-5-records{
+    margin-top: 50px;
+    margin-left: 50px;
+    padding-left: 20px;
+    padding-top: 50px;
+    border-left: 3px solid #4787ffbc;
+}
+.last-5-records_li{
+    padding-bottom: 50px;
+}
+li::marker{
+    color: #095efdbc;
 }

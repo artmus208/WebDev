@@ -18,10 +18,10 @@ with app.app_context():
         # print("Before replacement:\n", r, sep="")
         record_with_names = r.replace_ids_to_names(
             EmployeesObj=Employees, ProjectsObj=Projects,
-            ProjectCostObj=ProjectCosts, CostsTasksObj=CostsTasks,
-            CostsObj=Costs, TasksObj=Tasks
+            ProjectCostObj=ProjectCosts,  CostsObj=Costs
         )
         print("After replacement:\n", record_with_names,sep='')
+        
 
 # with app.app_context():
 #     cost_name = Costs.query.filter_by(id=1).first().cost_name

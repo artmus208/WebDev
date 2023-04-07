@@ -1,4 +1,4 @@
-
+from typing import List
 import time
 import pathlib
 
@@ -322,6 +322,14 @@ def index():
 def record():
     login = g.emp.login
     try:
+        last_5_records = []
+        res:List[Records] = Records.get_last_5_records()
+        for r in res:
+            record_with_names = r.replace_ids_to_names(
+                EmployeesObj=Employees, ProjectsObj=Projects,
+                ProjectCostObj=ProjectCosts, CostsObj=Costs
+            )
+            last_5_records.append(record_with_names)
         form = RecordsForm()
         costs_name_list = Costs.get_costs_names()
         projects_name_id_list = Projects.get_projects_id_name_list()
@@ -331,29 +339,30 @@ def record():
         if form.is_submitted():
             project_id = int(form.project_name.data)
             employee_id = Employees.query.filter_by(login=login).first().id
-            print("employee_id:",employee_id)
+            # print("employee_id:",employee_id)
             # DONE:Правильно заносить записи с учётом новой таблицы ProjectsCosts 
             # [x]: 
-            print(form.category_of_costs.data.__repr__())
-            print(Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id)
+            # print(form.category_of_costs.data.__repr__())
+            # print(Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id)
             cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
-            print("cost_id:",cost_id)
+            # print("cost_id:",cost_id)
             cost_id_ = ProjectCosts.query.filter_by(cost_name_fk=cost_id, project_id=project_id).first().id
-            print("cost_id_:",cost_id_)
+            # print("cost_id_:",cost_id_)
             task_id = Tasks.query.filter_by(task_name=form.task.data).first().id     
-            print("task_id:", task_id)
+            # print("task_id:", task_id)
             task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id_).first().id
-            print("task_id_:",task_id_)
+            # print("task_id_:",task_id_)
             # print(project_id, cost_id, cost_id_, task_id, task_id_)
             hours = form.hours.data
             minuts = form.minuts.data
-            print("Hours:", hours, "Minuts:", minuts)
+            # print("Hours:", hours, "Minuts:", minuts)
             rec = Records(employee_id, project_id, cost_id_, task_id_, hours, minuts)
             rec.save()
             flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))
         else:
-            return render_template('main/records.html', form=form, login=login)
+            return render_template('main/records.html', form=form,
+                                    login=login, last_5_records=last_5_records)
     except Exception as e:
         logger.warning(f"In record page fail has been ocured: {e}")
         flash('Что-то пошло не так...', category="error")
