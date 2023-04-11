@@ -83,6 +83,8 @@ def edit_cat_cost():
                 new_cost_id = Costs.get_id_by_name(cost_name)
                 new_cost_in_project = ProjectCosts(new_cost_id, man_days, selected_project_id)
                 new_cost_in_project.save()
+                new_cost_task = CostsTasks(1, 100, ProjectCosts.query.order_by(ProjectCosts.id.desc()).first().id)
+                new_cost_task.save()
             # Если пытаются отредактировать старую статью
             print("Элемент из списка:", old_cost_name_id)
             if old_cost_name_id != "default":

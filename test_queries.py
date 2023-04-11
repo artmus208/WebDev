@@ -33,6 +33,9 @@ with app.app_context():
         )
         print("After replacement:\n", record_with_names,sep='')
 
+with app.app_context():
+    print(f"ProjectCosts.query.first().id: {ProjectCosts.query.order_by(ProjectCosts.id.desc()).first().id}")
+
 # with app.app_context():
 #     cost_name = Costs.query.filter_by(id=1).first().cost_name
 #     print(Costs.query.filter_by(cost_name=cost_name).first().cost_name.__repr__())
