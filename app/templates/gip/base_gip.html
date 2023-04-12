@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='gip_style.css' ) }}">
+{% endblock stylesheet %}
 {% block content %}
 <div class="container">
     <div class="content__inner">

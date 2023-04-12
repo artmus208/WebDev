@@ -1,0 +1,59 @@
+.content__p_gips{
+    width: 800px;
+    margin-top: 20px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px; 
+}
+
+.btn-success_gips{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    width: 255px;
+    height: 60px;
+    background: #4786FF;
+    text-decoration: none;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    border: 0cm; 
+}
+
+.btn-success_gips:hover {
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+}
+
+.input__gips-redactor{
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: block;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    width: 250px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+::placeholder {
+    color:#dad7d7;
+    font-size: 20px;
+  }
+
+b{
+    text-decoration: solid;
+    color: #000000;
+    font-weight: 500;
+}
