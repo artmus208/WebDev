@@ -6,35 +6,41 @@ from app.models import (
     Costs, Records,
     Employees, ProjectCosts, CostsTasks, Tasks)
 from app import helper_functions
-
-
-with app.app_context():
-    res = Records.get_last_5_records()
-    [print(i, item, type(item)) for i, item in enumerate(res)]
+from app import select, execute
 
 with app.app_context():
-    res:List[Records] = Records.get_last_5_records()
-    for r in res:
-        # print("Before replacement:\n", r, sep="")
-        record_with_names = r.replace_ids_to_names(
-            EmployeesObj=Employees, ProjectsObj=Projects,
-            ProjectCostObj=ProjectCosts,  CostsObj=Costs
-        )
-        print("After replacement:\n", record_with_names,sep='')
+    res = execute(
+        select(Records)
+    ).first()
+    print(res)
+
+# with app.app_context():
+#     res = Records.get_last_5_records()
+#     [print(i, item, type(item)) for i, item in enumerate(res)]
+
+# with app.app_context():
+#     res:List[Records] = Records.get_last_5_records()
+#     for r in res:
+#         # print("Before replacement:\n", r, sep="")
+#         record_with_names = r.replace_ids_to_names(
+#             EmployeesObj=Employees, ProjectsObj=Projects,
+#             ProjectCostObj=ProjectCosts,  CostsObj=Costs
+#         )
+#         print("After replacement:\n", record_with_names,sep='')
         
 
-with app.app_context():
-    res:List[Records] = Records.get_last_5_records(emp_id=34)
-    for r in res:
-        # print("Before replacement:\n", r, sep="")
-        record_with_names = r.replace_ids_to_names(
-            EmployeesObj=Employees, ProjectsObj=Projects,
-            ProjectCostObj=ProjectCosts,  CostsObj=Costs
-        )
-        print("After replacement:\n", record_with_names,sep='')
+# with app.app_context():
+#     res:List[Records] = Records.get_last_5_records(emp_id=34)
+#     for r in res:
+#         # print("Before replacement:\n", r, sep="")
+#         record_with_names = r.replace_ids_to_names(
+#             EmployeesObj=Employees, ProjectsObj=Projects,
+#             ProjectCostObj=ProjectCosts,  CostsObj=Costs
+#         )
+#         print("After replacement:\n", record_with_names,sep='')
 
-with app.app_context():
-    print(f"ProjectCosts.query.first().id: {ProjectCosts.query.order_by(ProjectCosts.id.desc()).first().id}")
+# with app.app_context():
+#     print(f"ProjectCosts.query.first().id: {ProjectCosts.query.order_by(ProjectCosts.id.desc()).first().id}")
 
 # with app.app_context():
 #     cost_name = Costs.query.filter_by(id=1).first().cost_name
@@ -64,4 +70,5 @@ with app.app_context():
 #         select(Projects).where(Projects.gip_id == 1)
 #     ).scalars()
 #     print(res.all())
+
 

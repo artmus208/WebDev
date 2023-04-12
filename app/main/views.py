@@ -27,8 +27,21 @@ from app.reports_makers import (
     get_project_report_dict,
     replace_id_to_name_in_record_dict)
 
+from app import select, execute
+
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
+
+@main.before_app_first_request
+def ping_connect():
+    try:
+        logger.info("Ping DB")
+        res = execute(
+            select(Records)
+        ).first()
+    except:
+        logger.warning("Ping DB")
+    
 
 # DONE:
 #  [x]: Реструктурировать все таблицы с Costs, главным образом в отчетах

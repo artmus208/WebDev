@@ -4,7 +4,6 @@ import pathlib
 import os
 
 from flask import Flask, redirect, render_template, url_for, jsonify, flash
-
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from app.config import Config
@@ -58,6 +57,12 @@ def setup_logger():
 
 logger = setup_logger()
 app, db = create_app_db()
+select = db.select
+execute = db.session.execute
+
+
+
+
 from app.main.views import main
 from app.auth.views import auth
 from app.gip.views import gip
