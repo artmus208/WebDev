@@ -1,4 +1,4 @@
-from app import db
+from app import db, select, execute
 from sqlalchemy.sql import func
 from passlib.hash import bcrypt
 
@@ -56,10 +56,34 @@ class Records(db.Model, MyBaseClass):
         return s
     
     @classmethod  
+    def get_all_employee_records(cls, employee_id):
+        return execute(select(cls).where(cls.employee_id==employee_id)).scalars().all()
+
+    @classmethod
+    def get_all_employee_projects_id(cls, employee_id):
+        return execute(select(cls.project_id).where(cls.employee_id==employee_id)).scalars().all()
+
+    @classmethod
+    def get_all_employee_cat_costs_id(cls, employee_id, project_id):
+        return execute(
+            select(cls.cost_id).where(
+            cls.employee_id == employee_id,
+            cls.project_id == project_id
+            )).scalars().all()
+
+    @classmethod
+    def get_records_by_emp_proj_cat(cls, employee_id, project_id, cat_cost_id):
+        res = execute(
+            select(cls).where(
+            cls.employee_id == employee_id,
+            cls.project_id == project_id,
+            cls.cost_id == cat_cost_id
+            )).scalars().all()
+        return [(r.time_created.strftime("%d.%m.%Y %H:%M"), r.hours, r.minuts) for r in res]
+    
+
+    @classmethod  
     def get_last_5_records(cls, emp_id=None):
-        session = db.session
-        select = db.select
-        execute = session.execute
         if emp_id is None:
             stmt = select(cls).order_by(cls.id.desc(), cls.time_created).limit(5)
         else: 
@@ -115,6 +139,12 @@ class Employees(db.Model, MyBaseClass):
     def get_by_login(cls, login):
         return cls.query.filter_by(login=login).first()
 
+    @classmethod
+    def get_login_by_id(cls, id):
+        return execute(
+            select(cls.login).where(cls.id==id)
+        ).scalar()
+
     def register(self):
         try:
             db.session.add(self)
@@ -159,6 +189,12 @@ class Projects(db.Model, MyBaseClass):
     @classmethod
     def get_projects_id_name_list_gip(self, gip_id):
         return [(p.id, p.project_name) for p in db.session.execute(db.select(Projects).where(Projects.gip_id == gip_id)).scalars()]
+
+    @classmethod
+    def get_project_name_by_id(cls, id):
+        return execute(
+            select(cls.project_name).where(cls.id == id)
+        ).scalar()
 
     def as_dict_name(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}        
@@ -290,7 +326,15 @@ class ProjectCosts(db.Model, MyBaseClass):
             r = [[c.id, c.man_days] for c in q] 
         return r
 
-
+    @classmethod
+    def get_cat_cost_name_by_id(cls, id):
+        cat_cost_fk = execute(
+            select(cls.cost_name_fk).where(cls.id == id)
+        ).scalar()
+        name = execute(
+            select(Costs.cost_name).where(Costs.id == cat_cost_fk)
+        ).scalar()
+        return name
 
 class Tasks(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)

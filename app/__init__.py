@@ -61,8 +61,6 @@ select = db.select
 execute = db.session.execute
 
 
-
-
 from app.main.views import main
 from app.auth.views import auth
 from app.gip.views import gip

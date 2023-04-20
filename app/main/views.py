@@ -143,6 +143,10 @@ def add_project():
         return redirect(url_for('main.add_project'))
 
 
+@main.route("/emp-report/<int:emp_id>", methods=["POST", "GET"])
+def emp_report(emp_id):
+    pass
+
 @main.errorhandler(500)
 def handle_error(err):
     headers = err.data.get('headers', None)

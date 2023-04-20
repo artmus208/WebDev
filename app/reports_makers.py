@@ -6,7 +6,7 @@ from transliterate import translit
 
 from app import db
 from app.models import (
-    Employees, Projects,
+    Employees, Projects, Records,
     Costs, Tasks, ProjectCosts, CostsTasks
 )
 from app import logger
@@ -160,6 +160,30 @@ def make_report_that_andrews_like(old_report: List[Dict]):
     else:
         return "None"
 
+
+def report_about_employee(employee_id):
+    print(f"Отчет по сотруднику с id: {employee_id}|{Employees.get_login_by_id(employee_id)}")
+    projects_id = set(Records.get_all_employee_projects_id(employee_id))
+    sum_proj_time = 0
+    sum_cat_cost_time = 0
+    sum_general_time = 0
+    for ip, p_id in enumerate(projects_id):
+        print(f"{ip+1}. {Projects.get_project_name_by_id(p_id)}")
+        costs_id = set(Records.get_all_employee_cat_costs_id(employee_id, p_id))
+
+        for ic, c_id in enumerate(costs_id):
+            print(f"\t {ic+1}. {ProjectCosts.get_cat_cost_name_by_id(c_id)}")
+            times = Records.get_records_by_emp_proj_cat(employee_id, p_id, c_id)
+            for it, time in enumerate(times):
+                print(f"\t\t {it+1}. {time[0]}: {time[1]} ч. {time[2]} мин.")
+                sum_proj_time += time[1]*60 + time[2]
+                sum_cat_cost_time += time[1]*60 + time[2]
+                sum_general_time += time[1]*60 + time[2]
+            print(f"\tОбщее время труда в статье расходов: {sum_cat_cost_time//60} ч. {sum_cat_cost_time%60} мин.")    
+            sum_cat_cost_time = 0
+        print(f"Общее время труда в проекте: {sum_proj_time//60} ч. {sum_proj_time%60} мин.")
+        sum_proj_time = 0
+    print(f"Общие трудозатраты сотрудника за весь период: {sum_general_time//60} ч. {sum_general_time%60} мин.")
 
 if __name__ == "__main__":
     res = get_project_report_dict(all_records=list_of_dicts,p_name="Project 1")
