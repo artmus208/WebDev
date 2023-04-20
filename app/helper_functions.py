@@ -22,6 +22,22 @@ projects_name_list = ["22П46 	Балтика СПб Термоупаковщи�
 "22П29       СтройЭнергоКом Диспетчеризация котельных",
 "Разработка этого сайта"]
 
+def clear_strings(str_list):
+    for i in range(len(str_list)):
+        str_list[i] = str_list[i].replace('\n', '')
+        str_list[i] = str_list[i].replace('\t', '')
+        if str_list[i][0] == ' ': 
+            str_list[i] = str_list[i].replace(' ', '', 1)
+    return str_list
+
+def delete_spaces_in(list_of_str:list):
+    while True:
+        try:
+            space_idx = list_of_str.index("")
+            list_of_str.pop(space_idx)
+        except Exception as e:
+            return " ".join(list_of_str)
+
 
 def none_or_value(value):
     if value == "None":
