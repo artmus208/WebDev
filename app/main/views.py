@@ -92,6 +92,50 @@ def project_report():
         return redirect(url_for('main.project_report'))
     
 
+@main.route('/add-project', methods = ['GET', 'POST'])
+def add_project():
+    emp = g.emp
+    if emp is None:
+        return redirect(url_for('auth.login'))
+    try:
+        form = ProjectAddForm()
+        form.gip.choices = GIPs.get_gips_id_names()
+        form.cat_costs.choices = Costs.get_costs_id_names()
+        if request.method == "POST":
+            if form.validate_on_submit():
+                logger.info(
+                    ','.join((form.code.data,
+                    form.name.data,
+                    '|'.join(list(map(str, form.cat_costs.data))),
+                    form.gip.data)
+                    ))
+                new_project = Projects(
+                    p_name=form.name.data,
+                    code=form.code.data,
+                    gip_id=int(form.gip.data)
+                    )
+                new_project.save()
+                for cost_id_fk in form.cat_costs.data:
+                    new_project_costs = ProjectCosts(
+                                        cost_id=cost_id_fk,
+                                        man_days=100,
+                                        project_id=new_project.id)
+                    new_project_costs.save()
+                    new_costs_tasks = CostsTasks(
+                        task_name_fk=1,
+                        man_days=100,
+                        cost_id=new_project_costs.id)
+                    new_costs_tasks.save()
+                flash("Проект добавлен", category='success')
+            else: 
+                flash("Возникли ошибки при заполнении формы", category='error')
+        return render_template("main/add_project.html", form=form)
+    except Exception as e:
+        flash("Произошла ошибка. Проект не добавлен", category='error')
+        logger.warning(f"add_project: {e}")
+        time.sleep(1)
+        return redirect(url_for('main.add_project'))
+
 
 @main.errorhandler(500)
 def handle_error(err):

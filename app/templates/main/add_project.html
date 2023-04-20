@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+    <div class="container">
+        <div class="content__inner">
+            <div class="space">
+                {% for cat, msg in get_flashed_messages(True) %}
+                    <div class="space flash {{cat}}">{{msg}}</div>
+                {% endfor %}
+                {% for field, errors in form.errors.items() %}
+                    <div class="alert alert-error">
+                        Поле: "{{ form[field].label }}" {{ ', '.join(errors) }}
+                    </div>
+                {% endfor %}
+            </div>
+            <form method="POST" action="{{ url_for('main.add_project') }}">
+                {{ form.csrf_token }}
+                <p>{{ form.code.label }}</p>
+                <p>{{ form.code }}</p>
+                <p>{{ form.name.label }}</p>
+                <p>{{ form.name }}</p>
+                <p>{{ form.cat_costs.label }}</p>
+                <p>{{ form.cat_costs }}</p>
+                <p>{{ form.gip.label }}</p>
+                <p>{{ form.gip }}</p>
+                <p>{{ form.submit }}</p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

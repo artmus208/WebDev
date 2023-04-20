@@ -8,11 +8,17 @@ from app.models import (
 from app import helper_functions
 from app import select, execute
 
+# with app.app_context():
+#     res = execute(
+#         select(Records)
+#     ).first()
+#     print(res)
+
+
 with app.app_context():
-    res = execute(
-        select(Records)
-    ).first()
-    print(res)
+    res = Costs.get_costs_id_names()
+    for r in res:
+        print(r)
 
 # with app.app_context():
 #     res = Records.get_last_5_records()

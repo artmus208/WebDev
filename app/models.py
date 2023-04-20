@@ -142,10 +142,13 @@ class Projects(db.Model, MyBaseClass):
         s = f"{self.id},{self.project_name},{self.gip_id}"
         return s
     
-    def __init__(self, p_name, gip_id, id=None):
-        if id is not None:
+    def __init__(self, p_name, gip_id, id=None, code=None):
+        if code is not None:
+            self.project_name = " ".join([code, p_name])
+        elif id is not None:
             self.id = id
-        self.project_name = p_name
+        else:
+            self.project_name = p_name
         self.gip_id = gip_id
 
     @classmethod
@@ -174,6 +177,14 @@ class GIPs(db.Model, MyBaseClass):
         self.id = id
         self.employee_id = emp_id
 
+    @classmethod
+    def get_gips_id_names(cls):
+        all_gips = cls.query.all()
+        res = [(-1, "ГИП")]
+        for gip in all_gips:
+            emp_login = db.session.get(Employees, gip.employee_id).login
+            res.append((gip.id, emp_login))
+        return res
 
 class Costs(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
@@ -194,6 +205,10 @@ class Costs(db.Model, MyBaseClass):
     @classmethod
     def get_costs_names(self):
         return [c.cost_name for c in db.session.execute(db.select(self)).scalars()]
+    
+    @classmethod
+    def get_costs_id_names(self):
+        return [(c.id, c.cost_name) for c in db.session.execute(db.select(self)).scalars()]
     
     @classmethod
     def get_name_by_id(cls, fk_id):
