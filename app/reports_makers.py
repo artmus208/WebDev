@@ -163,13 +163,13 @@ def make_report_that_andrews_like(old_report: List[Dict]):
 
 def report_about_employee(employee_id):
     print(f"Отчет по сотруднику с id: {employee_id}|{Employees.get_login_by_id(employee_id)}")
-    projects_id = set(Records.get_all_employee_projects_id(employee_id))
+    projects_id = Records.get_all_employee_projects_id(employee_id)
     sum_proj_time = 0
     sum_cat_cost_time = 0
     sum_general_time = 0
     for ip, p_id in enumerate(projects_id):
         print(f"{ip+1}. {Projects.get_project_name_by_id(p_id)}")
-        costs_id = set(Records.get_all_employee_cat_costs_id(employee_id, p_id))
+        costs_id = Records.get_all_employee_cat_costs_id(employee_id, p_id)
 
         for ic, c_id in enumerate(costs_id):
             print(f"\t {ic+1}. {ProjectCosts.get_cat_cost_name_by_id(c_id)}")

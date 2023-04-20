@@ -1,4 +1,4 @@
-from app import db, select, execute
+from app import db, select, execute, app
 from sqlalchemy.sql import func
 from passlib.hash import bcrypt
 
@@ -61,15 +61,15 @@ class Records(db.Model, MyBaseClass):
 
     @classmethod
     def get_all_employee_projects_id(cls, employee_id):
-        return execute(select(cls.project_id).where(cls.employee_id==employee_id)).scalars().all()
+        return set(execute(select(cls.project_id).where(cls.employee_id==employee_id)).scalars().all())
 
     @classmethod
     def get_all_employee_cat_costs_id(cls, employee_id, project_id):
-        return execute(
+        return set(execute(
             select(cls.cost_id).where(
             cls.employee_id == employee_id,
             cls.project_id == project_id
-            )).scalars().all()
+            )).scalars().all())
 
     @classmethod
     def get_records_by_emp_proj_cat(cls, employee_id, project_id, cat_cost_id):
