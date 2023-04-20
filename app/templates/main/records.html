@@ -17,6 +17,7 @@
                         <p>{{form.project_name.label(class="list_text")}}</p>
                         <p>{{form.project_name(class="project_list")}} </p>
                     </div>
+                    <a href="{{url_for('main.add_project')}}" class="gips-btn">Нет проекта в списке?</a>
                     <div class="cost_list">
                         <p>{{form.category_of_costs.label(class="list_text")}} </p>
                         <p>{{form.category_of_costs(class="cost_list_list")}} </p>

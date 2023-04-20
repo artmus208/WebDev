@@ -99,7 +99,7 @@ def add_project():
         return redirect(url_for('auth.login'))
     try:
         form = ProjectAddForm()
-        form.gip.choices = GIPs.get_gips_id_names()
+        form.gip.choices = Employees.get_id_logins()
         form.cat_costs.choices = Costs.get_costs_id_names()
         if request.method == "POST":
             if form.validate_on_submit():
@@ -109,10 +109,16 @@ def add_project():
                     '|'.join(list(map(str, form.cat_costs.data))),
                     form.gip.data)
                     ))
+                if int(form.gip.data) not in GIPs.get_emp_id_in_gips():
+                    new_gip = GIPs(int(form.gip.data))
+                    new_gip.save()
+                    gip_id = new_gip.id
+                else:
+                    gip_id = GIPs.get_by_employee_id(int(form.gip.data)).id
                 new_project = Projects(
                     p_name=form.name.data,
                     code=form.code.data,
-                    gip_id=int(form.gip.data)
+                    gip_id=gip_id
                     )
                 new_project.save()
                 for cost_id_fk in form.cat_costs.data:

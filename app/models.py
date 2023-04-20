@@ -102,13 +102,14 @@ class Employees(db.Model, MyBaseClass):
     def as_dict_name(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
+    @classmethod
+    def get_id_logins(cls):
+        return [(emp.id, emp.login) for emp in cls.query.all()] 
 
-        
+
     @classmethod
     def get_all_logins(cls):
         return [emp.login for emp in db.session.execute(db.select(cls)).scalars()]
-
-
 
     @classmethod
     def get_by_login(cls, login):
@@ -173,8 +174,9 @@ class GIPs(db.Model, MyBaseClass):
     def __repr__(self) -> str:
         return f"{self.id},{self.employee_id}"
 
-    def __init__(self, id, emp_id):
-        self.id = id
+    def __init__(self, emp_id, id=None):
+        if id is not None:
+            self.id = id
         self.employee_id = emp_id
 
     @classmethod
@@ -185,7 +187,14 @@ class GIPs(db.Model, MyBaseClass):
             emp_login = db.session.get(Employees, gip.employee_id).login
             res.append((gip.id, emp_login))
         return res
-
+    
+    @classmethod
+    def get_emp_id_in_gips(cls):
+        return [gip.employee_id for gip in cls.query.all()]
+    
+    @classmethod
+    def get_by_employee_id(cls, employee_id):
+        return cls.query.filter_by(employee_id=employee_id).first()
 class Costs(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
