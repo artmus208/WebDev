@@ -51,7 +51,7 @@ class ProjectAddForm(FlaskForm):
     gip = SelectField(u"ГИП проекта:")
     def validate_gip(form, field):
         if int(field.data) == -1:
-            raise ValidationError("пожалуйста, выберите ГИПа проекта")
+            raise ValidationError("Не забудьте назначить ГИПа")
     submit = SubmitField("Добавить")
 
     

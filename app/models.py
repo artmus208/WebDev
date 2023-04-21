@@ -128,7 +128,7 @@ class Employees(db.Model, MyBaseClass):
 
     @classmethod
     def get_id_logins(cls):
-        return [(emp.id, emp.login) for emp in cls.query.all()] 
+        return [(-1, "ГИП")] + [(emp.id, emp.login) for emp in cls.query.all()] 
 
 
     @classmethod

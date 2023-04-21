@@ -17,9 +17,9 @@
             <form method="POST" action="{{ url_for('main.add_project') }}">
                 {{ form.csrf_token }}
                 <p>{{ form.code.label }}</p>
-                <p>{{ form.code }}</p>
+                <p>{{ form.code(placeholder="Например, 23П99") }}</p>
                 <p>{{ form.name.label }}</p>
-                <p>{{ form.name }}</p>
+                <p>{{ form.name(placeholder="Например, Ультрамар СПМ-02", size="38") }}</p>
                 <p>{{ form.cat_costs.label }}</p>
                 <p>{{ form.cat_costs }}</p>
                 <p>{{ form.gip.label }}</p>

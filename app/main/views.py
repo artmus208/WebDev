@@ -135,6 +135,7 @@ def add_project():
                 flash("Проект добавлен", category='success')
             else: 
                 flash("Возникли ошибки при заполнении формы", category='error')
+            return redirect(url_for("main.add_project"))
         return render_template("main/add_project.html", form=form)
     except Exception as e:
         flash("Произошла ошибка. Проект не добавлен", category='error')
