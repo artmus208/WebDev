@@ -62,9 +62,10 @@ class ReportFormEmp(FlaskForm):
     def validate_employee(form, field):
         if int(field.data) == -1:
             raise ValidationError("Пожалуйста, выберите сотрудника")    
-    is_all_period = BooleanField("За весь период:", render_kw = {"checked": True})
-    lower_date = DateField("Дата от: ")
-    upper_date = DateField("Дата до: ")
+    is_all_period = BooleanField("За весь период:", 
+                                render_kw = {"checked": True, "onchange":"disable_date(this)"})
+    lower_date = DateField("Дата от: ", render_kw = {"disabled": True})
+    upper_date = DateField("Дата до: ", render_kw = {"disabled": True})
     submit = SubmitField("Показать отчет")
 
 

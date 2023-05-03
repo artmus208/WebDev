@@ -12,14 +12,14 @@
                     {% endfor %}
                     {% for field, errors in form.errors.items() %}
                         <div class="alert alert-error">
-                            Ошибка заполнения в: "{{ form[field].label }}" {{ ', '.join(errors) }}
+                            {{ ', '.join(errors) }}
                         </div>
                     {% endfor %}
                 </div>
-                <form method="POST" action="{{ url_for('main.add_project') }}">
+                <form method="POST" action="{{ url_for('main.emp_report') }}">
                     {{ form.csrf_token }}
                     <p>{{ form.employee.label }}</p> <p>{{ form.employee }}</p>
-                    <p>{{ form.is_all_period.label }}</p> {{ form.is_all_period }}
+                    <div style="display: block;"> {{ form.is_all_period.label }} {{ form.is_all_period }} </div>
                     <p>{{ form.lower_date.label }}</p> <p>{{ form.lower_date }}</p>
                     <p>{{ form.upper_date.label }}</p> <p>{{ form.upper_date }}</p>
                     <p>{{ form.submit }}</p>

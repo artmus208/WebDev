@@ -180,14 +180,23 @@ def emp_report():
     if emp is None:
         return redirect(url_for('auth.login'))
     form = ReportFormEmp()
+    # Перезапись ключевых слов при отображении полей
+    # form.lower_date.render_kw = {"min": "2023-04-03"}
+    # form.lower_date.render_kw = {"max": "2023-05-03"}
+    # form.upper_date.render_kw = {"min": "2023-04-03"}
+    # form.upper_date.render_kw = {"max": "2023-05-03"}
+
     form.employee.choices = Employees.get_id_logins()
-    if request.method == "GET":
-        return render_template('main/emp_report.html', form=form)
     try:
+        if request.method == "GET":
+            return render_template('main/emp_report.html', form=form)
         if form.validate_on_submit():
             flash("Отчет ниже:", category='success')    
-            logger.info(f"Дата от: {form.lower_date.data}")
-            logger.info(f"Дата до: {form.upper_date.data}")
+            logger.info(f"Date from: {form.lower_date.data}, {type(form.lower_date.data)}")
+            logger.info(f"Date to: {form.upper_date.data}, {type(form.upper_date.data)}")
+            return render_template('main/emp_report.html', form=form)
+        else:
+            flash("Произошла ошибка заполнения формы", category='error')
             return render_template('main/emp_report.html', form=form)
     except Exception as e:
         flash("Произошла ошибка генерации отчета сотрудника.", category='error')
