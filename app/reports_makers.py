@@ -170,7 +170,6 @@ def report_about_employee(employee_id):
     for ip, p_id in enumerate(projects_id):
         print(f"{ip+1}. {Projects.get_project_name_by_id(p_id)}")
         costs_id = Records.get_all_employee_cat_costs_id(employee_id, p_id)
-
         for ic, c_id in enumerate(costs_id):
             print(f"\t {ic+1}. {ProjectCosts.get_cat_cost_name_by_id(c_id)}")
             times = Records.get_records_by_emp_proj_cat(employee_id, p_id, c_id)
@@ -184,6 +183,9 @@ def report_about_employee(employee_id):
         print(f"Общее время труда в проекте: {sum_proj_time//60} ч. {sum_proj_time%60} мин.")
         sum_proj_time = 0
     print(f"Общие трудозатраты сотрудника за весь период: {sum_general_time//60} ч. {sum_general_time%60} мин.")
+
+
+
 
 if __name__ == "__main__":
     res = get_project_report_dict(all_records=list_of_dicts,p_name="Project 1")

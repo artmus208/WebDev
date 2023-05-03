@@ -144,16 +144,6 @@ def add_project():
         return redirect(url_for('main.add_project'))
 
 
-@main.context_processor
-def utility_processor():
-    return dict(
-        get_login_by_id = Employees.get_login_by_id,
-        get_all_employee_projects_id = Records.get_all_employee_projects_id,
-        get_project_name_by_id = Projects.get_project_name_by_id,
-        get_all_employee_cat_costs_id = Records.get_all_employee_cat_costs_id,
-        get_cat_cost_name_by_id = ProjectCosts.get_cat_cost_name_by_id,
-        get_records_by_emp_proj_cat = Records.get_records_by_emp_proj_cat
-    )
 
 @main.route("/emp-report/<int:emp_id>", methods=["POST", "GET"])
 def emp_report(emp_id):
@@ -168,9 +158,12 @@ def emp_report(emp_id):
         time.sleep(1)
         return redirect(url_for('main.record'))
 
-
-
-
+@main.route("/test_j2", methods=["POST", "GET"])
+def test_j2():
+    data = {
+        "name": "Artur"
+    }
+    return render_template("main/test_j2.html", data=data)
 
 @main.errorhandler(500)
 def handle_error(err):
