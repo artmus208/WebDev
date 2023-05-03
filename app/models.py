@@ -73,12 +73,18 @@ class Records(db.Model, MyBaseClass):
                                             )).scalars().all())
 
     @classmethod
-    def get_all_employee_cat_costs_id(cls, employee_id, project_id):
-        return set(execute(
-            select(cls.cost_id).where(
-            cls.employee_id == employee_id,
-            cls.project_id == project_id
-            )).scalars().all())
+    def get_all_employee_cat_costs_id(cls, employee_id, project_id, lower_date=None, upper_date=None):
+        if (lower_date is None) or (upper_date is None):
+            return set(execute(select(cls.cost_id).where(
+                cls.employee_id == employee_id,
+                cls.project_id == project_id
+                )).scalars().all())
+        else:
+            return set(execute(select(cls.cost_id).where(
+                cls.employee_id == employee_id,
+                cls.project_id == project_id,
+                cls.time_created.between(lower_date, upper_date)
+                )).scalars().all())
 
     @classmethod
     def get_records_by_emp_proj_cat(cls, employee_id, project_id, cat_cost_id, lower_date=None, upper_date=None):

@@ -174,7 +174,7 @@ def report_about_employee(employee_id, lower_date=None, upper_date=None):
     for ip, p_id in enumerate(projects_id):
         p_name = Projects.get_project_name_by_id(p_id)
         print(f"{ip+1}. {p_name}")
-        costs_id = Records.get_all_employee_cat_costs_id(employee_id, p_id)
+        costs_id = Records.get_all_employee_cat_costs_id(employee_id, p_id, lower_date=lower_date, upper_date=upper_date)
         
         data["projects"][ip] = {
             "project_id": p_id, 

@@ -1,6 +1,7 @@
 from typing import List
+from datetime import time as time_dt
+from datetime import datetime
 import time
-
 from flask import (
     render_template, redirect, 
     url_for, flash, session, g, request,
@@ -26,7 +27,8 @@ from app.reports_makers import (
     make_query_to_dict_list,
     make_report_that_andrews_like,
     get_project_report_dict,
-    replace_id_to_name_in_record_dict)
+    replace_id_to_name_in_record_dict,
+    report_about_employee)
 
 from . import main
 
@@ -191,10 +193,24 @@ def emp_report():
         if request.method == "GET":
             return render_template('main/emp_report.html', form=form)
         if form.validate_on_submit():
-            flash("Отчет ниже:", category='success')    
-            logger.info(f"Date from: {form.lower_date.data}, {type(form.lower_date.data)}")
-            logger.info(f"Date to: {form.upper_date.data}, {type(form.upper_date.data)}")
-            return render_template('main/emp_report.html', form=form)
+            date_low = None
+            date_upp = None
+            if not form.is_all_period.data:
+                t_low = time_dt(hour=0, minute=0) 
+                t_upp = time_dt(hour=23, minute=59)
+                date_low = datetime.combine(form.lower_date.data, t_low)
+                date_upp = datetime.combine(form.upper_date.data, t_upp)
+                data = report_about_employee(
+                    employee_id=form.employee.data,
+                    lower_date=date_low,
+                    upper_date=date_upp
+                )
+            else:
+                data = report_about_employee(employee_id=form.employee.data)
+            emp_login = Employees.get_login_by_id(int(form.employee.data))
+            return render_template('main/emp_report.html', 
+                                    form=form, emp_data=data,
+                                    date_low=date_low, date_upp=date_upp, emp_login=emp_login)
         else:
             flash("Произошла ошибка заполнения формы", category='error')
             return render_template('main/emp_report.html', form=form)
