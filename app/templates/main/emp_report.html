@@ -47,9 +47,9 @@
                         <li>{{cost["cost_name"]}}</li>
                         <ol>
                         {% for record in cost["records"] %}
-                            <li>{{ record["date_time"] }}: <span style="border-bottom: solid 1px;">{{ record["hours"] }}ч {{ record["minutes"] }}мин</span></li>
+                            <li>{{ record["date_time"] }}: {{ record["hours"] }}ч {{ record["minutes"] }}мин</li>
                         {% endfor %}
-                        <p>Общее время труда в этой статье расходов: {{cost["total_cost_time"] // 60}}ч {{cost["total_cost_time"] % 60}}мин  </p>        
+                        <p>Общее время труда в этой статье расходов: <span style="border-bottom: solid 1px;">{{cost["total_cost_time"] // 60}}ч {{cost["total_cost_time"] % 60}}мин</span></p>        
                         </ol>
                     {% endfor %}
                     <p><b>Общее время труда в проекте "{{ project["project_name"] }}": {{project["total_proj_time"] // 60}}ч {{project["total_proj_time"] % 60}}мин</b></p>
