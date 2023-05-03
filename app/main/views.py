@@ -1,5 +1,34 @@
-from . import *
+from typing import List
+import time
 
+from flask import (
+    render_template, redirect, 
+    url_for, flash, session, g, request,
+    jsonify)
+
+from app import logger
+from app.forms import (
+    RecordsForm, ReturnButton, 
+    ReportProjectForm, ProjectAddForm,
+    ReportFormEmp
+)
+
+from app.models import (
+    Records, Employees,
+    Costs, Tasks, Projects,
+    GIPs, ProjectCosts, CostsTasks,
+)
+from app.helper_functions import (
+        sorting_projects_names
+)
+
+from app.reports_makers import (
+    make_query_to_dict_list,
+    make_report_that_andrews_like,
+    get_project_report_dict,
+    replace_id_to_name_in_record_dict)
+
+from . import main
 
 # TODO:
 # [x]: Добавить реальных ГИПов в реальные проекты на проде
@@ -145,13 +174,21 @@ def add_project():
 
 
 
-@main.route("/emp-report/<int:emp_id>", methods=["POST", "GET"])
-def emp_report(emp_id):
+@main.route("/emp-report", methods=["POST", "GET"])
+def emp_report():
     emp = g.emp
     if emp is None:
         return redirect(url_for('auth.login'))
+    form = ReportFormEmp()
+    form.employee.choices = Employees.get_id_logins()
+    if request.method == "GET":
+        return render_template('main/emp_report.html', form=form)
     try:
-        return render_template('main/emp_report.html', employee_id=emp_id)
+        if form.validate_on_submit():
+            flash("Отчет ниже:", category='success')    
+            logger.info(f"Дата от: {form.lower_date.data}")
+            logger.info(f"Дата до: {form.upper_date.data}")
+            return render_template('main/emp_report.html', form=form)
     except Exception as e:
         flash("Произошла ошибка генерации отчета сотрудника.", category='error')
         logger.warning(f"emp_report: {e}")
@@ -163,7 +200,7 @@ def test_j2():
     data = {
         "name": "Artur"
     }
-    return render_template("main/test_j2.html", data=data)
+    return render_template("main/test_j2.html", data = data )
 
 @main.errorhandler(500)
 def handle_error(err):

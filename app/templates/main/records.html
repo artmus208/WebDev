@@ -44,8 +44,9 @@
                 </form>
             </div>
             {% if session.get("emp_role", "Нет роли") == 'gip' -%}
-                <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
+                <a href="{{ url_for('gip.gips_project') }}" class="gips-btn">Мой проект</a>
             {% endif %}
+            <a href="{{ url_for('main.emp_report') }}">Отчет по сотруднику</a>
             <p>Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
         </div>
         <div class="last-5-records">

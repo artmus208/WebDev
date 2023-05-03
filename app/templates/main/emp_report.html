@@ -2,11 +2,30 @@
 
 {% block content %}
 
-    <h1 style="padding-left: 20%;">Отчет по сотруднику {{ get_login_by_id(employee_id)|upper }}</h1>
-    <div style="padding-left: 15%;
-                padding-right: 15%;
-                border: thick double #32a1ce;">
+    <h1 style="padding-left: 10%;">Отчет по сотруднику</h1>
+    <div class="main-container">
+        <div class="container">
+            <div class="content__inner">
+                <div class="space">
+                    {% for cat, msg in get_flashed_messages(True) %}
+                        <div class="space flash {{cat}}">{{msg}}</div>
+                    {% endfor %}
+                    {% for field, errors in form.errors.items() %}
+                        <div class="alert alert-error">
+                            Ошибка заполнения в: "{{ form[field].label }}" {{ ', '.join(errors) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <form method="POST" action="{{ url_for('main.add_project') }}">
+                    {{ form.csrf_token }}
+                    <p>{{ form.employee.label }}</p> <p>{{ form.employee }}</p>
+                    <p>{{ form.is_all_period.label }}</p> {{ form.is_all_period }}
+                    <p>{{ form.lower_date.label }}</p> <p>{{ form.lower_date }}</p>
+                    <p>{{ form.upper_date.label }}</p> <p>{{ form.upper_date }}</p>
+                    <p>{{ form.submit }}</p>
+                </form>
+            </div>
+        </div>
     </div>
-    
 
 {% endblock content %}

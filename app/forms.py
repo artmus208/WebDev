@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (
-    SubmitField, StringField, SelectField, IntegerField, SelectMultipleField
+    SubmitField, StringField, SelectField, IntegerField, SelectMultipleField,
+    DateField, BooleanField
     )
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms.validators import  ValidationError, Length, InputRequired, Regexp
@@ -56,7 +57,15 @@ class ProjectAddForm(FlaskForm):
 
     
 
-
+class ReportFormEmp(FlaskForm):
+    employee = SelectField("Выбор сотрудника: ")
+    def validate_employee(form, field):
+        if int(field.data) == -1:
+            raise ValidationError("Пожалуйста, выберите сотрудника")    
+    is_all_period = BooleanField("За весь период:", render_kw = {"checked": True})
+    lower_date = DateField("Дата от: ")
+    upper_date = DateField("Дата до: ")
+    submit = SubmitField("Показать отчет")
 
 
 class ProjectButton(FlaskForm):

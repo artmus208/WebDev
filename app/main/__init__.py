@@ -2,34 +2,20 @@ from typing import List
 import time
 import pathlib
 
-from flask import Blueprint, render_template, redirect, url_for, flash, session, g, request
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import data_required, length
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import Blueprint
 
 from app import logger, db
-from app.forms import (
-    ProjectButton, RecordsForm,
-    ReturnButton, ReportProjectForm, available_login,
-    ProjectAddForm)
 from app.models import (
     Records, Employees,
     Costs, Tasks, Projects,
     GIPs, ProjectCosts, CostsTasks,
     Admins)
 from app.helper_functions import (
-    sorting_projects_names, revise_records_for_ProjectCosts, 
-    none_or_value, clear_strings, delete_spaces_in)
+revise_records_for_ProjectCosts, clear_strings, delete_spaces_in)
 
-from app.reports_makers import (
-    make_query_to_dict_list,
-    make_report_that_andrews_like,
-    get_project_report_dict,
-    replace_id_to_name_in_record_dict)
+
 
 from app import select, execute
-
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 

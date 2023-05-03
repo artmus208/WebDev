@@ -1,3 +1,4 @@
+from datetime import datetime, date, time
 from typing import List
 
 from app import app, db, text
@@ -15,16 +16,41 @@ from app.reports_makers import report_about_employee
 #     ).first()
 #     print(res)
 
+# with app.app_context():
+#     # res = Records.get_all_employee_projects_id(34)
+#     res = Records.get_all_employee_cat_costs_id(34, 22)
+#     for r in res:
+#         print(r)
+
+# # Проверка работы отчета по сотруднику по всему периоду
+# with app.app_context():
+#     data = report_about_employee(34)
+#     print(data)
+#     print(data["total_emp_time"]//60, data["total_emp_time"]%60)
+
+
+## Проверка работы отчета по сотруднику по выбранному периоду:
 with app.app_context():
-    # res = Records.get_all_employee_projects_id(34)
-    res = Records.get_all_employee_cat_costs_id(34, 22)
-    for r in res:
-        print(r)
+    d_low = date(year=2023, month=4, day=1)
+    t_low = time(hour=0, minute=0)
+    # date_low = datetime.combine(d_low, t_low)
+    date_low = None
+    
+    d_upper = date(year=2023, month=4, day=30)
+    t_upper = time(hour=23, minute=59)
+    # date_upper = datetime.combine(d_upper, t_upper)
+    date_upper = None
 
+    print(f"Lower time:{date_low}")
+    print(f"Upper time:{date_upper}")
 
-with app.app_context():
-    report_about_employee(34)
-
+    data = report_about_employee(
+        employee_id=2,
+        lower_date=date_low,
+        upper_date=date_upper
+    )
+    print(data)
+    print(data["total_emp_time"]//60, data["total_emp_time"]%60)
 
 # with app.app_context():
 #     res = Records.get_last_5_records()

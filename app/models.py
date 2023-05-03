@@ -1,5 +1,6 @@
 from app import db, select, execute, app
 from sqlalchemy.sql import func
+from sqlalchemy import between
 from passlib.hash import bcrypt
 
 
@@ -60,8 +61,16 @@ class Records(db.Model, MyBaseClass):
         return execute(select(cls).where(cls.employee_id==employee_id)).scalars().all()
 
     @classmethod
-    def get_all_employee_projects_id(cls, employee_id):
-        return set(execute(select(cls.project_id).where(cls.employee_id==employee_id)).scalars().all())
+    def get_all_employee_projects_id(cls, employee_id, lower_date=None, upper_date=None):
+        if (lower_date is None) or (upper_date is None): 
+            return set(execute(select(cls.project_id).where(
+                                                cls.employee_id==employee_id,
+                                            )).scalars().all())
+        else:
+            return set(execute(select(cls.project_id).where(
+                                                cls.employee_id==employee_id,
+                                                cls.time_created.between(lower_date, upper_date)
+                                            )).scalars().all())
 
     @classmethod
     def get_all_employee_cat_costs_id(cls, employee_id, project_id):
@@ -72,13 +81,23 @@ class Records(db.Model, MyBaseClass):
             )).scalars().all())
 
     @classmethod
-    def get_records_by_emp_proj_cat(cls, employee_id, project_id, cat_cost_id):
-        res = execute(
-            select(cls).where(
-            cls.employee_id == employee_id,
-            cls.project_id == project_id,
-            cls.cost_id == cat_cost_id
+    def get_records_by_emp_proj_cat(cls, employee_id, project_id, cat_cost_id, lower_date=None, upper_date=None):
+        if (lower_date is None) or (upper_date is None):
+            res = execute(
+                select(cls).where(
+                cls.employee_id == employee_id,
+                cls.project_id == project_id,
+                cls.cost_id == cat_cost_id
+                )).scalars().all()
+        else:
+            res = execute(
+                select(cls).where(
+                cls.employee_id == employee_id,
+                cls.project_id == project_id,
+                cls.cost_id == cat_cost_id,
+                cls.time_created.between(lower_date, upper_date)
             )).scalars().all()
+
         return [(r.time_created.strftime("%d.%m.%Y %H:%M"), r.hours, r.minuts) for r in res]
     
 
@@ -128,7 +147,7 @@ class Employees(db.Model, MyBaseClass):
 
     @classmethod
     def get_id_logins(cls):
-        return [(-1, "ГИП")] + [(emp.id, emp.login) for emp in cls.query.all()] 
+        return [(-1, "Сотрудник")] + [(emp.id, emp.login) for emp in cls.query.all()] 
 
 
     @classmethod
