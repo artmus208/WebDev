@@ -276,3 +276,13 @@ content{
 li::marker{
     color: #095efdbc;
 }
+
+
+
+option[value="-1"]{
+    color: #a9a9a9;
+}
+
+#project_name, #category_of_costs, #hours, #minuts{
+    padding-left: 25px;
+}

@@ -12,7 +12,13 @@
                         <div class="space flash {{cat}}">{{msg}}</div>
                     {% endfor %}
                 </div>
+                {% for field, errors in form.errors.items() %}
+                    <div style="padding-left: 10px;" class="alert alert-error">
+                        {{ ', '.join(errors) }}
+                    </div>
+                {% endfor %}
                 <form method="POST" action="{{url_for('main.record', login=login)}}">
+                    {{ form.csrf_token }}
                     <div class="project">
                         <p>{{form.project_name.label(class="list_text")}}</p>
                         <p>{{form.project_name(class="project_list")}} </p>

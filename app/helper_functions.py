@@ -76,7 +76,7 @@ def sorting_projects_names(projects_name_id_list):
         else:
             res_word = ' '.join([i[1], i[2]])
             res_words.append((i[0],res_word))
-    return res_words
+    return [(-1, "Выберите проект")] + res_words
 
 # DONE: 
 # [x]: 1) Выгружаем все записи в единный список
