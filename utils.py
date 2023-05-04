@@ -1,4 +1,4 @@
-from app.models import Records
+from app.models import Records, Projects
 from app import app
 from datetime import datetime
 
@@ -20,5 +20,18 @@ def update_date_in_records():
                 else:
                     print(f"Записью c id:{id_} нет в базе")
 
+def update_p_name_in_projects():
+    with app.app_context():
+        with open("projects.txt", encoding="UTF8") as f:
+            for line in f:
+                id_ = int(line.split(",")[0])
+                name_ = line.split(",")[1]
+                if id_ == 22:
+                    name_ = "23R01 Система TCS"
+                p = Projects.get(id_)
+                p.project_name = name_
+                p.commit
+                print(id_, name_.__repr__())
 
-l = list()
+if __name__ == "__main__":          
+    update_p_name_in_projects()
