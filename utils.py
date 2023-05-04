@@ -30,7 +30,7 @@ def update_p_name_in_projects():
                     name_ = "23R01 Система TCS"
                 p = Projects.get(id_)
                 p.project_name = name_
-                p.commit
+                p.commit()
                 print(id_, name_.__repr__())
 
 if __name__ == "__main__":          
