@@ -8,12 +8,18 @@ from wtforms.validators import  ValidationError, Length, InputRequired, Regexp
 
 class RecordsForm(FlaskForm):
     project_name = SelectField(u'Проект')
+    def validate_project_name(form, field):
+        if int(field.data) == -1:
+            raise ValidationError("Пожалуйста, выберите проект")    
     category_of_costs = SelectField(u'Статья расходов')
+    def validate_category_of_costs(form, field):
+        if int(field.data) == -1:
+            raise ValidationError("Пожалуйста, выберите статью расходов")
     task = StringField(label='Задача',
                         default="blank_task",
                         render_kw={'disabled':''})
-    hours = IntegerField(label='Кол-во часов', default=0)
-    minuts = IntegerField(label='Кол-во минут', default=0)
+    hours = IntegerField(label='Кол-во часов', default=0, render_kw={"min": 0})
+    minuts = IntegerField(label='Кол-во минут', default=0, render_kw={"min": 0})
     submit = SubmitField('Подтвердить')
 
 def available_login(available_logins):
@@ -23,14 +29,6 @@ def available_login(available_logins):
             message = "Логин не зарегистрирован. Обратитесь к ЕАВ"
             raise ValidationError(message)
     return _available_login
-
-
-# class SimpleForm(FlaskForm):
-#     string_of_files = ['one\r\ntwo\r\nthree\r\n']
-#     list_of_files = string_of_files[0].split()
-#     # create a list of value/description tuples
-#     files = [(x, x) for x in list_of_files]
-#     example = MultiCheckboxField('Label', choices=files)
 
 class MultiCheckboxField(SelectMultipleField):
     widget = ListWidget(prefix_label=False)

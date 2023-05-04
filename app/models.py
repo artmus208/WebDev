@@ -278,7 +278,7 @@ class Costs(db.Model, MyBaseClass):
     
     @classmethod
     def get_costs_id_names(self):
-        return [(c.id, c.cost_name) for c in db.session.execute(db.select(self)).scalars()]
+        return [(-1, "А статья расходов?")] + [(c.id, c.cost_name) for c in db.session.execute(db.select(self)).scalars()]
     
     @classmethod
     def get_name_by_id(cls, fk_id):

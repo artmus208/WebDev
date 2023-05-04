@@ -59,36 +59,27 @@ def record():
             )
             last_5_records.append(record_with_names)
         form = RecordsForm()
-        costs_name_list = Costs.get_costs_names()
-        projects_name_id_list = Projects.get_projects_id_name_list()
-        sorted_projects_name_list = sorting_projects_names(projects_name_id_list)
-        form.project_name.choices = sorted_projects_name_list
+        costs_name_list = Costs.get_costs_id_names()
+        form.project_name.choices = sorting_projects_names(Projects.get_projects_id_name_list())
         form.category_of_costs.choices = costs_name_list
-        if form.is_submitted():
+        if request.method == "GET":
+            return render_template('main/records.html', form=form,
+                                    login=login, last_5_records=last_5_records)
+        if form.validate_on_submit():
             project_id = int(form.project_name.data)
             employee_id = Employees.query.filter_by(login=login).first().id
-            # print("employee_id:",employee_id)
-            # DONE:Правильно заносить записи с учётом новой таблицы ProjectsCosts 
-            # [x]: 
-            # print(form.category_of_costs.data.__repr__())
-            # print(Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id)
-            cost_id = Costs.query.filter_by(cost_name=form.category_of_costs.data).first().id
-            # print("cost_id:",cost_id)
+            cost_id = int(form.category_of_costs.data)
             cost_id_ = ProjectCosts.query.filter_by(cost_name_fk=cost_id, project_id=project_id).first().id
-            # print("cost_id_:",cost_id_)
             task_id = Tasks.query.filter_by(task_name=form.task.data).first().id     
-            # print("task_id:", task_id)
             task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id_).first().id
-            # print("task_id_:",task_id_)
-            # print(project_id, cost_id, cost_id_, task_id, task_id_)
             hours = form.hours.data
             minuts = form.minuts.data
-            # print("Hours:", hours, "Minuts:", minuts)
             rec = Records(employee_id, project_id, cost_id_, task_id_, hours, minuts)
             rec.save()
             flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))
         else:
+            flash('Кажется, кто-то ошибся при заполнении формы...', category="error")
             return render_template('main/records.html', form=form,
                                     login=login, last_5_records=last_5_records)
     except Exception as e:
