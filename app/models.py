@@ -1,4 +1,4 @@
-from app import db, select, execute, app
+from app import db, select, execute, app, text, logger
 from sqlalchemy.sql import func
 from sqlalchemy import between
 from passlib.hash import bcrypt
@@ -19,6 +19,10 @@ class MyBaseClass:
             db.session.rollback()
             raise
 
+    @classmethod
+    def get_all(cls):
+        return execute(select(cls)).scalars().all()
+        
     @classmethod
     def commit(self):
         db.session.commit()
@@ -56,6 +60,11 @@ class Records(db.Model, MyBaseClass):
         s = f"{self.id},{self.time_created},{self.employee_id},{self.project_id},{self.cost_id},{self.task_id},{self.hours},{self.minuts}"
         return s
     
+    @classmethod
+    def get_emp_ids_by_project_id_cat_cost_id(cls, project_id, cat_cost_id):
+        stmt = select(cls.employee_id).where(cls.project_id==project_id, cls.cost_id==cat_cost_id)
+        return list(set(execute(stmt).scalars().all()))
+
     @classmethod  
     def get_all_employee_records(cls, employee_id):
         return execute(select(cls).where(cls.employee_id==employee_id)).scalars().all()
@@ -91,21 +100,45 @@ class Records(db.Model, MyBaseClass):
         if (lower_date is None) or (upper_date is None):
             res = execute(
                 select(cls).where(
-                cls.employee_id == employee_id,
-                cls.project_id == project_id,
-                cls.cost_id == cat_cost_id
-                )).scalars().all()
+                    cls.employee_id == employee_id,
+                    cls.project_id == project_id,
+                    cls.cost_id == cat_cost_id
+                ).order_by(cls.time_created.asc())).scalars().all()
         else:
             res = execute(
                 select(cls).where(
-                cls.employee_id == employee_id,
-                cls.project_id == project_id,
-                cls.cost_id == cat_cost_id,
-                cls.time_created.between(lower_date, upper_date)
-            )).scalars().all()
+                    cls.employee_id == employee_id,
+                    cls.project_id == project_id,
+                    cls.cost_id == cat_cost_id,
+                    cls.time_created.between(lower_date, upper_date)
+            ).order_by(cls.time_created.asc())).scalars().all()
 
         return [(r.time_created.strftime("%d.%m.%Y %H:%M"), r.hours, r.minuts) for r in res]
     
+    @classmethod
+    def get_records_by_proj_id(cls, project_id):
+        try:
+            return execute(select(cls).where(cls.project_id==project_id)).scalars().all()
+        except Exception as e:
+            db.session.rollback()
+            logger.warning(f"in Records class {e}")
+            
+    @classmethod
+    def get_info_by_proj_id_cat_id_emp_id(cls, project_id, project_cost_id, employee_id):
+        """
+        Возврат общего времени сотрудника под ЭТОЙ статьей расходов и в ЭТОМ проекте
+        внутри функция просто делает запросы к БД с вычислением суммы по часам и минутам
+        Возврат: (часы, минуты, логин сотрудника)
+        """
+        stmt = select(func.sum(cls.hours)).where(
+            cls.project_id==project_id, cls.cost_id==project_cost_id, cls.employee_id==employee_id)
+        sum_hours = execute(stmt).scalar()
+        stmt = select(func.sum(cls.minuts)).where(
+            cls.project_id==project_id, cls.cost_id==project_cost_id, cls.employee_id==employee_id)
+        sum_minuts = execute(stmt).scalar()
+        if not (sum_minuts is None and sum_hours is None):
+            sum_minuts += sum_hours*60
+            return int(sum_minuts)
 
     @classmethod  
     def get_last_5_records(cls, emp_id=None):
@@ -116,6 +149,18 @@ class Records(db.Model, MyBaseClass):
         res = execute(stmt).scalars().fetchmany()
         return res
         
+    @classmethod
+    def get_emp_ids_by_project_id(cls, project_id):
+        stmt = select(cls.employee_id).where(cls.project_id==project_id)
+        res = set(execute(stmt).scalars().all())
+        return res
+    
+    @classmethod
+    def get_cat_costs_ids_by_project_id(cls, project_id):
+        stmt = select(cls.cost_id).where(cls.project_id==project_id)
+        res = set(execute(stmt).scalars().all())
+        return list(res)
+
     def replace_ids_to_names(
             self, EmployeesObj,
             ProjectsObj, ProjectCostObj, CostsObj):

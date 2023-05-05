@@ -96,7 +96,6 @@ example = \
 # [ ] Можно сделать рефактор этой функции с использованием словаря
 def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
     """Из all_records получается словарь заданной структуры. См example в этом модуле
-    
         Структура словаря:
             Имя проекта: p_name 
                 Статьи расходов
@@ -114,7 +113,8 @@ def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
             for i_c, category_of_costs in enumerate(list_of_category_of_costs):
                 buff_dict_1 = filter_dict_by(all_records, ("cost_id", category_of_costs))
                 list_uniq_tasks = get_uniq_key_values(buff_dict_1, "task_id")
-                buff_dict_item_1 = {"cat_of_cost": category_of_costs, "list_of_tasks": [0 for i in range(len(list_uniq_tasks))]}
+                # 
+                buff_dict_item_1 = {"cat_of_cost": ProjectCosts.get_cat_cost_name_by_id(category_of_costs), "list_of_tasks": [0 for i in range(len(list_uniq_tasks))]}
                 # reportDict[category_of_costs] = list()
                 for i_t, task in enumerate(list_uniq_tasks): 
                     buff_dict_2 = filter_dict_by(all_records, ("task_id", task))
@@ -129,14 +129,14 @@ def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
                         emp_summ_time_gen_m = (60*emp_summ_time_h + emp_summ_time_min) % 60
                         emp_summ_time_h = 0
                         emp_summ_time_min = 0
-                        buff_dict_item_3 = {"emp_name":employee, "summ_time_h":emp_summ_time_gen_h, "summ_time_m":emp_summ_time_gen_m}
+                        buff_dict_item_3 = {"emp_name":Employees.get_login_by_id(employee), "summ_time_h":emp_summ_time_gen_h, "summ_time_m":emp_summ_time_gen_m}
                         buff_dict_item_2['list_of_emp'][i_e] = buff_dict_item_3
                     buff_dict_item_1['list_of_tasks'][i_t] = buff_dict_item_2 
                 buff_dict_item_0['list_of_cat_cos'][i_c] = buff_dict_item_1
             buff_dict_item_0["project_name"] = p_name
             return buff_dict_item_0
     except Exception as e:
-            logger.warning(f"replace_id_to_name_in_record_dict fail has been ocured: {e}")
+            logger.warning(f"get_project_report_dict fail has been ocured: {e}")
 
             
 
