@@ -94,6 +94,69 @@ example = \
 # TIPS:
 # TODO: 
 # [ ] Можно сделать рефактор этой функции с использованием словаря
+
+def project_report(p_id):
+    """
+       Функция генерирует отчет по проекту в виде словаря:
+
+       project_report = {
+            "p_id": p_id,
+            "p_name": Projects.get_project_name_by_id(p_id),
+            "cat_cost_list": {},
+            "total_perf_time": 0,
+        }
+        Значение ключа "cat_cost_list" тоже словарь с ключами-именами категорий
+        затрат, значения которых тоже словари вида:
+            project_report["cat_cost_list"][cat_cost_name] = {
+                "cat_cost_id": cat_cost_id,
+                "emp_list": {},
+                "total_perf_time": 0,
+            }         
+            Значение ключа "emp_list" тоже словарь с ключами-логинами сотрудников,
+            значения этихх ключей словари вида:
+                    project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login] = {
+                        "emp_id": emp_id,
+                        "total_perf_time": list()
+                    }
+            
+    """
+    project_report = {
+        "p_id": p_id,
+        "p_name": Projects.get_project_name_by_id(p_id),
+        "cat_cost_list": {},
+        "total_perf_time": 0,
+    }
+    for cat_cost_id in Records.get_cat_costs_ids_by_project_id(p_id):
+        cat_cost_name = ProjectCosts.get_cat_cost_name_by_id(cat_cost_id)
+        if not (cat_cost_name in project_report["cat_cost_list"]):
+            project_report["cat_cost_list"][cat_cost_name] = {
+                "cat_cost_id": cat_cost_id,
+                "emp_list": {},
+                "total_perf_time": 0,
+            }
+        for emp_id in Records.get_emp_ids_by_project_id_cat_cost_id(
+                        project_id=p_id, cat_cost_id=cat_cost_id):
+            emp_login = Employees.get_login_by_id(emp_id)
+            if (emp_login not in project_report["cat_cost_list"][cat_cost_name]["emp_list"]):
+                project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login] = {
+                    "emp_id": emp_id,
+                    "total_perf_time": list()
+                }
+            project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"].append(
+                Records.get_info_by_proj_id_cat_id_emp_id(
+                    project_id=p_id,
+                    project_cost_id=cat_cost_id,
+                    employee_id=emp_id,
+                )
+            )
+        total_cat_cost_time = []
+        for emp_login_ in project_report["cat_cost_list"][cat_cost_name]["emp_list"]:
+            total_cat_cost_time.append(sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login_]["total_perf_time"]))
+        project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] = sum(total_cat_cost_time)
+    for cat_cost_name in project_report["cat_cost_list"]:
+        project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
+    return project_report
+
 def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
     """Из all_records получается словарь заданной структуры. См example в этом модуле
         Структура словаря:

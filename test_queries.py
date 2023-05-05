@@ -11,42 +11,70 @@ from app import select, execute
 
 from app.reports_makers import report_about_employee, get_project_report_dict
 
+from utils import timeit
+@timeit
 def project_report2(p_id):
-    total_perf_min_project = 0
-    total_perf_min_cat_cost = 0
+    """
+       Функция генерирует отчет по проекту в виде словаря:
+
+       project_report = {
+            "p_id": p_id,
+            "p_name": Projects.get_project_name_by_id(p_id),
+            "cat_cost_list": {},
+            "total_perf_time": 0,
+        }
+        Значение ключа "cat_cost_list" тоже словарь с ключами-именами категорий
+        затрат, значения которых тоже словари вида:
+            cat_cost_report = {
+                "cat_cost_id": cat_cost_id,
+                "emp_list": {},
+                "total_perf_time": 0,
+            }         
+            Значение ключа "emp_list" тоже словарь с ключами-логинами сотрудников,
+            значения этихх ключей словари вида:
+                    cat_cost_report["emp_list"][emp_login] = {
+                        "emp_id": emp_id,
+                        "total_perf_time": list()
+                    }
+            
+    """
     project_report = {
         "p_id": p_id,
         "p_name": Projects.get_project_name_by_id(p_id),
         "cat_cost_list": {},
         "total_perf_time": 0,
     }
-    for i_cat, cat_cost_id in enumerate(Records.get_cat_costs_ids_by_project_id(p_id)):
+    for cat_cost_id in Records.get_cat_costs_ids_by_project_id(p_id):
         cat_cost_name = ProjectCosts.get_cat_cost_name_by_id(cat_cost_id)
-        cat_cost_report = {
-            "cat_cost_id": cat_cost_id,
-            "emp_list": {},
-            "total_perf_time": 0,
-        }
-        emp_ids = Records.get_emp_ids_by_project_id_cat_cost_id(
-            project_id=p_id, cat_cost_id=cat_cost_id
-        )
-        for i_emp, emp_id in enumerate(emp_ids):
+        if not (cat_cost_name in project_report["cat_cost_list"]):
+            project_report["cat_cost_list"][cat_cost_name] = {
+                "cat_cost_id": cat_cost_id,
+                "emp_list": {},
+                "total_perf_time": 0,
+            }
+        for emp_id in Records.get_emp_ids_by_project_id_cat_cost_id(
+                        project_id=p_id, cat_cost_id=cat_cost_id):
             emp_login = Employees.get_login_by_id(emp_id)
-            emp_time = Records.get_info_by_proj_id_cat_id_emp_id(
+            if (emp_login not in project_report["cat_cost_list"][cat_cost_name]["emp_list"]):
+                project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login] = {
+                    "emp_id": emp_id,
+                    "total_perf_time": list()
+                }
+            project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"].append(
+                Records.get_info_by_proj_id_cat_id_emp_id(
                     project_id=p_id,
                     project_cost_id=cat_cost_id,
                     employee_id=emp_id,
                 )
-            if not emp_login in cat_cost_report["emp_list"]:
-                cat_cost_report["emp_list"][emp_login] = {
-                    "emp_id": emp_id,
-                    "total_perf_min": list(emp_time)
-                } 
-            else:
-                cat_cost_report["emp_list"][emp_login]["total_perf_min"].append(emp_time)
-        project_report["cat_cost_list"][cat_cost_name] = cat_cost_report
+            )
+        total_cat_cost_time = []
+        for emp_login_ in project_report["cat_cost_list"][cat_cost_name]["emp_list"]:
+            total_cat_cost_time.append(sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login_]["total_perf_time"]))
+        project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] = sum(total_cat_cost_time)
+    for cat_cost_name in project_report["cat_cost_list"]:
+        project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
     return project_report
-
+@timeit
 def report_project(p_id):
     # TODO:
     # [x]: Проверить на адекватность выдачу отчета
@@ -89,9 +117,40 @@ def report_project(p_id):
     return project_report
 
 
+
+def show_project_report2(p_id=3):
+    print("\n\nВерсия отчета II:")
+    with app.app_context():
+        project_report = project_report2(p_id)
+        print(
+            "Отчет по проекту:\n",
+            f'({project_report["p_id"]})',
+            project_report["p_name"],
+            f'{project_report["total_perf_time"] // 60}ч',
+            f'{project_report["total_perf_time"] % 60}мин',
+        )
+        for cat_cost_name in project_report["cat_cost_list"]:
+            cat_cost_report = project_report["cat_cost_list"][cat_cost_name]
+            print(
+                "\t Отчет по категории затрат:",
+                f'({cat_cost_report["cat_cost_id"]})',
+                cat_cost_name,
+                f'{cat_cost_report["total_perf_time"] // 60}ч',
+                f'{cat_cost_report["total_perf_time"] % 60}мин',
+            )
+            for emp_login in cat_cost_report["emp_list"]:
+                emp_report = cat_cost_report["emp_list"][emp_login]
+                print(
+                    "\t\t Отчет по сотруднику:",
+                    f'({emp_report["emp_id"]})',
+                    emp_login,
+                    f'{sum(emp_report["total_perf_time"]) // 60}ч',
+                    f'{sum(emp_report["total_perf_time"]) % 60}мин',
+                )
+
+
 def show_project_report(p_id=3):
     with app.app_context():
-        p_id = 3
         project_report = report_project(p_id)
         print(
             "Отчет по проекту:\n",
@@ -118,7 +177,7 @@ def show_project_report(p_id=3):
                 )
 
 show_project_report()
-
+show_project_report2(p_id=3)
 
 # # Делаю отчет по проекту
 # with app.app_context():
