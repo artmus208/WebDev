@@ -544,3 +544,6 @@
 2023-04-07 16:46:05,969:app:WARNING:In record page fail has been ocured: 'NoneType' object has no attribute 'id'
 2023-04-07 17:28:14,697:app:WARNING:In record page fail has been ocured: 'NoneType' object has no attribute 'id'
 2023-04-07 17:32:55,410:app:WARNING:In record page fail has been ocured: 'NoneType' object has no attribute 'id'
+2023-04-12 12:35:49,739:app:WARNING:In record page fail has been ocured: 'NoneType' object has no attribute 'id'
+2023-04-12 12:43:31,871:app:WARNING:In record page fail has been ocured: 'NoneType' object has no attribute 'id'
+2023-05-05 16:19:55,566:app:WARNING:In record page fail has been ocured: 'NoneType' object has no attribute 'id'
