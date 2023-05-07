@@ -4,7 +4,7 @@ import pathlib
 
 from flask import Blueprint
 
-from app import logger, db
+from app import logger, db, app
 from app.models import (
     Records, Employees,
     Costs, Tasks, Projects,
@@ -13,9 +13,9 @@ from app.models import (
 from app.helper_functions import (
 revise_records_for_ProjectCosts, clear_strings, delete_spaces_in)
 
-
-
 from app import select, execute
+
+app.jinja_env.globals.update(sum=sum)
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 

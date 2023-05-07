@@ -4,7 +4,7 @@ import json
 from typing import Dict, List
 from transliterate import translit
 
-from app import db
+from app import db, app
 from app.models import (
     Employees, Projects, Records,
     Costs, Tasks, ProjectCosts, CostsTasks
@@ -91,11 +91,7 @@ example = \
     ]
 }
 
-# TIPS:
-# TODO: 
-# [ ] Можно сделать рефактор этой функции с использованием словаря
-
-def project_report(p_id):
+def project_report2(p_id):
     """
        Функция генерирует отчет по проекту в виде словаря:
 
@@ -107,14 +103,14 @@ def project_report(p_id):
         }
         Значение ключа "cat_cost_list" тоже словарь с ключами-именами категорий
         затрат, значения которых тоже словари вида:
-            project_report["cat_cost_list"][cat_cost_name] = {
+            cat_cost_report = {
                 "cat_cost_id": cat_cost_id,
                 "emp_list": {},
                 "total_perf_time": 0,
             }         
             Значение ключа "emp_list" тоже словарь с ключами-логинами сотрудников,
             значения этихх ключей словари вида:
-                    project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login] = {
+                    cat_cost_report["emp_list"][emp_login] = {
                         "emp_id": emp_id,
                         "total_perf_time": list()
                     }
@@ -157,6 +153,40 @@ def project_report(p_id):
         project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
     return project_report
 
+
+def show_project_report2(p_id=3):
+    print("\n\nВерсия отчета II:")
+    with app.app_context():
+        project_report = project_report2(p_id)
+        print(
+            "Отчет по проекту:\n",
+            f'({project_report["p_id"]})',
+            project_report["p_name"],
+            f'{project_report["total_perf_time"] // 60}ч',
+            f'{project_report["total_perf_time"] % 60}мин',
+        )
+        for cat_cost_name in project_report["cat_cost_list"]:
+            cat_cost_report = project_report["cat_cost_list"][cat_cost_name]
+            print(
+                "\t Отчет по категории затрат:",
+                f'({cat_cost_report["cat_cost_id"]})',
+                cat_cost_name,
+                f'{cat_cost_report["total_perf_time"] // 60}ч',
+                f'{cat_cost_report["total_perf_time"] % 60}мин',
+            )
+            for emp_login in cat_cost_report["emp_list"]:
+                emp_report = cat_cost_report["emp_list"][emp_login]
+                print(
+                    "\t\t Отчет по сотруднику:",
+                    f'({emp_report["emp_id"]})',
+                    emp_login,
+                    f'{sum(emp_report["total_perf_time"]) // 60}ч',
+                    f'{sum(emp_report["total_perf_time"]) % 60}мин',
+                )
+
+# TIPS:
+# TODO: 
+# [ ] Можно сделать рефактор этой функции с использованием словаря
 def get_project_report_dict(all_records: List[Dict], p_name:str) -> Dict:
     """Из all_records получается словарь заданной структуры. См example в этом модуле
         Структура словаря:
