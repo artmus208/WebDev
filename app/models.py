@@ -208,8 +208,8 @@ class Projects(db.Model, MyBaseClass):
         self.gip_id = gip_id
 
     @classmethod
-    def get_projects_id_name_list(self):
-        return [(p.id, p.project_name) for p in db.session.execute(db.select(Projects)).scalars()]
+    def get_projects_id_name_list(cls):
+        return [(p.id, p.project_name) for p in db.session.execute(db.select(cls).order_by(cls.project_name)).scalars()]
 
     @classmethod
     def get_projects_id_name_list_gip(self, gip_id):

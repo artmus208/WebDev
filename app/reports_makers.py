@@ -1,10 +1,10 @@
-
+git cherry-pick 62016088f4eafe4298941638287a12646b8a052c
 import datetime
 import json
 from typing import Dict, List
 from transliterate import translit
 
-from app import db
+from app import db, app
 from app.models import (
     Employees, Projects, Records,
     Costs, Tasks, ProjectCosts, CostsTasks
@@ -90,6 +90,99 @@ example = \
         ]},
     ]
 }
+
+def project_report2(p_id):
+    """
+       Функция генерирует отчет по проекту в виде словаря:
+
+       project_report = {
+            "p_id": p_id,
+            "p_name": Projects.get_project_name_by_id(p_id),
+            "cat_cost_list": {},
+            "total_perf_time": 0,
+        }
+        Значение ключа "cat_cost_list" тоже словарь с ключами-именами категорий
+        затрат, значения которых тоже словари вида:
+            cat_cost_report = {
+                "cat_cost_id": cat_cost_id,
+                "emp_list": {},
+                "total_perf_time": 0,
+            }         
+            Значение ключа "emp_list" тоже словарь с ключами-логинами сотрудников,
+            значения этихх ключей словари вида:
+                    cat_cost_report["emp_list"][emp_login] = {
+                        "emp_id": emp_id,
+                        "total_perf_time": list()
+                    }
+            
+    """
+    project_report = {
+        "p_id": p_id,
+        "p_name": Projects.get_project_name_by_id(p_id),
+        "cat_cost_list": {},
+        "total_perf_time": 0,
+    }
+    for cat_cost_id in Records.get_cat_costs_ids_by_project_id(p_id):
+        cat_cost_name = ProjectCosts.get_cat_cost_name_by_id(cat_cost_id)
+        if not (cat_cost_name in project_report["cat_cost_list"]):
+            project_report["cat_cost_list"][cat_cost_name] = {
+                "cat_cost_id": cat_cost_id,
+                "emp_list": {},
+                "total_perf_time": 0,
+            }
+        for emp_id in Records.get_emp_ids_by_project_id_cat_cost_id(
+                        project_id=p_id, cat_cost_id=cat_cost_id):
+            emp_login = Employees.get_login_by_id(emp_id)
+            if (emp_login not in project_report["cat_cost_list"][cat_cost_name]["emp_list"]):
+                project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login] = {
+                    "emp_id": emp_id,
+                    "total_perf_time": list()
+                }
+            project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"].append(
+                Records.get_info_by_proj_id_cat_id_emp_id(
+                    project_id=p_id,
+                    project_cost_id=cat_cost_id,
+                    employee_id=emp_id,
+                )
+            )
+        total_cat_cost_time = []
+        for emp_login_ in project_report["cat_cost_list"][cat_cost_name]["emp_list"]:
+            total_cat_cost_time.append(sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login_]["total_perf_time"]))
+        project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] = sum(total_cat_cost_time)
+    for cat_cost_name in project_report["cat_cost_list"]:
+        project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
+    return project_report
+
+
+def show_project_report2(p_id=3):
+    print("\n\nВерсия отчета II:")
+    with app.app_context():
+        project_report = project_report2(p_id)
+        print(
+            "Отчет по проекту:\n",
+            f'({project_report["p_id"]})',
+            project_report["p_name"],
+            f'{project_report["total_perf_time"] // 60}ч',
+            f'{project_report["total_perf_time"] % 60}мин',
+        )
+        for cat_cost_name in project_report["cat_cost_list"]:
+            cat_cost_report = project_report["cat_cost_list"][cat_cost_name]
+            print(
+                "\t Отчет по категории затрат:",
+                f'({cat_cost_report["cat_cost_id"]})',
+                cat_cost_name,
+                f'{cat_cost_report["total_perf_time"] // 60}ч',
+                f'{cat_cost_report["total_perf_time"] % 60}мин',
+            )
+            for emp_login in cat_cost_report["emp_list"]:
+                emp_report = cat_cost_report["emp_list"][emp_login]
+                print(
+                    "\t\t Отчет по сотруднику:",
+                    f'({emp_report["emp_id"]})',
+                    emp_login,
+                    f'{sum(emp_report["total_perf_time"]) // 60}ч',
+                    f'{sum(emp_report["total_perf_time"]) % 60}мин',
+                )
 
 # TIPS:
 # TODO: 

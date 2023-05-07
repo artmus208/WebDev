@@ -28,7 +28,8 @@ from app.reports_makers import (
     make_report_that_andrews_like,
     get_project_report_dict,
     replace_id_to_name_in_record_dict,
-    report_about_employee)
+    report_about_employee,
+    project_report2)
 
 from . import main
 
@@ -97,6 +98,7 @@ def project_report():
     try:
         form = ReportProjectForm()
         returnBtn = ReturnButton()
+        # TIPS: Убрать лишнее ниже (sorting_projects_names(projects_name_id_list))
         projects_name_id_list = Projects.get_projects_id_name_list()
         sorted_projects_name_list = sorting_projects_names(projects_name_id_list)
         form.project_name.choices = sorted_projects_name_list
@@ -116,6 +118,26 @@ def project_report():
         time.sleep(1)
         return redirect(url_for('main.project_report'))
     
+
+@main.route('/detailed-project-report', methods=['GET', 'POST'])
+def detailed_project_report():
+    if g.emp is None:
+        return redirect(url_for('auth.login'))
+    form = ReportProjectForm()
+    form.project_name.choices = Projects.get_projects_id_name_list()
+    try:
+        if form.validate_on_submit():
+            proj_id = int(form.project_name.data)
+            detail_project_report = project_report2(p_id=proj_id)
+            return render_template('main/detailed_project_report.html',
+                                    form=form, project_report=detail_project_report)    
+        else:
+            return render_template('main/detailed_project_report.html', form=form)    
+    except Exception as e:
+        flash("Произошла ошибка при генерации подробного отчета", category="error")
+        logger.warning(f"detailed_project_report: {e}")
+        time.sleep(1)
+        return redirect(url_for('main.detailed_project_report'))
 
 @main.route('/add-project', methods = ['GET', 'POST'])
 def add_project():
