@@ -25,41 +25,44 @@
                     <p>{{ form.submit }}</p>
                 </form>
             </div>
+        {% if emp_data %}
+            <hr>
+                {% if date_low%}
+                    <h2 style="margin-left: 100px;">Отчет по сотруднику за {{date_low}} - {{ date_upp }}</h2>
+                {% else %}
+                    <h2 style="margin-left: 100px;">Отчет по сотруднику за весь период</h2>
+                {% endif %}
+                <div style="border: solid #32a1ce;
+                            width: 1000px;
+                            height: auto;">
+                    <p style="padding-left: 2%;"><strong>Общие трудозатраты сотрудника {{emp_login.upper()}}: {{ emp_data["total_emp_time"]//60 }}ч {{ emp_data["total_emp_time"]%60 }}мин </strong></p>
+                    <ol>
+                    {% for project in emp_data["projects"]%}
+                        <li>
+                            {{ project["project_name"] }}
+                            <hr>
+                            <ol>
+                            {% for cost in project["projects_costs"] %}
+                                <li>{{ cost }}</li>
+                                <ol>
+                                {% for record in project["projects_costs"][cost]["records"] %}
+                                    <li>{{ record["date_time"] }}: {{ record["hours"] }}ч {{ record["minutes"] }}мин</li>
+                                {% endfor %}
+                                <p>
+                                    Общее время труда в этой статье расходов: 
+                                    <span style="border-bottom: solid 1px;">
+                                        {{ project["projects_costs"][cost]["total_cost_time"] // 60 }}ч {{ project["projects_costs"][cost]["total_cost_time"] % 60 }}мин
+                                    </span>
+                                </p>        
+                                </ol>
+                            {% endfor %}
+                            <p><b>Общее время труда в проекте "{{ project["project_name"] }}": {{ project["total_proj_time"] // 60 }}ч {{ project["total_proj_time"] % 60 }}мин</b></p>
+                            </ol>
+                        </li>
+                    {% endfor %}
+                    </ol>
+                </div>
+        {% endif %}
         </div>
     </div>
-    {% if emp_data %}
-        <hr>
-            {% if date_low%}
-                <h2 style="margin-left: 100px;">Отчет по сотруднику за {{date_low}} - {{ date_upp }}</h2>
-            {% else %}
-                <h2 style="margin-left: 100px;">Отчет по сотруднику за весь период</h2>
-            {% endif %}
-            <div style="margin-left: 10%;
-                        border: solid #32a1ce;
-                        width: 1000px;
-                        height: auto;">
-                    <ol>
-                {% for project in emp_data["projects"]%}
-                    <li>{{ project["project_name"] }}
-                        <hr>
-                        <ol>
-                    {% for cost in project["projects_costs"] %}
-                        <li>{{cost["cost_name"]}}</li>
-                        <ol>
-                        {% for record in cost["records"] %}
-                            <li>{{ record["date_time"] }}: {{ record["hours"] }}ч {{ record["minutes"] }}мин</li>
-                        {% endfor %}
-                        <p>Общее время труда в этой статье расходов: <span style="border-bottom: solid 1px;">{{cost["total_cost_time"] // 60}}ч {{cost["total_cost_time"] % 60}}мин</span></p>        
-                        </ol>
-                    {% endfor %}
-                    <p><b>Общее время труда в проекте "{{ project["project_name"] }}": {{project["total_proj_time"] // 60}}ч {{project["total_proj_time"] % 60}}мин</b></p>
-                        </ol>
-                    </li>
-                {% endfor %}
-                    </ol>
-                    <p><strong>Общие трудозатраты сотрудника {{emp_login}}: {{ emp_data["total_emp_time"]//60 }}ч {{ emp_data["total_emp_time"]%60 }}мин </strong></p>
-            </div>
-            
-    {% endif %}
-    
 {% endblock content %}

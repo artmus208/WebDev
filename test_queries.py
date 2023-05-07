@@ -15,6 +15,8 @@ from utils import timeit
 
 
 
+
+
 # with app.app_context():
 #     res = execute(
 #         select(Records)
@@ -27,11 +29,10 @@ from utils import timeit
 #     for r in res:
 #         print(r)
 
-# # Проверка работы отчета по сотруднику по всему периоду
-# with app.app_context():
-#     data = report_about_employee(34)
-#     print(data)
-#     print(data["total_emp_time"]//60, data["total_emp_time"]%60)
+# Проверка работы отчета по сотруднику по всему периоду
+with app.app_context():
+    data = report_about_employee(51)
+    # print(data["total_emp_time"]//60, data["total_emp_time"]%60)
 
 # all_records_list = []
 # 

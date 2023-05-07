@@ -10,7 +10,7 @@ from app.models import (
     Costs, Tasks, ProjectCosts, CostsTasks
 )
 from app import logger
-
+from utils import timeit
 # 
 
 def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
@@ -18,17 +18,17 @@ def replace_id_to_name_in_record_dict(list_of_ditc) -> dict:
         for item in list_of_ditc:
             item["employee_id"] = db.session.get(Employees, item["employee_id"]).login
             item["project_id"] = db.session.get(Projects, item["project_id"]).project_name
-            logger.info(f"item['cost_id']:{item['cost_id']}")
+            # logger.info(f"item['cost_id']:{item['cost_id']}")
             project_cost_id = db.session.get(ProjectCosts, item["cost_id"]).id
-            logger.info(f"project_cost_id:{project_cost_id}")
+            # logger.info(f"project_cost_id:{project_cost_id}")
             
             CostTasks_id = CostsTasks.query.filter_by(cost_id=project_cost_id).first().task_name_fk
             project_cost_name_id = db.session.get(ProjectCosts, item["cost_id"]).cost_name_fk
-            logger.info(f" CostTasks_id:{CostTasks_id}")
+            # logger.info(f" CostTasks_id:{CostTasks_id}")
             item["cost_id"] = db.session.get(Costs, project_cost_name_id).cost_name
             
             
-            logger.info(f" CostTasks_id:{CostTasks_id}")
+            # logger.info(f" CostTasks_id:{CostTasks_id}")
             item["task_id"] = db.session.get(Tasks, CostTasks_id).task_name
             cost_postfix = translit(item["cost_id"][:4], language_code='ru', reversed=True)
             if item["task_id"] == "blank_task":
@@ -90,7 +90,7 @@ example = \
         ]},
     ]
 }
-
+@timeit
 def project_report2(p_id):
     """
        Функция генерирует отчет по проекту в виде словаря:
@@ -253,7 +253,7 @@ def make_report_that_andrews_like(old_report: List[Dict]):
     else:
         return "None"
 
-
+@timeit
 def report_about_employee(employee_id, lower_date=None, upper_date=None):
     # print(f"Отчет по сотруднику с id: {employee_id}|{Employees.get_login_by_id(employee_id)}")
     projects_id = Records.get_all_employee_projects_id(employee_id, lower_date=lower_date, upper_date=upper_date)
@@ -268,32 +268,30 @@ def report_about_employee(employee_id, lower_date=None, upper_date=None):
         p_name = Projects.get_project_name_by_id(p_id)
         # print(f"{ip+1}. {p_name}")
         costs_id = Records.get_all_employee_cat_costs_id(employee_id, p_id, lower_date=lower_date, upper_date=upper_date)
-        
         data["projects"][ip] = {
             "project_id": p_id, 
             "project_name": p_name,
-            "projects_costs": [0 for i in range(len(costs_id))],
+            "projects_costs": {},
             "total_proj_time": 0
         }
-
         for ic, c_id in enumerate(costs_id):
             c_name = ProjectCosts.get_cat_cost_name_by_id(c_id)
             # print(f"\t {ic+1}. {c_name}")
             times = Records.get_records_by_emp_proj_cat(employee_id, p_id, c_id, lower_date=lower_date, upper_date=upper_date)
-            data["projects"][ip]["projects_costs"][ic] = {
-                "cost_id": c_id, 
-                "cost_name": c_name, 
-                "records": [0 for i in range(len(times))],
-                "total_cost_time": 0
-            }
+            if not (c_name in data["projects"][ip]["projects_costs"]):
+                data["projects"][ip]["projects_costs"][c_name] = {
+                    "cost_id": c_id, 
+                    "records": [],
+                    "total_cost_time": 0
+                }
             for it, time in enumerate(times):
                 # print(f"\t\t {it+1}. {time[0]}: {time[1]} ч. {time[2]} мин.")
-                data["projects"][ip]["projects_costs"][ic]["records"][it] = {"date_time": time[0], "hours": time[1], "minutes": time[2]}
+                data["projects"][ip]["projects_costs"][c_name]["records"].append({"date_time": time[0], "hours": time[1], "minutes": time[2]})
                 sum_cat_cost_time += time[1]*60 + time[2]
                 sum_proj_time += time[1]*60 + time[2]
                 sum_general_time += time[1]*60 + time[2]
             # print(f"\tОбщее время труда в статье расходов: {sum_cat_cost_time//60} ч. {sum_cat_cost_time%60} мин.")    
-            data["projects"][ip]["projects_costs"][ic]["total_cost_time"] = sum_cat_cost_time
+            data["projects"][ip]["projects_costs"][c_name]["total_cost_time"] += sum_cat_cost_time
             sum_cat_cost_time = 0
         # print(f"Общее время труда в проекте: {sum_proj_time//60} ч. {sum_proj_time%60} мин.")
         data["projects"][ip]["total_proj_time"] = sum_proj_time

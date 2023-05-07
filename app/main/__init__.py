@@ -22,7 +22,7 @@ folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 @main.before_app_first_request
 def ping_connect():
     try:
-        logger.info("Ping DB")
+        # logger.info("Ping DB")
         res = execute(
             select(Records)
         ).first()

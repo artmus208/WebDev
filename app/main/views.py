@@ -147,12 +147,6 @@ def add_project():
         form.cat_costs.choices = Costs.get_costs_id_names()
         if request.method == "POST":
             if form.validate_on_submit():
-                logger.info(
-                    ','.join((form.code.data,
-                    form.name.data,
-                    '|'.join(list(map(str, form.cat_costs.data))),
-                    form.gip.data)
-                    ))
                 if int(form.gip.data) not in GIPs.get_emp_id_in_gips():
                     new_gip = GIPs(int(form.gip.data))
                     new_gip.save()
