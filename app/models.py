@@ -379,7 +379,9 @@ class ProjectCosts(db.Model, MyBaseClass):
     @classmethod
     def get_costs_id_name(cls, project_id):
         """Возвращает список, который состоит из имён категорий затрат данного проекта"""
-        r = [[0,"Нет данных"]]
+        p_name = Projects.get_project_name_by_id(project_id)
+        promt = f"Статьи расходов {p_name.split()[0]}:"
+        r = [[0, promt]]
         q = cls.query.filter_by(project_id=project_id).all()
         if q is not None:
             for c in q:

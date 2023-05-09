@@ -47,6 +47,25 @@ def index():
         print("Redirect to make record")
         return redirect(url_for('.record', login=emp.login))
 
+
+@main.route("/_update_dropdown")
+def update_cat_costs_list():
+    """
+    Функция генерирует новый SelectedField для категорий затрат в зависимости от 
+    выбранного id проекта.
+    """
+    try:
+        selected_project_id = request.args.get("selected_project_id", type=int)
+        updated_costs = ProjectCosts.get_costs_id_name(project_id=selected_project_id)
+        html_string_selected = ''
+        for cost in updated_costs:
+            html_string_selected += f'<option value="{cost[0]}">{cost[1]}</option>'
+        return jsonify(html_string_selected=html_string_selected)
+    except Exception as e:
+        logger.warning(f"update_cat_costs_list: {e}")
+        return jsonify(html_string_selected="<option value='-1'>Произошла ошибка!</option>")
+
+
 @main.route("/record", methods=['GET', 'POST'])
 def record():
     try:
