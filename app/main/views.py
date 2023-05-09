@@ -49,7 +49,10 @@ def index():
 
 @main.route("/record", methods=['GET', 'POST'])
 def record():
-    login = g.emp.login
+    try:
+        login = g.emp.login
+    except:
+        return redirect(url_for("auth.login"))
     try:
         last_5_records = []
         res:List[Records] = Records.get_last_5_records(emp_id=g.emp.id)
@@ -144,36 +147,33 @@ def add_project():
     try:
         form = ProjectAddForm()
         form.gip.choices = Employees.get_id_logins()
-        form.cat_costs.choices = Costs.get_costs_id_names()
-        if request.method == "POST":
-            if form.validate_on_submit():
-                if int(form.gip.data) not in GIPs.get_emp_id_in_gips():
-                    new_gip = GIPs(int(form.gip.data))
-                    new_gip.save()
-                    gip_id = new_gip.id
-                else:
-                    gip_id = GIPs.get_by_employee_id(int(form.gip.data)).id
-                new_project = Projects(
-                    p_name=form.name.data,
-                    code=form.code.data,
-                    gip_id=gip_id
-                    )
-                new_project.save()
-                for cost_id_fk in form.cat_costs.data:
-                    new_project_costs = ProjectCosts(
-                                        cost_id=cost_id_fk,
-                                        man_days=100,
-                                        project_id=new_project.id)
-                    new_project_costs.save()
-                    new_costs_tasks = CostsTasks(
-                        task_name_fk=1,
-                        man_days=100,
-                        cost_id=new_project_costs.id)
-                    new_costs_tasks.save()
-                flash("Проект добавлен", category='success')
-            else: 
-                flash("Возникли ошибки при заполнении формы", category='error')
-            return redirect(url_for("main.add_project"))
+        form.cat_costs.choices = Costs.get_costs_id_names()[1:]        
+        if form.validate_on_submit():
+            if int(form.gip.data) not in GIPs.get_emp_id_in_gips():
+                new_gip = GIPs(int(form.gip.data))
+                new_gip.save()
+                gip_id = new_gip.id
+            else:
+                gip_id = GIPs.get_by_employee_id(int(form.gip.data)).id
+            new_project = Projects(
+                p_name=form.name.data,
+                code=form.code.data,
+                gip_id=gip_id
+                )
+            new_project.save()
+            for cost_id_fk in form.cat_costs.data:
+                new_project_costs = ProjectCosts(
+                                    cost_id=cost_id_fk,
+                                    man_days=100,
+                                    project_id=new_project.id)
+                new_project_costs.save()
+                new_costs_tasks = CostsTasks(
+                    task_name_fk=1,
+                    man_days=100,
+                    cost_id=new_project_costs.id)
+                new_costs_tasks.save()
+            flash("Проект добавлен", category='success')
+            return redirect(url_for('main.add_project'))
         return render_template("main/add_project.html", form=form)
     except Exception as e:
         flash("Произошла ошибка. Проект не добавлен", category='error')

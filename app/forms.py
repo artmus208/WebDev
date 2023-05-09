@@ -37,8 +37,8 @@ class MultiCheckboxField(SelectMultipleField):
 class ProjectAddForm(FlaskForm):
 
     code = StringField(u"Код проекта:", validators=[
-        Length(min=5, max=5), InputRequired("Необходимо заполнить:"),
-        Regexp('\d\d\D\d\d', message="Код проекта должен соответствовать формату: ЧЧБЧЧ") 
+        Length(min=5, max=7), InputRequired("Необходимо заполнить:"),
+        # Regexp('\d\d\D\d\d', message="Код проекта должен соответствовать формату: ЧЧБЧЧ") 
     ])
     name = StringField(u"Название проекта:", validators=[InputRequired("Необходимо заполнить")])
     cat_costs = MultiCheckboxField(
