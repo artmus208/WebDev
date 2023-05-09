@@ -1,0 +1,550 @@
+.records__gip{
+    display: block;
+    justify-content: center;
+}
+
+.project{
+    margin-top: 35px;
+}
+
+.project_list{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    box-sizing: border-box;
+    width: 800px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+.cost_list{
+    margin-top: 30px;
+}
+
+.cost_list_list{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    box-sizing: border-box;
+    width: 400px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+.task_list{
+    margin-top: 30px;
+}
+
+.task_list_list{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    box-sizing: border-box;
+    width: 400px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+.input{
+    margin-top: 30px;
+    display: flex;
+}
+
+.input_hour{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    width: 215px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+form{
+    display: block;
+}
+
+.input_min{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    width: 215px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+.time_min{
+    margin-left: 185px;
+}
+
+.list_text{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+}
+
+.buttons{
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.done{
+    width: 215px;
+    height: 60px;
+    left: 335px;
+    top: 763px;
+
+    border: 0px;
+    background: #4786FF;
+    border-radius: 5px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+
+    color: #FFFFFF;
+}
+
+.done:hover {
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+}
+
+.otchet{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 60px;
+    background: #4786FF;
+    margin-left: 20px;
+    text-decoration: none;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+    border-radius: 5px;
+    color: #FFFFFF;
+}
+
+.otchet:hover {
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+}
+
+.back{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 20px;
+    width: 215px;
+    height: 60px;
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.back:hover {
+    background-color: #4786FF;
+    color:#FFFFFF;
+}
+
+.gips-btn{
+    display: block;
+    text-decoration: none;
+    margin-top: 24px; 
+    color: #4786FF;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+}
+
+.flash.success {
+    border: 1px solid #21DB56;
+    background: #AEFFC5;
+    display: block;
+    text-align: center;
+    font-family: 'Inter';
+}
+
+.flash.error {
+    background: #FFA866;
+    text-align: center;
+    display: block;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 200;
+    font-size: 20px;
+    color: #171717;
+}
+
+/* Стили перед отчетом */
+.content__h{
+    margin-bottom: 0px;
+    margin-top: 40px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.content__p{
+    margin-top: 20px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;  
+}
+
+.form-control-sm{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    box-sizing: border-box;
+    width: 800px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+.btn-success{
+    margin-top: 10px;
+    width: 300px;
+    height: 60px;
+    background: #4786FF;
+    text-decoration: none;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    border: 0cm;
+}
+
+.btn-success:hover {
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+}
+
+.about-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 10px;
+    width: 300px;
+    height: 58px;
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* Стили отчета */
+
+.container-report{
+    border: 4px double black;
+    padding: 10px;
+    background-color: aliceblue;
+}
+
+.time{
+    padding-left: 2%;
+    display: flex;
+}
+
+.time-m{
+    padding-left: 2%;
+}
+
+.info{
+    display: flex;
+    padding-bottom: 1%;
+    border-bottom: 2px solid black;
+}
+
+.general-hours{
+    padding-left: 1%;
+    font-weight: bold;
+}
+
+.cat-cost-item{
+    padding-bottom: 1%;
+}
+
+
+/*Отчет по сотрудникам*/
+
+.emp__heading{
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 24px;
+}
+
+#emp_list{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    width: 400px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+/* #emp_lower-date{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    width: 400px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+} */
+
+/* Адаптив */
+
+@media only screen and (max-width: 500px) {
+    @font-face {
+        font-family: 'Inter';
+        src: url('fonts/Inter-Regular.woff2') format('woff2'),
+            url('fonts/Inter-Regular.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .project{
+        margin-top: 25px;
+    }
+
+    .project_list{
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        box-sizing: border-box;
+        width: 300px;
+        height: 50px;
+
+        border: 1px solid #4786FF;
+        border-radius: 5px;
+    }
+
+    .cost_list{
+        margin-top: 20px;
+    }
+
+    .cost_list_list{
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        box-sizing: border-box;
+        width: 300px;
+        height: 50px;
+
+        border: 1px solid #4786FF;
+        border-radius: 5px;
+    }
+
+    .task_list{
+        margin-top: 20px;
+    }
+
+    .task_list_list{
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        box-sizing: border-box;
+        width: 300px;
+        height: 50px;
+
+        border: 1px solid #4786FF;
+        border-radius: 5px;
+    }
+
+    .input{
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+    }
+
+    .input_hour{
+        display: block;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        width: 215px;
+        height: 40px;
+
+        border: 1px solid #4786FF;
+        border-radius: 5px;
+    }
+
+    .input_min{
+        display: block;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        width: 215px;
+        height: 40px;
+
+        border: 1px solid #4786FF;
+        border-radius: 5px;
+    }
+
+    .time_min{
+        margin-left: 0px;
+    }
+
+    .list_text{
+        display: block;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 29px;
+    }
+
+    .buttons{
+        margin-top: 0px;
+        display: inline-flex;
+        align-content: center;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .done{
+        display: block;
+        width: 215px;
+        height: 50px;
+
+        border: 0px;
+        background: #4786FF;
+        border-radius: 5px;
+
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 27px;
+
+        color: #FFFFFF;
+    }
+
+    .otchet{
+        margin-top: 5px;
+        margin-left: 0px;
+        width: 265px;
+        height: 50px;
+
+        border: 0px;
+        background: #4786FF;
+        border-radius: 5px;
+
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 27px;
+
+        color: #FFFFFF;
+    }
+
+    .back{
+        margin-top: 15px;
+        width: 140px;
+        height: 50px;
+
+
+        border: 2px solid #4786FF;
+        border-radius: 5px;
+
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 27px;
+        color: #4786FF;
+    }
+
+    .form-control-sm{
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        box-sizing: border-box;
+        width: 350px;
+        height: 50px;
+    
+        border: 1px solid #4786FF;
+        border-radius: 5px;
+    }
+
+    .records__gip {
+        display: flex;
+        justify-content: space-evenly;
+        width: 300px;
+        flex-direction: column;
+    }
+
+    .time_min{
+        width: 350px;
+    }
+
+    .gips-btn{
+        font-size: 20px;
+        margin: 0px;
+        width: 200px;
+    }
+}
