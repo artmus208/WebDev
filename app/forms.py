@@ -11,7 +11,8 @@ class RecordsForm(FlaskForm):
     def validate_project_name(form, field):
         if int(field.data) == -1:
             raise ValidationError("Пожалуйста, выберите проект")    
-    category_of_costs = SelectField(u'Статья расходов')
+    category_of_costs = SelectField(u'Статья расходов', coerce=int, 
+                                    validate_choice=False)
     def validate_category_of_costs(form, field):
         if int(field.data) == -1:
             raise ValidationError("Пожалуйста, выберите статью расходов")

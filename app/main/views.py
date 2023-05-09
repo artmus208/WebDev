@@ -92,17 +92,18 @@ def record():
             project_id = int(form.project_name.data)
             employee_id = Employees.query.filter_by(login=login).first().id
             cost_id = int(form.category_of_costs.data)
-            cost_id_ = ProjectCosts.query.filter_by(cost_name_fk=cost_id, project_id=project_id).first().id
+            # cost_id_ = ProjectCosts.query.filter_by(cost_name_fk=cost_id, project_id=project_id).first().id
             task_id = Tasks.query.filter_by(task_name=form.task.data).first().id     
-            task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id_).first().id
+            task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id).first().id
             hours = form.hours.data
             minuts = form.minuts.data
-            rec = Records(employee_id, project_id, cost_id_, task_id_, hours, minuts)
+            rec = Records(employee_id, project_id, cost_id, task_id_, hours, minuts)
             rec.save()
             flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))
         else:
             flash('Кажется, кто-то ошибся при заполнении формы...', category="error")
+            logger.info(f"cost_id:{form.category_of_costs.data}, type: {type(form.category_of_costs.data)}")
             return render_template('main/records.html', form=form,
                                     login=login, last_5_records=last_5_records)
     except Exception as e:
