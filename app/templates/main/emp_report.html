@@ -35,7 +35,7 @@
                 <div style="border: solid #32a1ce;
                             width: 1000px;
                             height: auto;">
-                    <p style="padding-left: 2%;"><strong>Общие трудозатраты сотрудника {{emp_login.upper()}}: {{ emp_data["total_emp_time"]//60 }}ч {{ emp_data["total_emp_time"]%60 }}мин </strong></p>
+                    <p style="padding-left: 2%;"><strong>Общие трудозатраты сотрудника {{emp_login.upper()}}: {{ round(emp_data["total_emp_time"] / 60 / 8, 3) }} чел/д </strong></p>
                     <ol>
                     {% for project in emp_data["projects"]%}
                         <li>
@@ -51,12 +51,12 @@
                                 <p>
                                     Общее время труда в этой статье расходов: 
                                     <span style="border-bottom: solid 1px;">
-                                        {{ project["projects_costs"][cost]["total_cost_time"] // 60 }}ч {{ project["projects_costs"][cost]["total_cost_time"] % 60 }}мин
+                                        {{ round(project["projects_costs"][cost]["total_cost_time"] / 60 / 8, 3) }} чел/д
                                     </span>
                                 </p>        
                                 </ol>
                             {% endfor %}
-                            <p><b>Общее время труда в проекте "{{ project["project_name"] }}": {{ project["total_proj_time"] // 60 }}ч {{ project["total_proj_time"] % 60 }}мин</b></p>
+                            <p><b>Общее время труда в проекте "{{ project["project_name"] }}": {{ round(project["total_proj_time"] / 60 / 8, 3) }} чел/д </b></p>
                             </ol>
                         </li>
                     {% endfor %}

@@ -16,6 +16,7 @@ revise_records_for_ProjectCosts, clear_strings, delete_spaces_in)
 from app import select, execute
 
 app.jinja_env.globals.update(sum=sum)
+app.jinja_env.globals.update(round=round)
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 

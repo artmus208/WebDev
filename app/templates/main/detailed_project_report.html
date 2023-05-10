@@ -28,21 +28,20 @@
                         width: 1000px;
                         height: auto;">
                 <h2 style="padding-left: 2%;"> Отчет по проекту: {{ project_report["p_name"] }} </h2>
-                <p style="padding-left: 5%;"> Трудозатраты всего: <b>{{project_report["total_perf_time"] // 60 }}ч {{project_report["total_perf_time"] % 60 }}мин</b> </p>
+                <p style="padding-left: 5%;"> Трудозатраты всего: <b>{{ round(project_report["total_perf_time"] / 60 / 8, 3) }} чел/д </b> </p>
                 <ol>
                     {% for cat_cost_name in project_report["cat_cost_list"] %}
                         <li>
                             {{ cat_cost_name }}: 
-                            {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 }}ч
-                            {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] %  60 }}мин
+                            {{ round(project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] / 60 / 8, 3) }} чел/д
+                            
                         </li>
                             <hr>
                             <ol>
                                 {% for emp_login in project_report["cat_cost_list"][cat_cost_name]["emp_list"] %}
                                     <li>
                                         {{ emp_login.upper() }}:
-                                        {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) // 60 }}ч
-                                        {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 60 }}мин
+                                        {{ round(sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) / 60 / 8, 3) }} чeл/д
                                     </li>
                                 {% endfor %}
                             </ol>
