@@ -39,19 +39,19 @@ class ProjectAddForm(FlaskForm):
     code = StringField(u"Код проекта:", validators=[
         Length(min=5, max=7), InputRequired("Необходимо заполнить:"),
         # Regexp('\d\d\D\d\d', message="Код проекта должен соответствовать формату: ЧЧБЧЧ") 
-    ])
-    name = StringField(u"Название проекта:", validators=[InputRequired("Необходимо заполнить")])
+    ], id="project__code")
+    name = StringField(u"Название проекта:", validators=[InputRequired("Необходимо заполнить")], id="project__name")
     cat_costs = MultiCheckboxField(
         u"Выберите категорию затрат проекта (по умолчанию 100 ч/д на каждой статье):",
-        coerce=int)
+        coerce=int, id="cat_costs")
     def validate_cat_costs(form, field):
         if not field.data:
             raise ValidationError("Выберите хотя бы одну статью расходов")
-    gip = SelectField(u"ГИП проекта:")
+    gip = SelectField(u"ГИП проекта:", id="emp__list")
     def validate_gip(form, field):
         if int(field.data) == -1:
             raise ValidationError("Не забудьте назначить ГИПа")
-    submit = SubmitField("Добавить")
+    submit = SubmitField("Добавить", id="done")
 
     
 

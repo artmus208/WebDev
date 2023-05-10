@@ -12,18 +12,17 @@
             <label for="gips_project_list"  class="gip__p" style="display: block;"><p>
                 Список проектов, где пользователь числится ГИПом:
             </p></label>
-            <select name="gips_project_list"  multiple>
+            <select class="gips_project_list" name="gips_project_list"  multiple>
                 <option selected value="default">Не выбрано</option>
                 {% for pr in project_list -%}
                     <option value="{{ pr[0] }}">{{ pr[1] }}</option>
                 {% endfor %}
             </select> 
-            <input style="display: block;" type="submit" value="Выбрать">
+            <div class="gip-btns">
+                <input class="choose" style="display: block;" type="submit" value="Выбрать">
+                <a href="{{ url_for('gip.edit_cat_cost') }}" class="update">Радактировать статьи расходов</a>
+            </div>
         </form>
-
-        <a href="{{ url_for('gip.edit_cat_cost') }}" class="">Радактировать статьи расходов</a>
-        <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
-        <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
     </div>
 </div>
 {% endblock content %}

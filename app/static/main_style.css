@@ -403,6 +403,88 @@ form{
     border: 0cm;
 }
 
+/*Добавление проекта*/
+#project__code{
+    margin-bottom: 0px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    width: 300px;
+    height: 40px;
+    padding: 5px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+#project__name{
+    margin-bottom: 0px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    width: 350px;
+    height: 40px;
+    padding: 5px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+.name_code{
+    display: flex;
+}
+
+.name{
+    margin-left: 50px;
+}
+
+#cat_costs{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+}
+
+#emp__list{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    box-sizing: border-box;
+    width: 300px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+#done{
+    width: 215px;
+    height: 60px;
+    left: 335px;
+    top: 763px;
+
+    border: 0px;
+    background: #4786FF;
+    border-radius: 5px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+
+    color: #FFFFFF;
+}
+
+#done:hover {
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+}
+
 /* Адаптив */
 
 @media only screen and (max-width: 500px) {

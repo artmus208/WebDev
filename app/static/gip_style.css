@@ -18,3 +18,139 @@
     font-weight: 400;
     font-size: 20px;  
 }
+
+.gips_project_list{
+    width: 500px;
+    border-color: #4786FF;
+    margin-bottom: 10px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px; 
+}
+
+.choose{
+    margin-top: 10px;
+    width: 200px;
+    height: 54px;
+    left: 335px;
+    top: 763px;
+
+    border: 0px;
+    background: #4786FF;
+    border-radius: 5px;
+    border: 2px solid #4786FF;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+
+    color: #FFFFFF;
+}
+
+.gip-btns{
+    display: flex;
+}
+
+.update{
+    margin-left: 40px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    width: 215px;
+    height: 50px;
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.update:hover {
+    background-color: #4786FF;
+    color:#FFFFFF;
+}
+
+.gip__input-name{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    width: 400px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+.gip__input-rate{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    width: 215px;
+    height: 50px;
+
+    border: 1px solid #4786FF;
+    border-radius: 5px;
+}
+
+.old_cost_list{
+    width: 500px;
+    border-color: #4786FF;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px; 
+}
+
+.gip__submit{
+    margin-top: 20px;
+    width: 200px;
+    height: 54px;
+    left: 335px;
+    top: 763px;
+
+    border: 0px;
+    background: #4786FF;
+    border-radius: 5px;
+    border: 2px solid #4786FF;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+
+    color: #FFFFFF;
+}
+
+.gip__back{
+    margin-left: 40px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    width: 215px;
+    height: 50px;
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+    text-align: center;
+    border-radius: 5px;
+}

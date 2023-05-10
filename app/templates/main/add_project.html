@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='main_style.css' ) }}">
+{% endblock stylesheet %}
+
 {% block content %}
 <div class="main-container">
     <div class="container">
@@ -16,13 +20,19 @@
             </div>
             <form method="POST" action="{{ url_for('main.add_project') }}">
                 {{ form.csrf_token }}
-                <p>{{ form.code.label }}</p>
-                <p>{{ form.code(placeholder="Например, 23П99") }}</p>
-                <p>{{ form.name.label }}</p>
-                <p>{{ form.name(placeholder="Например, Ультрамар СПМ-02", size="38") }}</p>
-                <p>{{ form.cat_costs.label }}</p>
+                <div class="name_code">
+                    <div class="code">
+                        <p class="list_text">{{ form.code.label }}</p>
+                        <p>{{ form.code(placeholder="Например, 23П99") }}</p>
+                    </div>
+                    <div class="name">
+                        <p class="list_text">{{ form.name.label }}</p>
+                        <p>{{ form.name(placeholder="Например, Ультрамар СПМ-02", size="38") }}</p>
+                    </div>
+                </div>
+                <p class="list_text" style="width: 650px;">{{ form.cat_costs.label }}</p>
                 <p>{{ form.cat_costs }}</p>
-                <p>{{ form.gip.label }}</p>
+                <p class="list_text">{{ form.gip.label }}</p>
                 <p>{{ form.gip }}</p>
                 <p>{{ form.submit }}</p>
             </form>
