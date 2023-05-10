@@ -383,11 +383,14 @@ class ProjectCosts(db.Model, MyBaseClass):
         promt = f"Статьи расходов {p_name.split()[0]}:"
         r = [[-1, promt]]
         q = cls.query.filter_by(project_id=project_id).all()
+        cost_ids = {}
         if q is not None:
             for c in q:
                 cost_id_fk = c.cost_name_fk
-                cost_name = db.session.get(Costs, cost_id_fk).cost_name
-                r.append([c.id, cost_name])
+                if cost_id_fk not in cost_ids:
+                    cost_ids[cost_id_fk] = 0
+                    cost_name = db.session.get(Costs, cost_id_fk).cost_name
+                    r.append([c.id, cost_name])
         return r
 
     @classmethod
