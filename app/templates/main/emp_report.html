@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='main_style.css' ) }}">
+{% endblock stylesheet %}
+
 {% block content %}
 
-    <h1 style="padding-left: 10%;">Отчет по сотруднику</h1>
+    
     <div class="main-container">
         <div class="container">
             <div class="content__inner">
+                <h1 class="content__h">Отчет по сотруднику</h1>
                 <div class="space">
                     {% for cat, msg in get_flashed_messages(True) %}
                         <div class="space flash {{cat}}">{{msg}}</div>
@@ -18,48 +23,50 @@
                 </div>
                 <form method="POST" action="{{ url_for('main.emp_report') }}">
                     {{ form.csrf_token }}
-                    <p>{{ form.employee.label }}</p> <p>{{ form.employee }}</p>
-                    <div style="display: block;"> {{ form.is_all_period.label }} {{ form.is_all_period }} </div>
-                    <p>{{ form.lower_date.label }}</p> <p>{{ form.lower_date }}</p>
-                    <p>{{ form.upper_date.label }}</p> <p>{{ form.upper_date }}</p>
+                    <p class="content__p">{{ form.employee.label }}</p> 
+                    <p>{{ form.employee }}</p>
+                    <div class="content__p" style="display: block;"> {{ form.is_all_period.label }} {{ form.is_all_period }} </div>
+                    <div class="emp__form-date">
+                        <div  class="lower_date"><p class="content__p">{{ form.lower_date.label }}</p> <p>{{ form.lower_date }}</p></div>
+                        <div  class="upper_date"><p class="content__p">{{ form.upper_date.label }}</p> <p>{{ form.upper_date }}</p></div>
+                    </div>
                     <p>{{ form.submit }}</p>
                 </form>
+            {% if emp_data %}
+            <hr>
+                {% if date_low%}
+                    <h2 class="content__h">Отчет по сотруднику за {{date_low}} - {{ date_upp }}</h2>
+                {% else %}
+                    <h2 class="content__h">Отчет по сотруднику за весь период</h2>
+                {% endif %}
+                <div style="border: 1px solid #4786FF;
+                            width: 800px;
+                            height: auto;">
+                        <ol>
+                    {% for project in emp_data["projects"]%}
+                        <li  class="content__p">{{ project["project_name"] }}
+                            <hr>
+                            <ol>
+                        {% for cost in project["projects_costs"] %}
+                            <li  class="content__p">{{cost["cost_name"]}}</li>
+                            <ol>
+                            {% for record in cost["records"] %}
+                                <li class="content__p">{{ record["date_time"] }}: {{ record["hours"] }}ч {{ record["minutes"] }}мин</li>
+                            {% endfor %}
+                            <p class="content__p">Общее время труда в этой статье расходов: <span style="border-bottom: solid 1px;">{{cost["total_cost_time"] // 60}}ч {{cost["total_cost_time"] % 60}}мин</span></p>        
+                            </ol>
+                        {% endfor %}
+                        <p  class="content__p"><b>Общее время труда в проекте "{{ project["project_name"] }}": {{project["total_proj_time"] // 60}}ч {{project["total_proj_time"] % 60}}мин</b></p>
+                            </ol>
+                        </li>
+                    {% endfor %}
+                        </ol>
+                        <p  style="margin-left: 20px;" class="content__p"><strong>Общие трудозатраты сотрудника {{emp_login}}: {{ emp_data["total_emp_time"]//60 }}ч {{ emp_data["total_emp_time"]%60 }}мин </strong></p>
+                </div>
+            {% endif %}
             </div>
         </div>
     </div>
-    {% if emp_data %}
-        <hr>
-            {% if date_low%}
-                <h2 style="margin-left: 100px;">Отчет по сотруднику за {{date_low}} - {{ date_upp }}</h2>
-            {% else %}
-                <h2 style="margin-left: 100px;">Отчет по сотруднику за весь период</h2>
-            {% endif %}
-            <div style="margin-left: 10%;
-                        border: solid #32a1ce;
-                        width: 1000px;
-                        height: auto;">
-                    <ol>
-                {% for project in emp_data["projects"]%}
-                    <li>{{ project["project_name"] }}
-                        <hr>
-                        <ol>
-                    {% for cost in project["projects_costs"] %}
-                        <li>{{cost["cost_name"]}}</li>
-                        <ol>
-                        {% for record in cost["records"] %}
-                            <li>{{ record["date_time"] }}: {{ record["hours"] }}ч {{ record["minutes"] }}мин</li>
-                        {% endfor %}
-                        <p>Общее время труда в этой статье расходов: <span style="border-bottom: solid 1px;">{{cost["total_cost_time"] // 60}}ч {{cost["total_cost_time"] % 60}}мин</span></p>        
-                        </ol>
-                    {% endfor %}
-                    <p><b>Общее время труда в проекте "{{ project["project_name"] }}": {{project["total_proj_time"] // 60}}ч {{project["total_proj_time"] % 60}}мин</b></p>
-                        </ol>
-                    </li>
-                {% endfor %}
-                    </ol>
-                    <p><strong>Общие трудозатраты сотрудника {{emp_login}}: {{ emp_data["total_emp_time"]//60 }}ч {{ emp_data["total_emp_time"]%60 }}мин </strong></p>
-            </div>
-            
-    {% endif %}
+    
     
 {% endblock content %}

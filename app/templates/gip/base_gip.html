@@ -1,22 +1,29 @@
 {% extends "base.html" %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='gip_style.css' ) }}">
+{% endblock stylesheet %}
+
 {% block content %}
 <div class="container">
-    <p>Проект:  <strong>{{session.get("gip_project", "Проект не выбран")}}</strong></p>
-    <form action="{{ url_for('gip.gips_project') }}" method="POST">
-        <label for="gips_project_list" style="display: block;"><b>
-            Список проектов, где пользователь числится ГИПом:
-        </b></label>
-        <select name="gips_project_list"  multiple>
-            <option selected value="default">Не выбрано</option>
-            {% for pr in project_list -%}
-                <option value="{{ pr[0] }}">{{ pr[1] }}</option>
-            {% endfor %}
-        </select> 
-        <input style="display: block;" type="submit" value="Выбрать">
-    </form>
+    <div class="content__inner">
+        <p class="gip__h">Проект:  <strong>{{session.get("gip_project", "Проект не выбран")}}</strong></p>
+        <form action="{{ url_for('gip.gips_project') }}" method="POST">
+            <label for="gips_project_list"  class="gip__p" style="display: block;"><p>
+                Список проектов, где пользователь числится ГИПом:
+            </p></label>
+            <select name="gips_project_list"  multiple>
+                <option selected value="default">Не выбрано</option>
+                {% for pr in project_list -%}
+                    <option value="{{ pr[0] }}">{{ pr[1] }}</option>
+                {% endfor %}
+            </select> 
+            <input style="display: block;" type="submit" value="Выбрать">
+        </form>
 
-    <a href="{{ url_for('gip.edit_cat_cost') }}" class="">Радактировать статьи расходов</a>
-    <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
-    <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
+        <a href="{{ url_for('gip.edit_cat_cost') }}" class="">Радактировать статьи расходов</a>
+        <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
+        <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
+    </div>
 </div>
 {% endblock content %}

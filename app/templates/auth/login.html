@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='auth_style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='/images/logo.svg') }}">
     <title>Вход</title>
     
@@ -12,28 +12,28 @@
 <body>
     <div class="content">
         <form class="form-container" method="POST">
-            <img class="logo" src="{{url_for('static', filename='images/taskpesk.svg')}}"></img>
+            <img class="auth__logo" src="{{url_for('static', filename='images/taskpesk.svg')}}"></img>
 
             {% for cat, msg in get_flashed_messages(True) %}
                 <div class="space flash {{cat}}">{{msg}}</div>
             {% endfor %}
 
-            <div class="login">
-                <img class="login_icon" src="{{url_for('static', filename='images/user.png')}}"></img>
-                <label for="login" class="text">Логин</label>
+            <div class="auth__login">
+                <img class="auth__login_icon" src="{{url_for('static', filename='images/user.png')}}"></img>
+                <label for="login" class="auth__text">Логин</label>
             </div>
-            <div class="input_login">
-                <input name="login" placeholder="Инициалы на латинице как в почте" class="input_log"></input>
+            <div class="auth__input_login">
+                <input name="login" placeholder="Инициалы на латинице" class="auth__input_log"></input>
             </div>
-            <div class="password">
-                <img class="password_icon" src="{{url_for('static', filename='images/password.png')}}"></img>
-                <label for="password" class="text">Пароль</label>
+            <div class="auth__password">
+                <img class="auth__password_icon" src="{{url_for('static', filename='images/password.png')}}"></img>
+                <label for="password" class="auth__text">Пароль</label>
             </div>
-            <div class="input_password">
-                <input type="password" placeholder="Пароль от почты @pesk.spb.ru" name="password" class="input_pas"></input>
+            <div class="auth__input_password">
+                <input type="password" placeholder="Пароль от рабочей почты" name="password" class="auth__input_pas"></input>
             </div>
-            <button type="submit" class="enter">Вход</button>
-            <a class="reg-btn" href="{{ url_for('auth.register') }}">Регистрация</a>
+            <button type="submit" class="auth__enter">Вход</button>
+            <button class="auth__reg-btn" href="{{ url_for('auth.register') }}">Регистрация</button>
         </form>
     </div>
 

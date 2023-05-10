@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='main_style.css' ) }}">
+{% endblock stylesheet %}
+
 {% block content %}
-    <h1 style="padding-left: 10%;">Подробный отчет по проекту</h1>
+    
     <div class="main-container">
         <div class="container">
             <div class="content__inner">
+                <h1 class="content__h">Подробный отчет по проекту</h1>
                 <div class="space">
                     {% for cat, msg in get_flashed_messages(True) %}
                         <div class="space flash {{cat}}">{{msg}}</div>
@@ -17,29 +22,31 @@
                 </div>
                 <form method="POST" action="{{ url_for('main.detailed_project_report') }}">
                     {{ form.csrf_token }}
-                    <p> {{form.project_name.label()}} </p>
-                    <p> {{form.project_name()}} </p>
-                    <p> {{form.submit()}} </p>
+                    <p  class="list_text"> {{form.project_name.label()}} </p>
+                    <p> {{form.project_name( class="form-control-sm")}} </p>
+                    <p> {{form.submit(class="btn-success")}} </p>
                 </form>
-            </div>
-            {% if project_report %}
-            <hr>
-            <div style="border: solid #32a1ce;
-                        width: 1000px;
-                        height: auto;">
-                <h2 style="padding-left: 2%;"> Отчет по проекту: {{ project_report["p_name"] }} </h2>
-                <p style="padding-left: 5%;"> Трудозатраты всего: <b>{{project_report["total_perf_time"] // 60 }}ч {{project_report["total_perf_time"] % 60 }}мин</b> </p>
+                {% if project_report %}
+                <div style="border: 1px solid #4786FF;
+                        width: 800px;
+                        height: auto;
+                        margin-bottom: 50px;">
+                <h2 class="content__h" style="padding-left: 2%;"> Отчет по проекту: {{ project_report["p_name"] }} </h2>
+                <p class="list_text" style="padding-left: 5%;"> Трудозатраты всего: <b>{{project_report["total_perf_time"] // 60 }}ч {{project_report["total_perf_time"] % 60 }}мин</b> </p>
                 <ol>
                     {% for cat_cost_name in project_report["cat_cost_list"] %}
-                        <li>
+                        <li class="list_text">
                             {{ cat_cost_name }}: 
                             {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 }}ч
                             {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] %  60 }}мин
                         </li>
-                            <hr>
+                            <div style="height: 1px; 
+                            background-color: #4786FF; 
+                            margin-top: 10px; 
+                            margin-bottom: 10px;"></div>
                             <ol>
                                 {% for emp_login in project_report["cat_cost_list"][cat_cost_name]["emp_list"] %}
-                                    <li>
+                                    <li class="list_text">
                                         {{ emp_login.upper() }}:
                                         {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) // 60 }}ч
                                         {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 60 }}мин
@@ -51,6 +58,8 @@
                 </ol>
             </div>
             {% endif %}
+            </div>
+            
         </div>
     </div>
 {% endblock content %}

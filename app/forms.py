@@ -56,15 +56,15 @@ class ProjectAddForm(FlaskForm):
     
 
 class ReportFormEmp(FlaskForm):
-    employee = SelectField("Выбор сотрудника: ")
+    employee = SelectField("Выбор сотрудника: ", id="emp_list")
     def validate_employee(form, field):
         if int(field.data) == -1:
             raise ValidationError("Пожалуйста, выберите сотрудника")    
     is_all_period = BooleanField("За весь период:", 
                                 render_kw = {"checked": True, "onchange":"disable_date(this)"})
-    lower_date = DateField("Дата от: ", render_kw = {"disabled": True})
-    upper_date = DateField("Дата до: ", render_kw = {"disabled": True})
-    submit = SubmitField("Показать отчет")
+    lower_date = DateField("Дата от: ", render_kw = {"disabled": True, "class": "emp_date"})
+    upper_date = DateField("Дата до: ", render_kw = {"disabled": True, "class": "emp_date"})
+    submit = SubmitField("Показать отчет", id="btn-success")
 
 
 class ProjectButton(FlaskForm):

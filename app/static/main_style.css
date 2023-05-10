@@ -1,3 +1,20 @@
+.content{
+    display: flex;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.content__inner-main{
+    border-right: 1px solid #4786FF;
+    padding: 0px 33px;
+}
+
+.vertical {
+    margin-right: 20px;
+    border-left: 6px solid black;
+    height: 100%;
+}
+
 .records__gip{
     display: block;
     justify-content: center;
@@ -13,7 +30,7 @@
     font-weight: 400;
     font-size: 24px;
     box-sizing: border-box;
-    width: 800px;
+    width: 600px;
     height: 50px;
 
     border: 1px solid #4786FF;
@@ -88,7 +105,7 @@ form{
 }
 
 .time_min{
-    margin-left: 185px;
+    margin-left: 155px;
 }
 
 .list_text{
@@ -99,8 +116,20 @@ form{
     line-height: 29px;
 }
 
+.last-5-records_li{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 29px;
+}
+
+.last-5-records{
+    margin-top: 11px;
+}
+
 .buttons{
-    margin-top: 20px;
+    margin-top: 10px;
     display: inline-flex;
     align-items: center;
 }
@@ -160,6 +189,7 @@ form{
     align-items: center;
     text-decoration: none;
     margin-top: 20px;
+    margin-bottom: 50px;
     width: 215px;
     height: 60px;
     background-color: #FFFFFF;
@@ -217,8 +247,8 @@ form{
     margin-top: 40px;
     font-family: 'Inter';
     font-style: normal;
-    font-weight: 400;
-    font-size: 24px;
+    font-weight: 500;
+    font-size: 28px;
 }
 
 .content__p{
@@ -226,7 +256,7 @@ form{
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 24px;  
+    font-size: 20px;  
 }
 
 .form-control-sm{
@@ -330,24 +360,48 @@ form{
     font-style: normal;
     font-weight: 400;
     font-size: 24px;
-    width: 400px;
+    width: 800px;
     height: 50px;
 
     border: 1px solid #4786FF;
     border-radius: 5px;
 }
 
-/* #emp_lower-date{
+.emp_date{
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
     font-size: 24px;
-    width: 400px;
+    width: 300px;
     height: 50px;
 
     border: 1px solid #4786FF;
     border-radius: 5px;
-} */
+} 
+
+.emp__form-date{
+    display: flex;
+}
+
+.upper_date{
+   margin-left: 200px;
+}
+
+#btn-success{
+    margin-top: 10px;
+    width: 300px;
+    height: 60px;
+    background: #4786FF;
+    text-decoration: none;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    border: 0cm;
+}
 
 /* Адаптив */
 
@@ -358,6 +412,17 @@ form{
             url('fonts/Inter-Regular.woff') format('woff');
         font-weight: normal;
         font-style: normal;
+    }
+
+    .content__inner{
+        border-right: 0px solid #4786FF;
+        padding: 0px 0px;
+    }
+
+    .content{
+        display: block;
+        padding-left: 0px;
+        padding-right: 0px;
     }
 
     .project{
@@ -444,10 +509,12 @@ form{
     }
 
     .time_min{
+        width: 300px;
         margin-left: 0px;
     }
 
     .list_text{
+        width: 300px;
         display: block;
         font-family: 'Inter';
         font-style: normal;

@@ -1,0 +1,20 @@
+*{
+    margin: 0px;
+}
+
+.gip__h{
+    margin-top: 40px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+}
+
+.gip__p{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;  
+}

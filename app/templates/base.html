@@ -3,8 +3,9 @@
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css' ) }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='common_style.css' ) }}">
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='/images/logo.svg') }}">
+        {% block stylesheet %}{% endblock stylesheet %}
       </head>
   <body style="background-color:#ffffff">
     <header>
@@ -13,12 +14,12 @@
           <a href="/">
             <img class="logo" src="{{ url_for('static', filename='/images/taskpesk.svg') }}"height="68"/>
           </a>
-            <div class="header_project">
-                <p class="header_text"> </p>
-            </div>
-            <div class="header_otchet">
-                <p class="header_text"> </p>
-            </div>
+          <div class="header_project">
+            <a class="header_text" href="{{url_for('main.record')}}"> Проект </a>
+        </div>
+        <div class="header_otchet">
+            <a class="header_text" href="{{url_for('main.detailed_project_report')}}"> Отчет </a>
+        </div>
           <a href="https://t.me/artmus208" class="my-link">Связь с разработчиком</a>
         </div>
     </div>
