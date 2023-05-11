@@ -9,6 +9,13 @@
         <div class="container">
             <div class="content">
                 <div class="content__inner-main">
+                    <div class="gips__role">
+                        {% if session.get("emp_role", "Нет роли") == 'gip' -%}
+                            <p  class="list_text-role" >Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
+                            <a href="{{ url_for('gip.gips_project') }}" class="gips-btn_project">Мой проект</a>
+                        {% endif %}
+                    </div>
+                            <a class="gips-btn" href="{{ url_for('main.emp_report') }}">Отчет по сотруднику</a>
                     <div class="space">
                         {% for cat, msg in get_flashed_messages(True) %}
                             <div class="space flash {{cat}}">{{msg}}</div>
@@ -44,16 +51,10 @@
                                 <p>{{form.minuts(class="input_min")}} </p>
                             </div>
                         </div>
-                        {% if session.get("emp_role", "Нет роли") == 'gip' -%}
                         <div class="buttons">
                             <p>{{form.submit(class="done")}}</p>
                             <a class="otchet" href="{{url_for('main.detailed_project_report')}}">Отчет по проектам</a>
                         </div>
-                        <p  class="list_text" >Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
-                        <a href="{{ url_for('gip.gips_project') }}" class="gips-btn">Мой проект</a>
-                        {% endif %}
-                        <a class="gips-btn" href="{{ url_for('main.emp_report') }}">Отчет по сотруднику</a>
-                        <a class="back" href="{{url_for('auth.logout')}}">Выйти</a>
                     </form>
                 </div>
                 <div class ="vertical"></div>
@@ -61,10 +62,10 @@
                     <p  class="list_text">Недавние записи:</p>
                     <ul>
                         {% for r in last_5_records %}
-                            <li class="last-5-records_li">
+                            <li style="margin-bottom: 30px; font-size: 20px;" class="last-5-records_li">
                                 {{r[1]}}<br>
-                                <b>{{r[2]}}</b> инвестировал {{r[-2]}} ч. {{r[-1]}} мин. <br> на "{{r[4]}}"
-                                в проекте <br> {{r[3]}}
+                                <b>{{r[2]}}</b> инвестировал {{r[-2]}} ч. {{r[-1]}} мин. на "{{r[4]}}"
+                                в проекте {{r[3]}}
                             </li>
                         {% endfor %}
                     </ul>
@@ -72,8 +73,4 @@
             </div>
         </div>
     </div>
-
-
-    
-
 {% endblock content %}

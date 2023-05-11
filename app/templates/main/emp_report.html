@@ -35,9 +35,9 @@
             {% if emp_data %}
             <hr>
                 {% if date_low%}
-                    <h2 class="content__h">Отчет по сотруднику за {{date_low}} - {{ date_upp }}</h2>
+                    <h2 style="margin-bottom: 20px; margin-top: 0px;" class="content__h">Отчет по сотруднику за {{date_low}} - {{ date_upp }}</h2>
                 {% else %}
-                    <h2 class="content__h">Отчет по сотруднику за весь период</h2>
+                    <h2 style="margin-bottom: 20px; margin-top: 0px;" class="content__h">Отчет по сотруднику за весь период</h2>
                 {% endif %}
                 <div style="border: 1px solid #4786FF;
                             width: 800px;
@@ -51,7 +51,7 @@
                             <li  class="content__p">{{cost["cost_name"]}}</li>
                             <ol>
                             {% for record in cost["records"] %}
-                                <li class="content__p">{{ record["date_time"] }}: {{ record["hours"] }}ч {{ record["minutes"] }}мин</li>
+                                <li class="content__p" style="margin: 5px;">{{ record["date_time"] }}: {{ record["hours"] }}ч {{ record["minutes"] }}мин</li>
                             {% endfor %}
                             <p class="content__p">Общее время труда в этой статье расходов: <span style="border-bottom: solid 1px;">{{cost["total_cost_time"] // 60}}ч {{cost["total_cost_time"] % 60}}мин</span></p>        
                             </ol>

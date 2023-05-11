@@ -1,7 +1,7 @@
 .content{
     display: flex;
-    padding-left: 50px;
-    padding-right: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .content__inner-main{
@@ -30,7 +30,7 @@
     font-weight: 400;
     font-size: 24px;
     box-sizing: border-box;
-    width: 600px;
+    width: 500px;
     height: 50px;
 
     border: 1px solid #4786FF;
@@ -105,7 +105,16 @@ form{
 }
 
 .time_min{
-    margin-left: 155px;
+    margin-left: 55px;
+}
+
+.list_text-role{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    margin-right: 20px;
 }
 
 .list_text{
@@ -120,8 +129,16 @@ form{
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 24px;
     line-height: 29px;
+}
+
+li::marker{
+    color: #4786FF;
+}
+
+.gips__role{
+    display: flex;
 }
 
 .last-5-records{
@@ -135,13 +152,14 @@ form{
 }
 
 .done{
-    width: 215px;
+    width: 221px;
     height: 60px;
     left: 335px;
     top: 763px;
 
-    border: 0px;
-    background: #4786FF;
+    background-color: #FFFFFF;
+    border: 2px solid #4786FF;
+    color:#4786FF;
     border-radius: 5px;
 
     font-family: 'Inter';
@@ -149,14 +167,13 @@ form{
     font-weight: 400;
     font-size: 22px;
     line-height: 27px;
-
-    color: #FFFFFF;
 }
 
 .done:hover {
-    background-color: #FFFFFF;
-    border: 2px solid #4786FF;
-    color:#4786FF;
+    border: 0px;
+    background: #4786FF;
+    border-radius: 5px;
+    color: #FFFFFF;
 }
 
 .otchet{
@@ -166,7 +183,7 @@ form{
     width: 250px;
     height: 60px;
     background: #4786FF;
-    margin-left: 20px;
+    margin-left: 55px;
     text-decoration: none;
     font-family: 'Inter';
     font-style: normal;
@@ -177,42 +194,22 @@ form{
     color: #FFFFFF;
 }
 
-.otchet:hover {
-    background-color: #FFFFFF;
-    border: 2px solid #4786FF;
-    color:#4786FF;
-}
-
-.back{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.gips-btn_project{
+    display: block;
     text-decoration: none;
-    margin-top: 20px;
-    margin-bottom: 50px;
-    width: 215px;
-    height: 60px;
-    background-color: #FFFFFF;
-    border: 2px solid #4786FF;
-    color:#4786FF;
+    color: #4786FF;
+
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 22px;
-    line-height: 27px;
-    text-align: center;
-    border-radius: 5px;
-}
-
-.back:hover {
-    background-color: #4786FF;
-    color:#FFFFFF;
+    font-size: 24px;
+    line-height: 29px;
+    margin-top: 24px;
 }
 
 .gips-btn{
     display: block;
     text-decoration: none;
-    margin-top: 24px; 
     color: #4786FF;
 
     font-family: 'Inter';
@@ -496,7 +493,7 @@ form{
         font-style: normal;
     }
 
-    .content__inner{
+    .content__inner-main{
         border-right: 0px solid #4786FF;
         padding: 0px 0px;
     }
@@ -519,13 +516,14 @@ form{
         box-sizing: border-box;
         width: 300px;
         height: 50px;
+        background-color: #FFFFFF;
 
         border: 1px solid #4786FF;
         border-radius: 5px;
     }
 
     .cost_list{
-        margin-top: 20px;
+        margin-top: 10px;
     }
 
     .cost_list_list{
@@ -536,13 +534,14 @@ form{
         box-sizing: border-box;
         width: 300px;
         height: 50px;
+        background-color: #FFFFFF;
 
         border: 1px solid #4786FF;
         border-radius: 5px;
     }
 
     .task_list{
-        margin-top: 20px;
+        margin-top: 10px;
     }
 
     .task_list_list{
@@ -687,13 +686,9 @@ form{
         flex-direction: column;
     }
 
-    .time_min{
-        width: 350px;
-    }
-
     .gips-btn{
         font-size: 20px;
-        margin: 0px;
-        width: 200px;
+        margin: 5px;
+        width: 300px;
     }
 }
