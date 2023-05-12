@@ -1,4 +1,5 @@
 from app import db, select, execute, app, text, logger
+from flask import session
 from sqlalchemy.sql import func
 from sqlalchemy import between
 from passlib.hash import bcrypt
@@ -183,6 +184,8 @@ class Employees(db.Model, MyBaseClass):
     records = db.relationship("Records", backref='Employees', lazy='dynamic')
     gip = db.relationship("GIPs", backref='Employees', lazy='dynamic')
     admin = db.relationship("Admins", backref='Employees', lazy='dynamic')
+    is_gip = False
+    is_admin = False
 
     def __repr__(self) -> str:
         s = f"{self.id},{self.login},{self.password}"
@@ -193,6 +196,13 @@ class Employees(db.Model, MyBaseClass):
         self.login = login
         self.password = password
     
+    def set_role(self):
+        if GIPs.query.filter_by(employee_id=self.id).first() is not None:
+            self.is_gip = True
+        if Admins.query.filter_by(employee_id=self.id).first() is not None:
+            self.is_admin = True
+        
+
     def as_dict_name(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
@@ -322,8 +332,8 @@ class Costs(db.Model, MyBaseClass):
         return [c.cost_name for c in db.session.execute(db.select(self)).scalars()]
     
     @classmethod
-    def get_costs_id_names(self):
-        return [(-1, "А статью расходов?")] + [(c.id, c.cost_name) for c in db.session.execute(db.select(self)).scalars()]
+    def get_costs_id_names(cls):
+        return [(-1, "А статью расходов?")] + [(c.id, c.cost_name) for c in db.session.execute(db.select(cls).order_by(cls.cost_name.desc())).scalars()]
     
     @classmethod
     def get_name_by_id(cls, fk_id):

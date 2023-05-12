@@ -6,75 +6,73 @@
 
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+  <div class="container">
     <p>
-        Форма редактирования задачи в выбранной статье расходов в проекте:<br>
-        <strong>{{ project_name }}</strong>
+      Форма редактирования задачи в выбранной статье расходов в проекте:<br>
+      <strong>{{ project_name }}</strong>
     </p>
 
     {% for cat, msg in get_flashed_messages(True) %}
-        <div class="space flash {{cat}}">{{msg}}</div>
+    <div class="space flash {{cat}}">{{msg}}</div>
     {% endfor %}
 
     <form action="{{ url_for('gip.edit_task') }}" method="POST">
-        
-        <!-- Добавление новой задачи -->
-        <p>Выберете статью расходов, имя новой задачи и плановый показатель:</p>
-        <hr>
-        <!-- Выбор статьи расходов, для которой нужно редактировать задачу -->
-        <label for="for_add_cost_list" style="display: block;"><b>Статья расходов</b></label>
-        <select name="for_add_cost_list" style="display: block;" multiple>
-            <option selected value="default">Не выбрано</option>
-            {% for cat in added_cost -%}
-                <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+"чел/день"+")" }}</option>
-            {% endfor %}
-        </select> 
 
-        <label for="new_task_name" style="display: block;"><b>Новая задача</b></label>
-        <input type="text" name="new_task_name" placeholder="Имя задачи" style="display: block;">
+      <!-- Добавление новой задачи -->
+      <p>Выберете статью расходов, имя новой задачи и плановый показатель:</p>
+      <hr>
+      <!-- Выбор статьи расходов, для которой нужно редактировать задачу -->
+      <label for="for_add_cost_list" style="display: block;"><b>Статья расходов</b></label>
+      <select name="for_add_cost_list" style="display: block;" multiple>
+        <option selected value="default">Не выбрано</option>
+        {% for cat in added_cost -%}
+        <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+"чел/день"+")" }}</option>
+        {% endfor %}
+      </select>
 
-        <label for="new_man_days" style="display: block;"><b>Планируемое количество трудозатрат (чел/день)</b></label>
-        <input type="number" min="1" placeholder="чел/день" name="new_man_days" style="display: block;" value="default">
-        <!-- Конец добавления новой задачи -->
-        <hr>
-        <!-- Редактирование задачи -->
-        <p>Изменение плановых показателей задачи:<br>
-            Сначала выберете из списка статью расходов, затем выберете задачу
-             и обновите плановые показатели</p>
-    
-            
-        <!-- Выбор статьи расходов, для которой нужно редактировать задачу -->
-        <label for="old_cost_list" style="display: block;"><b>Статья расходов</b></label>
-        <select name="old_cost_list" style="display: block;" multiple>
-            <option selected value="default">Не выбрано</option>
-            {% for cat in added_cost -%}
-                <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+" чел/день"+")" }}</option>
-            {% endfor %}
-        </select> 
-        <!-- Выбор задачи, которую надо редактировать -->
-        <label for="old_task_list" style="display: block;"><b>Добавленные задачи</b></label>
-        <select name="old_task_list" style="display: block;" multiple>
-            <option selected value="default">Не выбрано</option>
-            {% for task in added_tasks -%}
-                <option value="{{ task[0] }}">{{ task[1]+" "+"("+task[2]+" чел/день"+")" }}</option>
-            {% endfor %}
-        </select> 
+      <label for="new_task_name" style="display: block;"><b>Новая задача</b></label>
+      <input type="text" name="new_task_name" placeholder="Имя задачи" style="display: block;">
 
-        <label for="upd_task_name" style="display: block;"><b>Обновленное имя</b></label>
-        <input type="text" name="upd_task_name" placeholder="Имя задачи" style="display: block;">
+      <label for="new_man_days" style="display: block;"><b>Планируемое количество трудозатрат (чел/день)</b></label>
+      <input type="number" min="1" placeholder="чел/день" name="new_man_days" style="display: block;" value="default">
+      <!-- Конец добавления новой задачи -->
+      <hr>
+      <!-- Редактирование задачи -->
+      <p>Изменение плановых показателей задачи:<br>
+        Сначала выберете из списка статью расходов, затем выберете задачу
+        и обновите плановые показатели</p>
+      <!-- Выбор статьи расходов, для которой нужно редактировать задачу -->
+      <label for="old_cost_list" style="display: block;"><b>Статья расходов</b></label>
+      <select name="old_cost_list" style="display: block;" multiple>
+        <option selected value="default">Не выбрано</option>
+        {% for cat in added_cost -%}
+        <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+" чел/день"+")" }}</option>
+        {% endfor %}
+      </select>
+      <!-- Выбор задачи, которую надо редактировать -->
+      <label for="old_task_list" style="display: block;"><b>Добавленные задачи</b></label>
+      <select name="old_task_list" style="display: block;" multiple>
+        <option selected value="default">Не выбрано</option>
+        {% for task in added_tasks -%}
+        <option value="{{ task[0] }}">{{ task[1]+" "+"("+task[2]+" чел/день"+")" }}</option>
+        {% endfor %}
+      </select>
 
-        <label style="display: block;" for="updated_man_days"><b>Человеко-дни редактируемой задачи</b></label>
-        <input style="display: block;" name="updated_man_days" type="number" min="1" placeholder="чел/день" value="default">
-        <!-- Конец редактирования задачи -->
+      <label for="upd_task_name" style="display: block;"><b>Обновленное имя</b></label>
+      <input type="text" name="upd_task_name" placeholder="Имя задачи" style="display: block;">
 
-        <input style="display: block;" type="submit" value="Сохранить">
-    </form> 
+      <label style="display: block;" for="updated_man_days"><b>Человеко-дни редактируемой задачи</b></label>
+      <input style="display: block;" name="updated_man_days" type="number" min="1" placeholder="чел/день" value="default">
+      <!-- Конец редактирования задачи -->
+
+      <input style="display: block;" type="submit" value="Сохранить">
+    </form>
     <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
 
-    {% if session.get("emp_role", "Нет роли") == 'gip' -%}
-        <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
-        <a href="{{ url_for('gip.edit_cat_cost') }}" class="">Радактировать статьи расходов</a>
+    {% if session.get("emp_is_gip", False) -%}
+    <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
+    <a href="{{ url_for('gip.edit_cat_cost') }}" class="">Радактировать статьи расходов</a>
     {% endif %}
 
-</div>
+  </div>
 {% endblock content %}

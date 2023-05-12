@@ -12,6 +12,8 @@ auth = Blueprint('auth', __name__,
                static_folder="static/auth")
 
 
+   
+
 @auth.route("/register", methods=("GET", "POST"))
 def register():
     try:
@@ -54,26 +56,30 @@ def login():
             login = request.form['login'].lower()
             password = request.form['password']
             error = None
-            employee = Employees.query.filter_by(login=login).first()
+            employee:Employees = Employees.query.filter_by(login=login).first()
             if employee is None:
                 error = 'Неверный логин'
             elif not check_password_hash(employee.password, password):
                 error = 'Неверный пароль'
 
-
             if error is None:
+                # TODO:
+                # [ ]: Сделать объект-менеджер для отслеживания роли сотрудника
                 session.clear()
+                employee.set_role()
                 session['emp_id'] = employee.id
-                session['emp_role'] = 'common'
-                if GIPs.query.filter_by(employee_id=employee.id).first() is not None:
-                    session['emp_role'] = 'gip'
-                    session['gip_project'] = None
-                if Admins.query.filter_by(employee_id=employee.id).first() is not None:
-                    session['emp_role'] = 'admin'
+                
+                session['emp_role'] = u'Сотрудник'
+                
+                if employee.is_gip:
+                    session['emp_role'] = u'ГИП '
+                    session['emp_is_gip'] = True
+                if employee.is_admin:
+                    session['emp_role'] += u'Админ'
+                    session['emp_is_admin'] = True
+                logger.info(f'{session.get("emp_role", "Нет роли")}')
                 return redirect(url_for('main.index'))
-            
             flash(error, category='error')
-
         return render_template('auth/login.html')
     except Exception as e:
         flash("Ошибка авторизации", category='error')

@@ -7,7 +7,6 @@
             Список проектов, где пользователь числится ГИПом:
         </b></label>
         <select name="gips_project_list"  multiple>
-            <option selected value="default">Не выбрано</option>
             {% for pr in project_list -%}
                 <option value="{{ pr[0] }}">{{ pr[1] }}</option>
             {% endfor %}

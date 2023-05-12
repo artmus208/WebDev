@@ -27,7 +27,7 @@ gip = Blueprint('gip', __name__,
 @gip.route('/', methods=['GET', 'POST'])
 def gips_project():
     try:
-        if session.get("emp_role", "Нет роли") != 'gip':
+        if not session.get("emp_is_gip", False):
             return redirect(url_for('main.index'))
         emp_id = session.get("emp_id")
         gip_id = GIPs.query.filter_by(employee_id=emp_id).first().id
@@ -49,7 +49,7 @@ def edit_cat_cost():
     error = False
     try:
         # Если пользователь не является ГИПом
-        if session.get("emp_role", "Нет роли") != 'gip':
+        if not session.get("emp_is_gip", False):
             return redirect(url_for('main.index'))
         # Определяется ГИП и его проект
         gip_id = GIPs.query.filter_by(employee_id=session.get("emp_id")).first().id
@@ -133,7 +133,7 @@ def print_type_and_repr(list_):
 def edit_task():
     try:
         # Если пользователь не является ГИПом
-        if session.get("emp_role", "Нет роли") != 'gip':
+        if not session.get("emp_is_gip", False):
             return redirect(url_for('main.index'))
         # Определяется ГИП и его проект
         gip_id = GIPs.query.filter_by(employee_id=session.get("emp_id")).first().id

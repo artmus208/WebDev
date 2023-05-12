@@ -1,55 +1,65 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 style="padding-left: 10%;">Подробный отчет по проекту</h1>
-    <div class="main-container">
-        <div class="container">
-            <div class="content__inner">
-                <div class="space">
-                    {% for cat, msg in get_flashed_messages(True) %}
-                        <div class="space flash {{cat}}">{{msg}}</div>
-                    {% endfor %}
-                    {% for field, errors in form.errors.items() %}
-                        <div class="alert alert-error">
-                            {{ ', '.join(errors) }}
-                        </div>
-                    {% endfor %}
-                </div>
-                <form method="POST" action="{{ url_for('main.detailed_project_report') }}">
-                    {{ form.csrf_token }}
-                    <p> {{form.project_name.label()}} </p>
-                    <p> {{form.project_name()}} </p>
-                    <p> {{form.submit()}} </p>
-                </form>
-            </div>
-            {% if project_report %}
-            <hr>
-            <div style="border: solid #32a1ce;
+<h1 style="padding-left: 10%;">Подробный отчет по проекту</h1>
+<div class="main-container">
+  <div class="container">
+    <div class="content__inner">
+      <div class="space">
+        {% for cat, msg in get_flashed_messages(True) %}
+        <div class="space flash {{cat}}">{{msg}}</div>
+        {% endfor %}
+        {% for field, errors in form.errors.items() %}
+        <div class="alert alert-error">
+          {{ ', '.join(errors) }}
+        </div>
+        {% endfor %}
+      </div>
+      <form method="POST" action="{{ url_for('main.detailed_project_report') }}">
+        {{ form.csrf_token }}
+        <p> {{form.project_name()}} </p>
+        <p> {{form.submit()}} </p>
+      </form>
+    </div>
+    {% if project_report %}
+    <hr>
+    <div style="border: solid #32a1ce;
                         width: 1000px;
                         height: auto;">
-                <h2 style="padding-left: 2%;"> Отчет по проекту: {{ project_report["p_name"] }} </h2>
-                <p style="padding-left: 5%;"> Трудозатраты всего: <b>{{ round(project_report["total_perf_time"] / 60 / 8, 3) }} чел/д </b> </p>
-                <ol>
-                    {% for cat_cost_name in project_report["cat_cost_list"] %}
-                        <li>
-                            {{ cat_cost_name }}: 
-                            {{ round(project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] / 60 / 8, 3) }} чел/д
-                            
-                        </li>
-                            <hr>
-                            <ol>
-                                {% for emp_login in project_report["cat_cost_list"][cat_cost_name]["emp_list"] %}
-                                    <li>
-                                        {{ emp_login.upper() }}:
-                                        {{ round(sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) / 60 / 8, 3) }} чeл/д
-                                    </li>
-                                {% endfor %}
-                            </ol>
-                            <br>
-                    {% endfor %}
-                </ol>
-            </div>
-            {% endif %}
-        </div>
+      <h2 style="padding-left: 2%;"> Отчет по проекту: {{ project_report["p_name"] }} </h2>
+      <p style="padding-left: 5%;"> 
+        Трудозатраты всего: 
+        <b>
+          {{ project_report["total_perf_time"] // 60 // 8 }} чел/д 
+          {{ project_report["total_perf_time"] % 480 // 60 }} чел/ч 
+          {{ project_report["total_perf_time"] % 60 }} чел/мин 
+        </b> 
+
+      </p>
+      <ol>
+        {% for cat_cost_name in project_report["cat_cost_list"] %}
+        <li>
+          {{ cat_cost_name }}:
+          {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д 
+          {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 480 // 60 }} чел/ч 
+          {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 60 }} чел/мин 
+        </li>
+        <hr>
+        <ol>
+          {% for emp_login in project_report["cat_cost_list"][cat_cost_name]["emp_list"] %}
+          <li>
+            {{ emp_login.upper() }}:
+            {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) // 60 // 8 }} чел/д 
+            {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 480 // 60 }} чел/ч 
+            {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 60 }} чел/мин 
+          </li>
+          {% endfor %}
+        </ol>
+        <br>
+        {% endfor %}
+      </ol>
     </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock content %}
