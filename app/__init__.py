@@ -1,4 +1,5 @@
 import logging
+
 import pathlib
 import os
 
@@ -14,13 +15,12 @@ def create_app_db():
     db = SQLAlchemy()
     data_base_URI = None
     if os.name == 'posix':
-        data_base_URI = "{connectorname}://{username}:{password}@{hostname}:{port}/{databasename}".format(
-            connectorname="postgresql",
-            username="tcs",
-            password="rtycbvopa726",
-            hostname="localhost",
-            port="5432",
-            databasename="tcsdb",
+        data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
+            connectorname="mysql+mysqlconnector",
+            username="artmus208",
+            password="pesk-2020",
+            hostname="artmus208.mysql.pythonanywhere-services.com",
+            databasename="artmus208$time_managment_web_app",
             )
     else:
         data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
