@@ -181,6 +181,7 @@ class Employees(db.Model, MyBaseClass):
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     login = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(200), nullable=False)
+    
     records = db.relationship("Records", backref='Employees', lazy='dynamic')
     gip = db.relationship("GIPs", backref='Employees', lazy='dynamic')
     admin = db.relationship("Admins", backref='Employees', lazy='dynamic')
@@ -188,7 +189,7 @@ class Employees(db.Model, MyBaseClass):
     is_admin = False
 
     def __repr__(self) -> str:
-        s = f"{self.id},{self.login},{self.password}"
+        s = f"{self.id},{self.time_created},{self.time_updated},{self.login},{self.password}"
         return s
 
     def __init__(self, id, login, password):
@@ -246,11 +247,12 @@ class Projects(db.Model, MyBaseClass):
     start_time = db.Column(db.DateTime(timezone=True))
     end_time = db.Column(db.DateTime(timezone=True))
     end_time_fact = db.Column(db.DateTime(timezone=True))
+    
     project_costs = db.relationship("ProjectCosts",
                                 backref='Projects', lazy='dynamic')
 
     def __repr__(self) -> str:
-        s = f"{self.id},{self.project_name},{self.gip_id}"
+        s = f"{self.id},{self.time_created},{self.time_updated},{self.project_name},{self.gip_id},{self.start_time},{self.end_time},{self.end_time_fact}"
         return s
     
     def __init__(self, p_name, gip_id, id=None, code=None):
@@ -285,10 +287,11 @@ class GIPs(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))
+    
     project = db.relationship("Projects", backref='gips', lazy='dynamic')
 
     def __repr__(self) -> str:
-        return f"{self.id},{self.employee_id}"
+        return f"{self.id},{self.time_created},{self.employee_id}"
 
     def __init__(self, emp_id, id=None):
         if id is not None:
@@ -311,15 +314,17 @@ class GIPs(db.Model, MyBaseClass):
     @classmethod
     def get_by_employee_id(cls, employee_id):
         return cls.query.filter_by(employee_id=employee_id).first()
+
 class Costs(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     cost_name = db.Column(db.String(85), nullable=False, unique=True)
+    
     project_costs_rel = db.relationship("ProjectCosts", backref="Costs", lazy='dynamic')
     
     def __repr__(self) -> str:
-        s = f"{self.id},{self.cost_name}"
+        s = f"{self.id},{self.time_created},{self.time_updated},{self.cost_name}"
         return s
 
     def __init__(self, cost_name, id=None):
@@ -353,7 +358,7 @@ class ProjectCosts(db.Model, MyBaseClass):
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     
     def __repr__(self) -> str:
-        return f"{self.id},{self.cost_name_fk},{self.man_days},{self.project_id}"
+        return f"{self.id},{self.time_created},{self.time_updated},{self.cost_name_fk},{self.man_days},{self.project_id}"
 
     def __init__(self, cost_id, man_days, project_id, id=None):
         if id is not None:
@@ -426,10 +431,11 @@ class Tasks(db.Model, MyBaseClass):
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     task_name = db.Column(db.String(85), nullable=False, unique=True)
+    
     costs_tasks_rel = db.relationship("CostsTasks", backref='Tasks', lazy='dynamic')
     
     def __repr__(self) -> str:
-        return f"{self.id},{self.task_name}"
+        return f"{self.id},{self.time_created},{self.time_updated},{self.task_name}"
 
     def __init__(self, id, task_name):
         self.id = id
@@ -456,7 +462,7 @@ class CostsTasks(db.Model, MyBaseClass):
     cost_id = db.Column(db.Integer, db.ForeignKey('project_costs.id'))
     
     def __repr__(self) -> str:
-        return f"{self.id},{self.task_name_fk},{self.man_days},{self.cost_id}"
+        return f"{self.id},{self.time_created},{self.time_updated},{self.task_name_fk},{self.man_days},{self.cost_id}"
 
     def __init__(self, task_name_fk, man_days, cost_id, id=None):
         if id is not None:
