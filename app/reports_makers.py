@@ -2,6 +2,7 @@
 import datetime
 import json
 from typing import Dict, List
+from sqlalchemy import func
 from transliterate import translit
 
 from app import db, app
@@ -121,14 +122,24 @@ def project_report2(p_id):
         "p_name": Projects.get_project_name_by_id(p_id),
         "cat_cost_list": {},
         "total_perf_time": 0,
+        "plan_time": 0,
+        "abs_diff": 0,
+        "rel_diff": 0
     }
+
+
+
     for cat_cost_id in Records.get_cat_costs_ids_by_project_id(p_id):
         cat_cost_name = ProjectCosts.get_cat_cost_name_by_id(cat_cost_id)
-        if not (cat_cost_name in project_report["cat_cost_list"]):
+        if not (cat_cost_name in project_report["cat_cost_list"]): 
+            cat_cost_plan = ProjectCosts.get(cat_cost_id).man_days * 8 * 60 
             project_report["cat_cost_list"][cat_cost_name] = {
                 "cat_cost_id": cat_cost_id,
+                "cat_cost_plan": cat_cost_plan,
                 "emp_list": {},
                 "total_perf_time": 0,
+                "abs_diff": 0,
+                "rel_diff": 0 
             }
         for emp_id in Records.get_emp_ids_by_project_id_cat_cost_id(
                         project_id=p_id, cat_cost_id=cat_cost_id):
@@ -148,9 +159,23 @@ def project_report2(p_id):
         total_cat_cost_time = []
         for emp_login_ in project_report["cat_cost_list"][cat_cost_name]["emp_list"]:
             total_cat_cost_time.append(sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login_]["total_perf_time"]))
-        project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] = sum(total_cat_cost_time)
+
+        cat_cost_fact = sum(total_cat_cost_time)
+        project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] = cat_cost_fact
+        project_report["cat_cost_list"][cat_cost_name]["abs_diff"] = cat_cost_plan - cat_cost_fact
+        project_report["cat_cost_list"][cat_cost_name]["rel_diff"] = round(
+            100*(cat_cost_plan - cat_cost_fact)/cat_cost_plan, 2
+        )
+
     for cat_cost_name in project_report["cat_cost_list"]:
         project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
+    
+    project = Projects.get(p_id)
+    plan_man_days = project.project_costs.with_entities(func.sum(ProjectCosts.man_days)).scalar()
+    plan_man_days = plan_man_days * 8 * 60 
+    project_report["plan_time"] = plan_man_days 
+    project_report["abs_diff"] = plan_man_days - project_report["total_perf_time"]
+    project_report["rel_diff"] = round((project_report["abs_diff"]/plan_man_days)*100, 2)
     return project_report
 
 

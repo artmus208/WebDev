@@ -6,6 +6,7 @@ from flask import (
     render_template, redirect, 
     url_for, flash, session, g, request,
     jsonify)
+from sqlalchemy import func
 
 from app import logger
 from app.forms import (
