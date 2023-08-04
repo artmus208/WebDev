@@ -27,6 +27,10 @@
                         width: 1000px;
                         height: auto;">
       <h2 style="padding-left: 2%;"> Отчет по проекту: {{ project_report["p_name"] }} </h2>
+      <p style="padding-left: 5%;">
+        Планируемые трудозатраты:
+        {{ project_report["plan_time"] // 60 // 8 }} чел/д
+      </p>
       <p style="padding-left: 5%;"> 
         Фактические трудозатраты: 
         <b>
@@ -35,12 +39,6 @@
           {{ project_report["total_perf_time"] % 60 }} чел/мин 
         </b> 
       </p>
-
-      <p style="padding-left: 5%;">
-        Планируемые трудозатраты:
-        {{ project_report["plan_time"] // 60 // 8 }} чел/д
-      </p>
-
       <p style="padding-left: 5%;">
         Разница:
         {% if project_report["abs_diff"] > 0  %}
@@ -54,13 +52,17 @@
         {% else %}
           <span style="color: red;">{{ project_report["rel_diff"] }} %</span>
         {% endif %}
-
       </p>
 
       <ol>
         {% for cat_cost_name in project_report["cat_cost_list"] %}
         <li>
           {{ cat_cost_name }} <br>
+          П: 
+          <b>
+            {{ project_report["cat_cost_list"][cat_cost_name]["cat_cost_plan"] // 60 // 8 }} чел/д
+          </b>
+          <br>
           Ф:
           <b>
             {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д 
@@ -68,25 +70,17 @@
             {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 60 }} чел/мин 
           </b>
           <br>
-          П: 
-          <b>
-            {{ project_report["cat_cost_list"][cat_cost_name]["cat_cost_plan"] // 60 // 8 }} чел/д
-          </b>
-          
-          <br>
           Р:
           {% if project_report["cat_cost_list"][cat_cost_name]["abs_diff"] > 0  %}
             <b><span style="color: green;">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] // 60 // 8  }} чел/д</span></b>
           {% else %}
             <b><span style="color: red;">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] }} чел/д</span></b>
           {% endif %}
-
           {% if project_report["cat_cost_list"][cat_cost_name]["rel_diff"] > 0  %}
             <b><span style="color: green;">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
           {% else %}
             <b><span style="color: red;">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
           {% endif %}
-          
         </li>
         <hr>
         <ol>

@@ -155,7 +155,7 @@ def detailed_project_report():
         else:
             return render_template('main/detailed_project_report.html', form=form)    
     except Exception as e:
-        flash("Произошла ошибка при генерации подробного отчета", category="error")
+        flash("Произошла ошибка при генерации подробного отчета (возможно нет записей)", category="error")
         logger.warning(f"detailed_project_report: {e}")
         time.sleep(1)
         return redirect(url_for('main.detailed_project_report'))
