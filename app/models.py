@@ -46,7 +46,9 @@ class Records(db.Model, MyBaseClass):
     hours = db.Column(db.Integer, default=0)
     minuts = db.Column(db.Integer, default=0)
 
-    def __init__(self, employee_id, project_id, cost_id, task_id, hours, minuts):
+    def __init__(self, id, time_created, employee_id, project_id, cost_id, task_id, hours, minuts):
+        self.id = id
+        self.time_created = time_created
         self.employee_id = employee_id
         self.project_id = project_id
         self.cost_id = cost_id
@@ -256,12 +258,8 @@ class Projects(db.Model, MyBaseClass):
         return s
     
     def __init__(self, p_name, gip_id, id=None, code=None):
-        if code is not None:
-            self.project_name = " ".join([code, p_name])
-        elif id is not None:
-            self.id = id
-        else:
-            self.project_name = p_name
+        self.id = id
+        self.project_name = p_name
         self.gip_id = gip_id
 
     @classmethod
@@ -327,9 +325,8 @@ class Costs(db.Model, MyBaseClass):
         s = f"{self.id},{self.time_created},{self.time_updated},{self.cost_name}"
         return s
 
-    def __init__(self, cost_name, id=None):
-        if id is not None:
-            self.id = id
+    def __init__(self, id, cost_name):
+        self.id = id
         self.cost_name = cost_name
 
     @classmethod

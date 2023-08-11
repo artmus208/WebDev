@@ -6,14 +6,21 @@ from flask import Blueprint
 
 from app import logger, db, app
 from app.models import (
-    Records, Employees,
-    Costs, Tasks, Projects,
-    GIPs, ProjectCosts, CostsTasks,
-    Admins)
-from app.helper_functions import (
-revise_records_for_ProjectCosts, clear_strings, delete_spaces_in)
+    Employees, GIPs, Projects, 
+    Costs, Tasks, ProjectCosts,
+    CostsTasks, Records, Admins
+)
+from app.helper_functions import(
+    revise_records_for_ProjectCosts, clear_strings, delete_spaces_in
+)
 
 from app import select, execute
+
+from app.main.loaders import (
+    load_emps, load_gips, load_projects,
+    load_costs, load_tasks, load_project_costs,
+    load_costs_tasks, load_records, load_admins
+)
 
 app.jinja_env.globals.update(sum=sum)
 app.jinja_env.globals.update(round=round)
@@ -162,120 +169,21 @@ def tasks_backup():
 
 
 ### LOAD STARTS ####################################################################
-@main.cli.command("load_projects")
-def load_projects():
-    with open(str(folder_path_that_contains_this_file)+"/files/projects.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            new_rec = Projects( id=splited_list[0],
-                                p_name=splited_list[1],
-                                gip_id=int(splited_list[2])
-                                )
-            new_rec.save()
-    print(load_projects.name, "done.")
-
-@main.cli.command("load_gips")
-def load_gips():
-    with open(str(folder_path_that_contains_this_file)+"/files/gips.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            new_rec = GIPs(
-                id=splited_list[0],
-                emp_id=splited_list[1]
-                )
-            new_rec.save()
-    print(load_gips.name, "done.")
-
-@main.cli.command("load_employees")
-def load_employees():
-    with open(str(folder_path_that_contains_this_file)+"/files/employees.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            new_rec = Employees(
-                id=splited_list[0],
-                login=splited_list[1],
-                password=splited_list[2]
-                )
-            new_rec.save()
-    print(load_employees.name, "done.")
-
-
-@main.cli.command("load_admins")
-def load_admins():
-    with open(str(folder_path_that_contains_this_file)+"/files/admins.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            new_rec = Admins(
-                id=splited_list[0],
-                employee_id=splited_list[1]
-                )
-            new_rec.save()
-    print(load_admins.name, "done.")
-
-@main.cli.command("load_project_costs")
-def load_project_costs():
-    with open(str(folder_path_that_contains_this_file)+"/files/project_costs.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            new_rec = ProjectCosts(
-                id=splited_list[0],
-                cost_id=splited_list[1],
-                man_days=splited_list[2],
-                project_id=splited_list[3]
-                )
-            new_rec.save()
-    print(load_project_costs.name, "done.")
-
-@main.cli.command("load_tasks")
-def load_tasks():
-    with open(str(folder_path_that_contains_this_file)+"/files/tasks.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            new_rec = Tasks(
-                id=splited_list[0],
-                task_name=splited_list[1]
-                )
-            new_rec.save()
-    print(load_tasks.name, "done.")
-
-@main.cli.command("load_costs_tasks")
-def load_costs_tasks():
-    with open(str(folder_path_that_contains_this_file)+"/files/costs_tasks.txt", "r",encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            new_rec = CostsTasks(
-                id=splited_list[0],
-                task_name_fk=splited_list[1],
-                man_days=splited_list[2],
-                cost_id=splited_list[3]
-                )
-            new_rec.save()
-    print(load_costs_tasks.name, "done.")
-
-@main.cli.command("load_costs")
-def load_costs():
-    with open(str(folder_path_that_contains_this_file)+"/files/costs.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            new_rec = Costs(
-                id=splited_list[0],
-                cost_name=splited_list[1]
-                )
-            new_rec.save()
-    print(load_costs.name, "done.")
-
-@main.cli.command("load_records")
-def load_records():
-    with open(str(folder_path_that_contains_this_file)+"/files/records.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            splited_list = clear_strings(line.split(","))
-            need_info = list(map(int, splited_list[2:]))
-            new_rec = Records(  need_info[0],
-                                need_info[1],
-                                need_info[2],
-                                need_info[3],
-                                need_info[4],
-                                need_info[5])
-            new_rec.save()
-    print(load_records.name, "done.")
+@main.cli.command("load_all_into_db")
+def load_all_into_db():
+    print("Start loading data into DB")
+    try:
+        load_emps()
+        load_gips()
+        load_projects()
+        load_costs()
+        load_tasks()
+        load_project_costs()
+        load_costs_tasks()
+        load_records()
+        load_admins()
+        print("End loading data into DB")
+    except:
+        print("Fail, maybe DB is not clear. Check log")
+        logger.exception("Fail, maybe DB is not clear")
 ### LOAD ENDS ######################################################################
