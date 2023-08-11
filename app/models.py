@@ -2,7 +2,7 @@ from app import db, select, execute, app, text, logger
 from flask import session
 from sqlalchemy.sql import func
 from sqlalchemy import between
-from passlib.hash import bcrypt
+# from passlib.hash import bcrypt
 
 
 # TIPS:
