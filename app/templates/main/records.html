@@ -39,8 +39,8 @@
           </div>
           <div class="buttons">
             <p>{{form.submit(class="done")}}</p>
-            <a class="otchet" href="{{url_for('main.detailed_project_report')}}">Отчет по проектам</a>
-            <a class="back" href="{{url_for('auth.logout')}}">Выйти</a>
+            <a class="btn" href="{{url_for('main.detailed_project_report')}}">Отчет по проектам</a>
+            <a class="btn" href="{{url_for('auth.logout')}}">Выйти</a>
           </div>
         </form>
         {% if session.get("emp_is_gip", False) -%}
@@ -53,7 +53,7 @@
         <p>Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
       </div>
       <div class="last-5-records">
-        <p>Недавние записи:</p>
+        <h2 class="title">Недавние записи</h2>
         <ul>
           {% for r in last_5_records %}
           <li class="last-5-records_li">
