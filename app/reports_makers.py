@@ -141,6 +141,7 @@ def project_report2(p_id):
                 "abs_diff": 0,
                 "rel_diff": 0 
             }
+            project_report["plan_time"] += cat_cost_plan
         for emp_id in Records.get_emp_ids_by_project_id_cat_cost_id(
                         project_id=p_id, cat_cost_id=cat_cost_id):
             emp_login = Employees.get_login_by_id(emp_id)
@@ -171,11 +172,11 @@ def project_report2(p_id):
         project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
     
     project = Projects.get(p_id)
-    plan_man_days = project.project_costs.with_entities(func.sum(ProjectCosts.man_days)).scalar()
-    plan_man_days = plan_man_days * 8 * 60 
-    project_report["plan_time"] = plan_man_days 
-    project_report["abs_diff"] = plan_man_days - project_report["total_perf_time"]
-    project_report["rel_diff"] = round((project_report["abs_diff"]/plan_man_days)*100, 2)
+    # plan_man_days = project.project_costs.with_entities(func.sum(ProjectCosts.man_days)).scalar()
+    # plan_man_days = plan_man_days * 8 * 60 
+     
+    project_report["abs_diff"] = project_report["plan_time"] - project_report["total_perf_time"]
+    project_report["rel_diff"] = round((project_report["abs_diff"]/project_report["plan_time"])*100, 2)
     return project_report
 
 
