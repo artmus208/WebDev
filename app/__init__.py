@@ -31,15 +31,6 @@ def create_app_db():
             databasename="time_managment_web_app",
             )
     app.config['SQLALCHEMY_DATABASE_URI'] = data_base_URI
-    # @app.teardown_appcontext
-    # def shutdown_session(exception=None):
-    #     db.session.remove()
-
-    @app.before_first_request
-    def create_database():
-        with app.app_context():
-            db.create_all()
-
     db.init_app(app)
     return app, db
 
@@ -70,3 +61,6 @@ app.register_blueprint(main)
 app.register_blueprint(auth)
 app.register_blueprint(gip)
 app.register_blueprint(admin)
+
+with app.app_context():
+    db.create_all()

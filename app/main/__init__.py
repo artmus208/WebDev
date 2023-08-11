@@ -20,7 +20,7 @@ app.jinja_env.globals.update(round=round)
 main = Blueprint('main', __name__, static_url_path="/static/main", static_folder="/static/main")
 folder_path_that_contains_this_file = pathlib.Path(__file__).parent.resolve()
 
-@main.before_app_first_request
+@main.before_request
 def ping_connect():
     try:
         # logger.info("Ping DB")
@@ -28,11 +28,11 @@ def ping_connect():
             select(Records)
         ).first()
     except:
-        logger.warning("Ping DB")
+        logger.exception("Ping DB")
 
 
 @main.cli.command("create_db")
-def init_emp():
+def create_db():
     db.create_all()
 
 @main.cli.command("drop_db")
