@@ -98,7 +98,13 @@ def record():
             task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id).first().id
             hours = form.hours.data
             minuts = form.minuts.data
-            rec = Records(employee_id, project_id, cost_id, task_id_, hours, minuts)
+            rec = Records(
+                employee_id=employee_id,
+                project_id=project_id,
+                cost_id=cost_id,
+                task_id=task_id_,
+                hours=hours,
+                minuts=minuts)
             rec.save()
             flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))

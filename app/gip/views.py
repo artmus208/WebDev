@@ -105,7 +105,7 @@ def edit_cat_cost():
                                added_cost=added_costs_list_id_name,
                                project_name=project.project_name)
     except Exception as e:
-        logger.warning(f"In edit_cat_cost fail: {e}")
+        logger.exception(f"In edit_cat_cost fail: {e}")
         flash("Что-то пошло не по плану в редакторе статей расходов...", category="error")
         return redirect(url_for("gip.edit_cat_cost"))
 

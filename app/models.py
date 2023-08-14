@@ -46,9 +46,20 @@ class Records(db.Model, MyBaseClass):
     hours = db.Column(db.Integer, default=0)
     minuts = db.Column(db.Integer, default=0)
 
-    def __init__(self, id, time_created, employee_id, project_id, cost_id, task_id, hours, minuts):
-        self.id = id
-        self.time_created = time_created
+    def __init__(
+        self, 
+        id=None, 
+        time_created=None, 
+        employee_id=None, 
+        project_id=None, 
+        cost_id=None, 
+        task_id=None, 
+        hours=None, 
+        minuts=None):
+        if id:
+            self.id = id
+        if time_created:
+            self.time_created = time_created
         self.employee_id = employee_id
         self.project_id = project_id
         self.cost_id = cost_id
@@ -325,8 +336,9 @@ class Costs(db.Model, MyBaseClass):
         s = f"{self.id},{self.time_created},{self.time_updated},{self.cost_name}"
         return s
 
-    def __init__(self, id, cost_name):
-        self.id = id
+    def __init__(self, id=None, cost_name=None):
+        if id:
+            self.id = id
         self.cost_name = cost_name
 
     @classmethod
