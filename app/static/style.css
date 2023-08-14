@@ -338,3 +338,11 @@ i.tl_telegram_share_icon {
     display: inline-block;
     text-decoration: none;
 }
+
+.color_red {
+    color: red;
+}
+
+.color_green {
+    color: green;
+}

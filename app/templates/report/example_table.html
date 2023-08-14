@@ -1,6 +1,9 @@
+{% import 'utils.j2' as utils %}
+
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='weekly_report.css') }}">
 <div class="main-container">
   <div class="container">
     <div class="content__inner">
@@ -23,9 +26,9 @@
         </form>
 
       </div>
+
       <hr>
       <table>
-        <link rel="stylesheet" href="{{ url_for('static', filename='weekly_report.css') }}">
         <caption>23R01 Система TCS, отчет от 07.08 по 11.08, ГИП: МАР </caption>
         <thead>
           <tr>
