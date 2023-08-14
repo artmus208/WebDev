@@ -17,7 +17,18 @@ from utils import timeit
 
 
 
-# with app.app_context():
+
+with app.app_context():
+    task = Tasks.query.filter_by(task_name="blank_task").first()
+    try:
+        print(task.id)
+    except:
+        print(task)
+        
+    tasks = Tasks.query.all()
+    for t in tasks:
+        print(t.task_name.__repr__())
+         
 #     res = execute(
 #         select(Records)
 #     ).first()

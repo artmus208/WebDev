@@ -23,9 +23,10 @@
     </div>
     {% if project_report %}
     <hr>
-    <div style="border: solid #32a1ce;
-                        width: 1000px;
-                        height: auto;">
+    <div style="border: solid #4786FF;
+                width: 1000px;
+                height: auto;
+                background-color: white;">
       <h2 style="padding-left: 2%;"> Отчет по проекту: {{ project_report["p_name"] }} </h2>
       <p style="padding-left: 5%;">
         Планируемые трудозатраты:
@@ -35,7 +36,7 @@
         Фактические трудозатраты: 
         <b>
           {{ project_report["total_perf_time"] // 60 // 8 }} чел/д 
-          {{ project_report["total_perf_time"] % 480 // 60 }} чел/ч 
+          {{ project_report["total_perf_time"] % 480 // 60 }} чел/ч     
           {{ project_report["total_perf_time"] % 60 }} чел/мин 
         </b> 
       </p>

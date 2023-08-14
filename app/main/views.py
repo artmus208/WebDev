@@ -108,7 +108,7 @@ def record():
             return render_template('main/records.html', form=form,
                                     login=login, last_5_records=last_5_records)
     except Exception as e:
-        logger.warning(f"In record page fail has been ocured: {e}")
+        logger.exception(f"In record page fail has been ocured: {e}")
         flash('Что-то пошло не так...', category="error")
         time.sleep(1)
         return redirect(url_for('main.record', login=login))
