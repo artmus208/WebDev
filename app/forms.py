@@ -75,7 +75,7 @@ class ProjectButton(FlaskForm):
 
 class ReportProjectForm(FlaskForm):
     project_name = SelectField(u'Проект')
-    submit = SubmitField('Создать отчет по проекту')
+    submit = SubmitField('Создать отчет')
 
 class ReturnButton(FlaskForm):
     submit = SubmitField('Выйти')
