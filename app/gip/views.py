@@ -2,13 +2,12 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, session, url_for, g
 )
 
-
-
 from app.models import (
     GIPs, Projects,
     ProjectCosts, Tasks,
     Costs, CostsTasks 
-    )
+)
+
 from app import logger
 from app.helper_functions import is_empty_default_or_none, sorting_projects_names
 

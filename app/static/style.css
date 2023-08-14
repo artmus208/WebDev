@@ -2,7 +2,7 @@ html {
     padding: 0px;
     margin: 0px;
     height: 100%;
-}   
+}
 
 body {
     /* width: 100%; */
@@ -11,7 +11,7 @@ body {
     margin: 0px;
 }
 
-header{
+header {
     box-sizing: border-box;
     width: 100%;
     height: 60px;
@@ -22,19 +22,19 @@ header{
     font-weight: 400;
     font-size: 24px;
     line-height: 29px;
-    color:#4786FF;
+    color: #4786FF;
 }
 
-.header_project{
+.header_project {
     margin-left: auto;
 }
 
-.header_otchet{
+.header_otchet {
     margin-left: 50px;
 }
 
 
-.header_content{
+.header_content {
     margin-top: 25px;
     display: flex;
     align-items: center;
@@ -46,16 +46,16 @@ header{
     height: 40px;
 }
 
-content{
+content {
     display: flex;
     justify-content: center;
 }
 
-.project{
+.project {
     margin-top: 55px;
 }
 
-.project_list{
+.project_list {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -68,11 +68,11 @@ content{
     border-radius: 5px;
 }
 
-.cost_list{
+.cost_list {
     margin-top: 30px;
 }
 
-.cost_list_list{
+.cost_list_list {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -85,11 +85,11 @@ content{
     border-radius: 5px;
 }
 
-.task_list{
+.task_list {
     margin-top: 30px;
 }
 
-.task_list_list{
+.task_list_list {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -102,12 +102,12 @@ content{
     border-radius: 5px;
 }
 
-.input{
+.input {
     margin-top: 30px;
     display: flex;
 }
 
-.input_hour{
+.input_hour {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -119,7 +119,7 @@ content{
     border-radius: 5px;
 }
 
-.input_min{
+.input_min {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -131,11 +131,11 @@ content{
     border-radius: 5px;
 }
 
-.time_min{
+.time_min {
     margin-left: 185px;
 }
 
-.list_text{
+.list_text {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -143,13 +143,13 @@ content{
     line-height: 29px;
 }
 
-.buttons{
+.buttons {
     margin-top: 30px;
     display: inline-flex;
     align-items: center;
 }
 
-.done{
+.done {
     width: 215px;
     height: 60px;
     left: 335px;
@@ -168,7 +168,7 @@ content{
     color: #FFFFFF;
 }
 
-.otchet{
+.otchet {
     width: 215px;
     max-height: 60px;
     background: #4786FF;
@@ -189,11 +189,11 @@ content{
     padding: 17px;
 }
 
-.back{
+.back {
     width: 215px;
     max-height: 60px;
     background-color: #4787ffbc;
-    color:#fff;
+    color: #fff;
     text-decoration: none;
     transition: background-color 0.2s linear;
     margin-left: 20px;
@@ -216,6 +216,7 @@ content{
     text-align: center;
     font-family: 'Inter';
 }
+
 .flash.error {
     background: #FFA866;
     text-align: center;
@@ -230,33 +231,37 @@ content{
 
 /* Стили отчета */
 
-.container-report{
+.container-report {
     border: 4px double black;
     padding: 10px;
     background-color: aliceblue;
 }
 
-.time{
+.content__inner {
+    max-width: fit-content;
+}
+
+.time {
     padding-left: 2%;
     display: flex;
 }
 
-.time-m{
+.time-m {
     padding-left: 2%;
 }
 
-.info{
+.info {
     display: flex;
     padding-bottom: 1%;
     border-bottom: 2px solid black;
 }
 
-.general-hours{
+.general-hours {
     padding-left: 1%;
     font-weight: bold;
 }
 
-.cat-cost-item{
+.cat-cost-item {
     padding-bottom: 1%;
 }
 
@@ -267,38 +272,44 @@ content{
     max-width: 1200px;
 }
 
-.main-container{
+.main-container {
     display: flex;
+    flex-direction: column;
     background-image: url("images/backgrounds/4.png");
     height: 85%;
 }
 
-.last-5-records{
+.last-5-records {
     margin-top: 50px;
     margin-left: 50px;
     padding-left: 20px;
     padding-top: 50px;
     border-left: 3px solid #4787ffbc;
 }
-.last-5-records_li{
+
+.last-5-records_li {
     padding-bottom: 50px;
 }
-li::marker{
+
+li::marker {
     color: #095efdbc;
 }
 
 
 
-option[value="-1"]{
+option[value="-1"] {
     color: #a9a9a9;
 }
 
-#project_name, #category_of_costs, #hours, #minuts{
+#project_name,
+#category_of_costs,
+#hours,
+#minuts {
     padding-left: 25px;
 }
 
 
-.tl_telegram_share_btn{
+.tl_telegram_share_btn {
     display: inline-block;
     border-radius: 16px;
     background-color: #4786FF;

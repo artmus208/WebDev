@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+  <div class="container">
+    <div class="content__inner">
+      <h1>Еженедельный отчет по проекту</h1>
+        <div class="space">
+          {% for cat, msg in get_flashed_messages(True) %}
+            <div class="space flash {{cat}}">{{msg}}</div>
+          {% endfor %}
+
+          {% for field, errors in form.errors.items() %}
+            <div class="alert alert-error">
+              {{ ', '.join(errors) }}
+            </div>
+          {% endfor %}
+
+        <form method="POST" action="{{ url_for('main.detailed_project_report') }}">
+          {{ form.csrf_token }}
+          <p> {{form.project_name()}} </p>
+          <p> {{form.submit()}} </p>
+        </form>
+
+      </div>
+      <hr>
+      <table>
+        <link rel="stylesheet" href="{{ url_for('static', filename='weekly_report.css') }}">
+        <caption>23R01 Система TCS, отчет от 07.08 по 11.08, ГИП: МАР </caption>
+        <thead>
+          <tr>
+            <th>Статьи расходов</th>
+            <th>За неделю,<br> чел/д</th>
+            <th>Факт,<br> чел/д</th>
+            <th>План,<br> чел/д</th>
+            <th>Разница,<br> чел/д</th>
+            <th>Прогресс,<br> %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left;">Программирование</td>
+            <td>8</td>
+            <td>10</td>
+            <td>15</td>
+            <td>5</td>
+            <td>65</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Проектирование</td>
+            <td>5</td>
+            <td>9</td>
+            <td>15</td>
+            <td>5</td>
+            <td>65</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="text-align: left;">Итого:</td>
+            <td>13</td>
+            <td>19</td>
+            <td>30</td>
+            <td>10</td>
+            <td>165</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div> 
+{% endblock content %}
