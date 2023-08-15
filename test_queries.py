@@ -12,7 +12,7 @@ from app import helper_functions
 from app import select, execute
 
 from app.reports_makers import report_about_employee, get_project_report_dict
-from app.report.utils import get_previous_week_dates
+from app.report.utils import get_end_week_dates
 from app.report.reports_generators import weekly_project_report
 
 from utils import timeit

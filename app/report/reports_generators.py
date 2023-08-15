@@ -7,7 +7,7 @@ from app.models import (
 )
 
 
-from .utils import get_previous_week_dates
+from .utils import get_end_week_dates
 
 RIGHT_ORDER_CC_NAMES = [
     "Управление проектом",
@@ -48,7 +48,7 @@ def weekly_project_report(project_id):
         "progress": 0,
         "week_labor": 0
     }
-    prev_monday_date, prev_friday_date = get_previous_week_dates()
+    prev_monday_date, prev_friday_date = get_end_week_dates()
     p = Projects.get(project_id)
     project_name = p.project_name
     gip_id = p.gip_id
