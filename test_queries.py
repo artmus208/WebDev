@@ -33,7 +33,7 @@ from utils import timeit
 #     print(all_cc_names)
     
 with app.app_context():
-    report, summury, caption = weekly_project_report(30)
+    report, summury, caption = weekly_project_report(22)
     print(caption)
     for key in report:
         print(f"{key}\n{report[key]}")

@@ -88,9 +88,9 @@ def weekly_project_report(project_id):
         labors_gen_fact = next(iter_labors_gen_fact)
         labors_week = next(iter_labors_week)
         
-        if not all(labors_gen_fact):
+        if not any(labors_gen_fact):
             labors_gen_fact = [0, 0]
-        if not all(labors_week):
+        if not any(labors_week):
             labors_week = [0, 0]
             
         hours_fact, minuts_fact = map(int, labors_gen_fact)
