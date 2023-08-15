@@ -191,12 +191,12 @@ def add_project():
             for cost_id_fk in form.cat_costs.data:
                 new_project_costs = ProjectCosts(
                                     cost_id=cost_id_fk,
-                                    man_days=100,
+                                    man_days=0,
                                     project_id=new_project.id)
                 new_project_costs.save()
                 new_costs_tasks = CostsTasks(
                     task_name_fk=1,
-                    man_days=100,
+                    man_days=0,
                     cost_id=new_project_costs.id)
                 new_costs_tasks.save()
             flash("Проект добавлен", category='success')
