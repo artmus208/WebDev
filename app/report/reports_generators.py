@@ -105,7 +105,12 @@ def weekly_project_report(project_id):
         current_cc_report["fact_labor"] += labors_fact_days
         current_cc_report["plan_labor"] = labors_plan_days
         current_cc_report["delta"] = current_cc_report["plan_labor"] - current_cc_report["fact_labor"] 
-        current_cc_report["progress"] += round((labors_fact_days/labors_plan_days if labors_plan_days else 1 )*100)
+        
+        if current_cc_report["plan_labor"]:
+            current_cc_report["progress"] += round((current_cc_report["fact_labor"]/current_cc_report["plan_labor"])*100)
+        else:
+            current_cc_report["progress"] += 0
+            
         current_cc_report["week_labor"] += labors_week_days
     summury = copy(cc_report)
     
@@ -115,7 +120,10 @@ def weekly_project_report(project_id):
         summury["week_labor"] += report[key]["week_labor"]
         
     summury["delta"] = summury["plan_labor"] - summury["fact_labor"]
-    summury["progress"] = round((summury["fact_labor"]/summury["plan_labor"] if summury["plan_labor"] else 1)*100)
+    if summury["plan_labor"]:
+        summury["progress"] = round((summury["fact_labor"]/summury["plan_labor"])*100)
+    else:
+        summury["progress"] = 0
     
     report = dict(
         sorted(

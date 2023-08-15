@@ -1,7 +1,7 @@
-{% import 'utils.j2' as utils %}
+{% from 'utils.j2' import colorize_it %}
 
 {% extends "base.html" %}
-
+colorize_it(value, conditional_value, class_red, class_green)
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='weekly_report.css') }}">
 <div class="main-container">
@@ -47,23 +47,23 @@
             {% for cc_name in report %}
               <tr>
                 <td style="text-align: left;">{{cc_name}}</td>
-                <td>{{report[cc_name]["week_labor"]}}</td>
-                <td>{{report[cc_name]["fact_labor"]}}</td>
-                <td>{{report[cc_name]["plan_labor"]}}</td>
-                <td>{{report[cc_name]["delta"]}}</td>
-                <td>{{report[cc_name]["progress"]}}</td>
+                <td>{{ colorize_it(report[cc_name]["week_labor"], 0, "color_red", "") }}</td>
+                <td>{{ colorize_it(report[cc_name]["fact_labor"], 0, "color_red", "")}}</td>
+                <td>{{ colorize_it(report[cc_name]["plan_labor"], 0, "color_red", "")}}</td>
+                <td>{{ colorize_it(report[cc_name]["delta"], 0, "color_red", "")}}</td>
+                <td>{{ colorize_it(report[cc_name]["progress"], 0, "color_red", "") }}</td>
               </tr>
             {% endfor %}
           </tbody>
 
           <tfoot>
             <tr>
-              <td style="text-align: left;">Итого:</td>
-              <td>{{summury["week_labor"]}}</td>
-              <td>{{summury["fact_labor"]}}</td>
-              <td>{{summury["plan_labor"]}}</td>
-              <td>{{summury["delta"]}}</td>
-              <td>{{summury["progress"]}}</td>
+              <td style="text-align: right;">Итого:</td>
+              <td>{{ colorize_it(summury["week_labor"], 0, "color_red", "") }}</td>
+              <td>{{ colorize_it(summury["fact_labor"], 0, "color_red", "") }}</td>
+              <td>{{ colorize_it(summury["plan_labor"], 0, "color_red", "") }}</td>
+              <td>{{ colorize_it(summury["delta"], 0, "color_red", "") }}</td>
+              <td>{{ colorize_it(summury["progress"], 0, "color_red", "") }}</td>
             </tr>
           </tfoot>
 

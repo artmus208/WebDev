@@ -61,6 +61,7 @@
             {% endif %}
 
             <a href="{{ url_for('main.emp_report') }}">Отчет по сотруднику</a>
+            <a href="{{ url_for('report.weekly') }}">Еженедельный отчет по проекту</a>
             <p>Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
         </div>
         <div class="last-5-records">
