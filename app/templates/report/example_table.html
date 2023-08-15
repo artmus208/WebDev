@@ -19,7 +19,7 @@
             </div>
           {% endfor %}
 
-        <form method="POST" action="{{ url_for('main.detailed_project_report') }}">
+        <form method="POST" action="{{ url_for('report.weekly') }}">
           {{ form.csrf_token }}
           <p> {{form.project_name()}} </p>
           <p> {{form.submit()}} </p>
@@ -28,47 +28,47 @@
       </div>
 
       <hr>
-      <table>
-        <caption>23R01 Система TCS, отчет от 07.08 по 11.08, ГИП: МАР </caption>
-        <thead>
-          <tr>
-            <th>Статьи расходов</th>
-            <th>За неделю,<br> чел/д</th>
-            <th>Факт,<br> чел/д</th>
-            <th>План,<br> чел/д</th>
-            <th>Разница,<br> чел/д</th>
-            <th>Прогресс,<br> %</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="text-align: left;">Программирование</td>
-            <td>8</td>
-            <td>10</td>
-            <td>15</td>
-            <td>5</td>
-            <td>65</td>
-          </tr>
-          <tr>
-            <td style="text-align: left;">Проектирование</td>
-            <td>5</td>
-            <td>9</td>
-            <td>15</td>
-            <td>5</td>
-            <td>65</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td style="text-align: left;">Итого:</td>
-            <td>13</td>
-            <td>19</td>
-            <td>30</td>
-            <td>10</td>
-            <td>165</td>
-          </tr>
-        </tfoot>
-      </table>
+      {% if report %}
+        <table>
+        <caption>{{ caption }} </caption>
+          
+          <thead>
+            <tr>
+              <th>Статьи расходов</th>
+              <th>За неделю,<br> чел/д</th>
+              <th>Факт,<br> чел/д</th>
+              <th>План,<br> чел/д</th>
+              <th>Разница,<br> чел/д</th>
+              <th>Прогресс,<br> %</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for cc_name in report %}
+              <tr>
+                <td style="text-align: left;">{{cc_name}}</td>
+                <td>{{report[cc_name]["week_labor"]}}</td>
+                <td>{{report[cc_name]["fact_labor"]}}</td>
+                <td>{{report[cc_name]["plan_labor"]}}</td>
+                <td>{{report[cc_name]["delta"]}}</td>
+                <td>{{report[cc_name]["progress"]}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td style="text-align: left;">Итого:</td>
+              <td>{{summury["week_labor"]}}</td>
+              <td>{{summury["fact_labor"]}}</td>
+              <td>{{summury["plan_labor"]}}</td>
+              <td>{{summury["delta"]}}</td>
+              <td>{{summury["progress"]}}</td>
+            </tr>
+          </tfoot>
+
+        </table>
+      {% endif %}
     </div>
   </div>
 </div> 

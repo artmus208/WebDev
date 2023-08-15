@@ -1,4 +1,6 @@
-from datetime import datetime, date, time
+from copy import copy
+from datetime import datetime, date, time, timedelta
+from decimal import Decimal
 from typing import List
 
 from app import app, db, text
@@ -10,24 +12,51 @@ from app import helper_functions
 from app import select, execute
 
 from app.reports_makers import report_about_employee, get_project_report_dict
+from app.report.utils import get_previous_week_dates
+from app.report.reports_generators import weekly_project_report
 
 from utils import timeit
 
 
 
 
-
-
+# with app.app_context():
+#     proj_id = 3
+#     records_res = Records.get_records_by_proj_id(proj_id)
+#     cat_costs = Records.get_cat_costs_ids_by_project_id(proj_id)
+#     cat_costs_names = ProjectCosts.get_costs_id_name(proj_id)
+#     all_cc_names = []
+#     all_cc_labors = []
+#     for cc_id in cat_costs:
+#         all_cc_names.append(ProjectCosts.get_cat_cost_name_by_id(cc_id))
+#         all_cc_labors.append(Records.get_labors_by_cat_cost_id(cc_id))
+#     print(all_cc_names)
+    
 with app.app_context():
-    task = Tasks.query.filter_by(task_name="blank_task").first()
-    try:
-        print(task.id)
-    except:
-        print(task)
+    report, summury, caption = weekly_project_report(30)
+    print(caption)
+    for key in report:
+        print(f"{key}\n{report[key]}")
+    
+    for key in summury:
+        print(f"{key}:{summury[key]}")
+    
         
-    tasks = Tasks.query.all()
-    for t in tasks:
-        print(t.task_name.__repr__())
+        
+
+    
+    
+
+# with app.app_context():
+#     task = Tasks.query.filter_by(task_name="blank_task").first()
+#     try:
+#         print(task.id)
+#     except:
+#         print(task)
+        
+#     tasks = Tasks.query.all()
+#     for t in tasks:
+#         print(t.task_name.__repr__())
          
 #     res = execute(
 #         select(Records)
@@ -40,9 +69,9 @@ with app.app_context():
 #     for r in res:
 #         print(r)
 
-# Проверка работы отчета по сотруднику по всему периоду
-with app.app_context():
-    data = report_about_employee(51)
+# # Проверка работы отчета по сотруднику по всему периоду
+# with app.app_context():
+#     data = report_about_employee(51)
     # print(data["total_emp_time"]//60, data["total_emp_time"]%60)
 
 # all_records_list = []

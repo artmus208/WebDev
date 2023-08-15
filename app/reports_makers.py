@@ -170,13 +170,9 @@ def project_report2(p_id):
 
     for cat_cost_name in project_report["cat_cost_list"]:
         project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
-    
-    project = Projects.get(p_id)
-    # plan_man_days = project.project_costs.with_entities(func.sum(ProjectCosts.man_days)).scalar()
-    # plan_man_days = plan_man_days * 8 * 60 
      
     project_report["abs_diff"] = project_report["plan_time"] - project_report["total_perf_time"]
-    project_report["rel_diff"] = round((project_report["abs_diff"]/project_report["plan_time"])*100, 2)
+    project_report["rel_diff"] = round((project_report["abs_diff"] / project_report["plan_time"])*100, 2)
     return project_report
 
 
