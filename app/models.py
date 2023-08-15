@@ -299,9 +299,9 @@ class Projects(db.Model, MyBaseClass):
         s = f"{self.id},{self.time_created},{self.time_updated},{self.project_name},{self.gip_id},{self.start_time},{self.end_time},{self.end_time_fact}"
         return s
     
-    def __init__(self, p_name, gip_id, id=None, code=None):
+    def __init__(self, p_name, gip_id, id=None, code=''):
         self.id = id
-        self.project_name = p_name
+        self.project_name = p_name if not code else f"{code} {p_name}"
         self.gip_id = gip_id
 
     @classmethod
