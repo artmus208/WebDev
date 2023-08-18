@@ -17,7 +17,7 @@
                         {{ ', '.join(errors) }}
                     </div>
                 {% endfor %}
-                <form method="POST" action="{{url_for('main.record', login=login)}}">
+                <form id="record-form" method="POST" action="{{url_for('main.record', login=login)}}">
                     {{ form.csrf_token }}
                     <div class="project">
                         <p>{{form.project_name.label(class="list_text")}}</p>
@@ -76,6 +76,42 @@
                 {% endfor %}
             </ul>
         </div>
+        <script>
+            const submitButton = document.getElementById('submit');
+            const container = document.querySelector('.last-5-records');
+            const originalContent = container.innerHTML;
+            const form = document.getElementById('record-form');
+            
+            submitButton.addEventListener('click', (event) => {
+                event.preventDefault(); // Предотвращаем перезагрузку страницы
+            
+                // Выполняем AJAX-запрос
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `{{url_for('main.record', login=login)}}`, true); // Замените 'server-url' на ваш URL сервера
+                xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    container.style.opacity = '0';
+                    container.style.transform = 'scale(0)';
+            
+                    setTimeout(() => {
+                    container.innerHTML = `<img src="{{ url_for('static', filename='images/me.png') }}" alt="Me" width="550" height="780">`;
+                    container.style.transform = 'scale(1)';
+                    container.style.opacity = '1';
+            
+                    setTimeout(() => {
+                        container.innerHTML = originalContent;
+                        container.style.opacity = '1';
+                        container.style.transform = 'scale(1)';
+                    }, 5000);
+                    }, 3000);
+                }
+                };
+                
+                // Отправляем форму через AJAX
+                xhr.send(new FormData(form));
+            });
+        </script>
+
     </div>
 
 

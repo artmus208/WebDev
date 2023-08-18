@@ -267,9 +267,11 @@ content {
 
 .container {
     margin-left: 200px;
+    margin-right: 50px;
     padding-left: 10px;
     padding-right: 10px;
     max-width: 1200px;
+    border-right: 3px solid #4787ffbc;
 }
 
 .main-container {
@@ -281,10 +283,10 @@ content {
 
 .last-5-records {
     margin-top: 50px;
-    margin-left: 50px;
     padding-left: 20px;
     padding-top: 50px;
-    border-left: 3px solid #4787ffbc;
+    
+    transition: opacity 3s, transform 3s;
 }
 
 .last-5-records_li {
