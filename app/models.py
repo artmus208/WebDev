@@ -46,6 +46,8 @@ class MyBaseClass:
         except Exception:
             db.session.rollback()
             raise
+
+
 class Records(db.Model, MyBaseClass):
     __tablename__ = 'records'
     id = db.Column(db.Integer, primary_key=True)
@@ -280,8 +282,6 @@ class Employees(db.Model, MyBaseClass):
             print(self.login, "is does not register.")
             raise
 
-
-
 class Projects(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -321,7 +321,6 @@ class Projects(db.Model, MyBaseClass):
     def as_dict_name(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}        
     
-
 class GIPs(db.Model, MyBaseClass):
     __tablename__ = "gips"
     id = db.Column(db.Integer, primary_key=True)
@@ -386,8 +385,6 @@ class Costs(db.Model, MyBaseClass):
     @classmethod
     def get_id_by_name(cls, name):
         return cls.query.filter_by(cost_name=name).first().id
-
-
 
 class ProjectCosts(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
@@ -491,8 +488,6 @@ class Tasks(db.Model, MyBaseClass):
         q = cls.query.filter_by(task_name=task_name).first() 
         return q
         
-    
-
 class CostsTasks(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -537,7 +532,6 @@ class CostsTasks(db.Model, MyBaseClass):
                     tasks_id.append([c_t.id, task_name, str(c_t.man_days)])
         r = tasks_id
         return r
-
 
 class Admins(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
