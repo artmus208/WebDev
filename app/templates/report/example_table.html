@@ -55,7 +55,7 @@ colorize_it(value, conditional_value, class_red, class_green)
                   {% if report[cc_name]["week_labor"] != 0 %}
                     +{{ report[cc_name]["week_labor"] }}
                   {% else %}
-                    {{ colorize_it(report[cc_name]["week_labor"], 0, "color_red", "") }}
+                    {{ colorize_it(report[cc_name]["week_labor"], -1, "color_red", "") }}
                   {% endif %}
                 </td>
               </tr>
@@ -73,7 +73,7 @@ colorize_it(value, conditional_value, class_red, class_green)
                 {% if summury["week_labor"] != 0 %}
                   +{{ summury["week_labor"] }}
                 {% else %}
-                  {{ colorize_it(summury["week_labor"], 0, "color_red", "") }}
+                  {{ colorize_it(summury["week_labor"], -1, "color_red", "") }}
                 {% endif %}
                 
               </td>
