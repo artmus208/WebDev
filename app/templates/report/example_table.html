@@ -35,11 +35,11 @@ colorize_it(value, conditional_value, class_red, class_green)
           <thead>
             <tr>
               <th>Статьи расходов</th>
-              <th>За неделю,<br> чел/д</th>
-              <th>Факт,<br> чел/д</th>
               <th>План,<br> чел/д</th>
-              <th>Разница,<br> чел/д</th>
-              <th>Прогресс,<br> %</th>
+              <th>Факт,<br> чел/д</th>
+              <th>Отклонение, <br> чел/д</th>
+              <th>Отклонение, <br>(отн) </th>
+              <th>За неделю,<br> чел/д</th>
             </tr>
           </thead>
 
@@ -47,11 +47,17 @@ colorize_it(value, conditional_value, class_red, class_green)
             {% for cc_name in report %}
               <tr>
                 <td style="text-align: left;">{{cc_name}}</td>
-                <td>{{ colorize_it(report[cc_name]["week_labor"], 0, "color_red", "") }}</td>
-                <td>{{ colorize_it(report[cc_name]["fact_labor"], 0, "color_red", "")}}</td>
-                <td>{{ colorize_it(report[cc_name]["plan_labor"], 0, "color_red", "")}}</td>
+                <td style="color: gray;">{{ colorize_it(report[cc_name]["plan_labor"], 0, "color_red", "")}}</td>
+                <td style="font-weight: bold;">{{ colorize_it(report[cc_name]["fact_labor"], report[cc_name]["plan_labor"], "color_green", "color_red")}}</td>
                 <td>{{ colorize_it(report[cc_name]["delta"], 0, "color_red", "")}}</td>
-                <td>{{ colorize_it(report[cc_name]["progress"], 0, "color_red", "") }}</td>
+                <td>{{ colorize_it(report[cc_name]["progress"], 0, "color_red", "") }} %</td>
+                <td>
+                  {% if report[cc_name]["week_labor"] != 0 %}
+                    +{{ report[cc_name]["week_labor"] }}
+                  {% else %}
+                    {{ colorize_it(report[cc_name]["week_labor"], 0, "color_red", "") }}
+                  {% endif %}
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -59,11 +65,18 @@ colorize_it(value, conditional_value, class_red, class_green)
           <tfoot>
             <tr>
               <td style="text-align: right;">Итого:</td>
-              <td>{{ colorize_it(summury["week_labor"], 0, "color_red", "") }}</td>
-              <td>{{ colorize_it(summury["fact_labor"], 0, "color_red", "") }}</td>
-              <td>{{ colorize_it(summury["plan_labor"], 0, "color_red", "") }}</td>
+              <td style="color: gray">{{ colorize_it(summury["plan_labor"], 0, "color_red", "") }}</td>
+              <td>{{ colorize_it(summury["fact_labor"], summury["plan_labor"], "color_green", "color_red") }}</td>
               <td>{{ colorize_it(summury["delta"], 0, "color_red", "") }}</td>
-              <td>{{ colorize_it(summury["progress"], 0, "color_red", "") }}</td>
+              <td>{{ colorize_it(summury["progress"], 0, "color_red", "")}} %</td>
+              <td>
+                {% if summury["week_labor"] != 0 %}
+                  +{{ summury["week_labor"] }}
+                {% else %}
+                  {{ colorize_it(summury["week_labor"], 0, "color_red", "") }}
+                {% endif %}
+                
+              </td>
             </tr>
           </tfoot>
 

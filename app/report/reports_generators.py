@@ -1,5 +1,6 @@
 from copy import copy
 from datetime import datetime, timedelta
+from app import logger
 from app.models import (
     Employees, GIPs, Projects,
     Costs, Tasks, ProjectCosts,
@@ -72,11 +73,12 @@ def weekly_project_report(project_id):
     d = [(cc_name, copy(cc_report)) for cc_name in all_cat_costs_names]
     report = dict(d)
     caption = f"{project_name}, отчет от {prev_monday_date.date().strftime('%d.%m.%Y')} по {prev_friday_date.date().strftime('%d.%m.%Y')}, ГИП: {gip_symbols}"
-    for cc_id in all_cat_costs_id:
+    for cc_id in reversed(all_cat_costs_id):
         cc_name = ProjectCosts.get_cat_cost_name_by_id(cc_id)
         current_cc_report = report.get(cc_name, cc_report)
         
         labors_plan_days = ProjectCosts.get(cc_id).man_days
+         
         iter_labors_gen_fact = Records.get_labors_by_cat_cost_id(cc_id, project_id)
         iter_labors_week = Records.get_labors_by_cat_cost_id(
             cc_id,
@@ -100,14 +102,14 @@ def weekly_project_report(project_id):
         labors_fact_days = round(labors_hours_fact/8)
         
         labors_hours_week = minuts_week/60 + hours_week
-        labors_week_days = round(labors_hours_week/8)
+        labors_week_days = round(labors_hours_week/8, 1)
         
         current_cc_report["fact_labor"] += labors_fact_days
         current_cc_report["plan_labor"] = labors_plan_days
         current_cc_report["delta"] = current_cc_report["plan_labor"] - current_cc_report["fact_labor"] 
         
         if current_cc_report["plan_labor"]:
-            current_cc_report["progress"] += round((current_cc_report["fact_labor"]/current_cc_report["plan_labor"])*100)
+            current_cc_report["progress"] = round((current_cc_report["delta"]/current_cc_report["plan_labor"])*100)
         else:
             current_cc_report["progress"] += 0
             
@@ -121,7 +123,7 @@ def weekly_project_report(project_id):
         
     summury["delta"] = summury["plan_labor"] - summury["fact_labor"]
     if summury["plan_labor"]:
-        summury["progress"] = round((summury["fact_labor"]/summury["plan_labor"])*100)
+        summury["progress"] = round((summury["delta"]/summury["plan_labor"])*100)
     else:
         summury["progress"] = 0
     
