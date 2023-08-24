@@ -1,5 +1,5 @@
 {% macro colorize_it(value, conditional_value, class_red, class_green) -%}
-    {%- if value <= conditional_value -%}
+    {%- if value < conditional_value -%}
         <span class={{ class_red }}>{{ value -}}</span>
     {%- else -%}
         <span class={{ class_green }}>{{ value -}}</span>
