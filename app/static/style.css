@@ -1,5 +1,43 @@
+@font-face {
+  font-family: 'OpenSans';
+  font-display: swap;
+  src: local('OpenSans-Bold'), url('fonts/OpenSans/OpenSans-Bold.woff2') format('woff2'),
+    url('fonts/OpenSans/OpenSans-Bold.woff') format('woff'), url('fonts/OpenSans/OpenSans-Bold.eot') format('eot'),
+    url('fonts/OpenSans/OpenSans-Bold.ttf') format('ttf');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'OpenSans';
+  font-display: swap;
+  src: local('OpenSans-Medium'), url('fonts/OpenSans/OpenSans-Medium.woff2') format('woff2'),
+    url('fonts/OpenSans/OpenSans-Medium.woff') format('woff'), url('fonts/OpenSans/OpenSans-Medium.eot') format('eot'),
+    url('fonts/OpenSans/OpenSans-Medium.ttf') format('ttf');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'OpenSans';
+  font-display: swap;
+  src: local('OpenSans-Regular'), url('fonts/OpenSans/OpenSans-Regular.woff2') format('woff2'),
+    url('fonts/OpenSans/OpenSans-Regular.woff') format('woff'), url('fonts/OpenSans/OpenSans-Regular.eot') format('eot'),
+    url('fonts/OpenSans/OpenSans-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'OpenSans';
+  font-display: swap;
+  src: local('OpenSans-Regular'), url('fonts/OpenSans/OpenSans-Light.woff2') format('woff2'),
+    url('fonts/OpenSans/OpenSans-Light.woff') format('woff'), url('fonts/OpenSans/OpenSans-Light.eot') format('eot'),
+    url('fonts/OpenSans/OpenSans-Light.ttf') format('ttf');
+  font-weight: 200;
+  font-style: normal;
+}
+
 body {
   background-image: url('images/backgrounds/4.png');
+  font-family: 'OpenSans';
 }
 a {
   color: inherit;
@@ -13,7 +51,7 @@ a {
 header {
   background: #ffffff;
   border-bottom: 1px solid #4786ff;
-  font-family: 'Inter';
+
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
@@ -53,7 +91,6 @@ content {
 }
 
 .project_list {
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
@@ -70,7 +107,6 @@ content {
 }
 
 .cost_list_list {
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
@@ -87,7 +123,6 @@ content {
 }
 
 .task_list_list {
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
@@ -105,7 +140,6 @@ content {
 }
 
 .input_hour {
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
@@ -117,7 +151,6 @@ content {
 }
 
 .input_min {
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
@@ -133,7 +166,6 @@ content {
 }
 
 .list_text {
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
@@ -157,7 +189,6 @@ content {
   background: #4786ff;
   border-radius: 5px;
 
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 500;
   font-size: 22px;
@@ -172,7 +203,7 @@ content {
   background-color: #4787ffbc;
   color: #fff;
   transition: background-color 0.2s linear;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 27px;
   font-weight: 700;
   border-radius: 5px;
@@ -193,13 +224,12 @@ content {
   background: #aeffc5;
   display: block;
   text-align: center;
-  font-family: 'Inter';
 }
 .flash.error {
   background: #ffa866;
   text-align: center;
   display: block;
-  font-family: 'Inter';
+
   font-style: normal;
   font-weight: 200;
   font-size: 20px;
