@@ -11,8 +11,6 @@ a {
 }
 
 header {
-  box-sizing: border-box;
-  height: 90px;
   background: #ffffff;
   border-bottom: 1px solid #4786ff;
   font-family: 'Inter';
@@ -21,6 +19,9 @@ header {
   font-size: 24px;
   line-height: 29px;
   color: #4786ff;
+
+  position: fixed;
+  width: 100%;
 }
 
 .header_project {
@@ -32,8 +33,7 @@ header {
 }
 
 .header_content {
-  /* margin-top: 25px; */
-  padding-top: 25px;
+  height: 59px;
   display: flex;
   align-items: center;
 }
@@ -246,6 +246,7 @@ content {
 }
 
 .main {
+  padding-top: 60px;
 }
 .main__inner {
   display: flex;
