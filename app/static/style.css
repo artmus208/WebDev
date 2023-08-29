@@ -42,10 +42,30 @@ body {
 a {
   color: inherit;
 }
+label {
+  display: block;
+  margin-bottom: 5px;
+}
 .title {
-  font-size: 25px;
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+.link {
+  color: #4786ff;
+  font-size: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.select {
+  font-weight: 400;
+  font-size: 20px;
+  height: 50px;
+  border: 1px solid #4786ff;
+  border-radius: 5px;
 }
 
 header {
@@ -60,6 +80,10 @@ header {
 
   position: fixed;
   width: 100%;
+}
+
+.page-section {
+  padding-top: 110px;
 }
 
 .header_project {
@@ -86,7 +110,7 @@ content {
   justify-content: center;
 }
 
-.project {
+/* .project {
   margin-top: 55px;
 }
 
@@ -100,7 +124,7 @@ content {
 
   border: 1px solid #4786ff;
   border-radius: 5px;
-}
+} */
 
 .cost_list {
   margin-top: 30px;
@@ -303,7 +327,7 @@ option[value='-1'] {
 #category_of_costs,
 #hours,
 #minuts {
-  padding-left: 25px;
+  padding-left: 12px;
 }
 
 .tl_telegram_share_btn {
@@ -333,4 +357,65 @@ i.tl_telegram_share_icon {
   vertical-align: top;
   display: inline-block;
   text-decoration: none;
+}
+
+.red {
+  color: red;
+}
+.green {
+  color: #06a77d;
+}
+.project {
+  margin-top: 50px;
+  font-size: 22px;
+}
+.project__title {
+  font-size: 24px;
+}
+.project p {
+  margin-bottom: 10px;
+}
+.project__title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.stage {
+  font-size: 20px;
+  font-weight: 400;
+  padding-left: 35px;
+  padding-top: 26px;
+  padding-right: 165px;
+  padding-bottom: 30px;
+
+  margin-top: 23px;
+  border: solid #32a1ce;
+  width: 1000px;
+}
+
+.stage__title {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.stage p {
+  margin-bottom: 10px;
+}
+.employee {
+  font-size: 16px;
+}
+.employee__line {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  border-bottom: 1px solid #c4c4c4;
+}
+.employee__block:first-child {
+  width: 311px;
+}
+
+.employee__title {
+  font-size: 18px;
 }

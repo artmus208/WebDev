@@ -14,28 +14,15 @@
         {% endfor %}
         <form method="POST" action="{{url_for('main.record', login=login)}}">
           {{ form.csrf_token }}
-          <div class="project">
-            <p>{{form.project_name.label(class="list_text")}}</p>
-            <p>{{form.project_name(class="project_list")}}</p>
-          </div>
+          <div class="project">{{form.project_name.label(class="list_text")}} {{form.project_name(class="project_list")}}</div>
           <a href="{{url_for('main.add_project')}}" class="gips-btn">Нет проекта в списке?</a>
           <div class="cost_list">
-            <p>{{form.category_of_costs.label(class="list_text")}}</p>
-            <p>{{form.category_of_costs(class="cost_list_list")}}</p>
+            {{form.category_of_costs.label(class="list_text")}} {{form.category_of_costs(class="cost_list_list")}}
           </div>
-          <div class="task_list" , style="display: none">
-            <p>{{form.task.label(class="list_text")}}</p>
-            <p>{{form.task(class="task_list_list")}}</p>
-          </div>
+          <div class="task_list" , style="display: none">{{form.task.label(class="list_text")}} {{form.task(class="task_list_list")}}</div>
           <div class="input">
-            <div class="time_hour">
-              <p>{{form.hours.label(class="list_text")}}</p>
-              <p>{{form.hours(class="input_hour")}}</p>
-            </div>
-            <div class="time_min">
-              <p>{{form.minuts.label(class="list_text")}}</p>
-              <p>{{form.minuts(class="input_min")}}</p>
-            </div>
+            <div class="time_hour">{{form.hours.label(class="list_text")}} {{form.hours(class="input_hour")}}</div>
+            <div class="time_min">{{form.minuts.label(class="list_text")}} {{form.minuts(class="input_min")}}</div>
           </div>
           <div class="buttons">
             {{form.submit(class="btn done")}}
