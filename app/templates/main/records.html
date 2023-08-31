@@ -1,58 +1,73 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
 
-<div class="main">
+<!-- prettier-ignore -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pages/record.css' ) }}" />
+{% endblock styles %} {% block content %}
+
+<section class="page-section main">
   <div class="container">
     <div class="main__inner">
       <div class="data">
+        <h1 class="main__title">Ваша роль: {{session.get("emp_role", "Нет роли")}}</h1>
+
+        <div class="reports-btns">
+          <a class="reports-btns__btn" href="{{url_for('main.detailed_project_report')}}"><span>Отчет по проектам</span></a>
+          <a class="reports-btns__btn" href="{{ url_for('main.emp_report') }}"><span>Отчет по сотроднику</span></a>
+          <a class="reports-btns__btn" href="{{ url_for('main.emp_report') }}"><span>Еженедельный отчет по проекту</span></a>
+        </div>
+
         <div class="space">
           {% for cat, msg in get_flashed_messages(True) %}
           <div class="space flash {{cat}}">{{msg}}</div>
           {% endfor %}
         </div>
         {% for field, errors in form.errors.items() %}
-        <div style="padding-left: 10px" class="alert alert-error">{{ ', '.join(errors) }}</div>
+        <div class="alert alert-error">{{ ', '.join(errors) }}</div>
         {% endfor %}
-        <form method="POST" action="{{url_for('main.record', login=login)}}">
+        <form method="POST" class="record-form" action="{{url_for('main.record', login=login)}}">
           {{ form.csrf_token }}
-          <div class="project">{{form.project_name.label(class="list_text")}} {{form.project_name(class="project_list")}}</div>
-          <a href="{{url_for('main.add_project')}}" class="gips-btn">Нет проекта в списке?</a>
-          <div class="cost_list">
-            {{form.category_of_costs.label(class="list_text")}} {{form.category_of_costs(class="cost_list_list")}}
+          <!-- <div class="project">{{form.project_name.label(class="list_text")}} {{form.project_name(class="project_list")}}</div> -->
+          <div class="project">
+            <h3 class="select-input-title">Проект</h3>
+            {{form.project_name(class="select project__select")}}
+            <a href="{{url_for('main.add_project')}}" class="link">Нет проекта в списке?</a>
           </div>
-          <div class="task_list" , style="display: none">{{form.task.label(class="list_text")}} {{form.task(class="task_list_list")}}</div>
-          <div class="input">
-            <div class="time_hour">{{form.hours.label(class="list_text")}} {{form.hours(class="input_hour")}}</div>
-            <div class="time_min">{{form.minuts.label(class="list_text")}} {{form.minuts(class="input_min")}}</div>
+          <div class="item">
+            <h3 class="select-input-title">Статья расходов</h3>
+            {{form.category_of_costs(class="select")}}
           </div>
+          <div class="task_list" , style="display: none">{{form.task.label(class="")}} {{form.task(class="")}}</div>
+          <div class="hours-minutes">
+            <div class="">{{form.hours.label(class="select-input-title")}} {{form.hours(class="input")}}</div>
+            <div class="">{{form.minuts.label(class="select-input-title")}} {{form.minuts(class="input")}}</div>
+          </div>
+
+          {{form.submit(class="btn record-submit")}}
           <div class="buttons">
-            {{form.submit(class="btn done")}}
-            <a class="btn" href="{{url_for('main.detailed_project_report')}}">Отчет по проектам</a>
-            <a class="btn" href="{{url_for('auth.logout')}}">Выйти</a>
+            <!-- <a class="btn" ">Отчет по проектам</a> -->
+            <!-- <a class="btn" href="{{url_for('auth.logout')}}">Выйти</a> -->
           </div>
         </form>
         {% if session.get("emp_is_gip", False) -%}
-        <a href="{{ url_for('gip.gips_project') }}" class="gips-btn">Мой проект</a>
+        <!-- <a href="{{ url_for('gip.gips_project') }}" class="gips-btn">Мой проект</a> -->
         {% endif %} {% if session.get("emp_is_admin", False) -%}
         <a href="{{ url_for('admin.hello_admin') }}" class="gips-btn"> Привет админ! </a>
         {% endif %}
-
-        <a href="{{ url_for('main.emp_report') }}">Отчет по сотруднику</a>
-        <p>Ваша роль: {{session.get("emp_role", "Нет роли")}}</p>
       </div>
-      <div class="last-5-records">
+      <div class="last-records">
         <h2 class="title">Недавние записи</h2>
         <ul>
           {% for r in last_5_records %}
-          <li class="last-5-records_li">
+          <li class="last-records_li">
             {{r[1]}}<br />
-            <b>{{r[2]}}</b> инвестировал {{r[-2]}} ч. {{r[-1]}} мин. на "{{r[4]}}" в проекте <br />
-            {{r[3]}}
+            <b>{{r[2]}}</b> инвестировал {{r[-2]}} ч. {{r[-1]}} мин. на "{{r[4]}}" в проекте {{r[3]}}
           </li>
           {% endfor %}
         </ul>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 {% endblock content %}

@@ -35,9 +35,24 @@
   font-style: normal;
 }
 
+select:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+}
+select {
+  cursor: pointer;
+}
+select,
+input {
+  background-color: #fff;
+}
+
 body {
   background-image: url('images/backgrounds/4.png');
   font-family: 'OpenSans';
+  font-weight: 400;
+  font-size: 20px;
 }
 a {
   color: inherit;
@@ -45,6 +60,13 @@ a {
 label {
   display: block;
   margin-bottom: 5px;
+}
+
+.container {
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  max-width: 1430px;
 }
 .title {
   font-size: 24px;
@@ -60,12 +82,33 @@ label {
   margin-top: 15px;
   margin-bottom: 15px;
 }
-.select {
+.select,
+.input {
   font-weight: 400;
   font-size: 20px;
   height: 50px;
   border: 1px solid #4786ff;
   border-radius: 5px;
+  padding-left: 11px;
+}
+select {
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+select {
+  background-repeat: no-repeat;
+  background-position: calc(100% - 14px) center;
+  background-size: 25px 25px;
+  background-image: url('images/arrow.png');
+}
+
+.select-input-title {
+  margin-bottom: 10px;
 }
 
 header {
@@ -99,6 +142,10 @@ header {
   display: flex;
   align-items: center;
 }
+.header__btns {
+  display: flex;
+  gap: 20px;
+}
 
 .logo {
   width: 177px;
@@ -126,10 +173,6 @@ content {
   border-radius: 5px;
 } */
 
-.cost_list {
-  margin-top: 30px;
-}
-
 .cost_list_list {
   font-style: normal;
   font-weight: 400;
@@ -156,37 +199,6 @@ content {
 
   border: 1px solid #4786ff;
   border-radius: 5px;
-}
-
-.input {
-  margin-top: 30px;
-  display: flex;
-}
-
-.input_hour {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 24px;
-  width: 215px;
-  height: 50px;
-
-  border: 1px solid #4786ff;
-  border-radius: 5px;
-}
-
-.input_min {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 24px;
-  width: 215px;
-  height: 50px;
-
-  border: 1px solid #4786ff;
-  border-radius: 5px;
-}
-
-.time_min {
-  margin-left: 185px;
 }
 
 .list_text {
@@ -223,18 +235,28 @@ content {
 
 .btn {
   width: 220px;
-  height: 60px;
-  background-color: #4787ffbc;
-  color: #fff;
-  transition: background-color 0.2s linear;
-  font-size: 20px;
-  line-height: 27px;
-  font-weight: 700;
+  height: 50px;
+  background: #4786ff;
   border-radius: 5px;
+
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 27px;
 
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+
+  transition: background-color 0.2s linear;
+}
+.btn_back {
+  width: 131px;
+  background-color: #fff;
+  color: #4786ff;
+  border: 2px solid #4786ff;
+  font-weight: 500px;
 }
 
 .otchet {
@@ -292,29 +314,6 @@ content {
   padding-bottom: 1%;
 }
 
-.container {
-  margin: 0 auto;
-  padding-left: 10px;
-  padding-right: 10px;
-  max-width: 1200px;
-}
-
-.main {
-  padding-top: 60px;
-}
-.main__inner {
-  display: flex;
-}
-
-.last-5-records {
-  margin-left: 50px;
-  padding-left: 20px;
-  padding-top: 50px;
-  border-left: 3px solid #4787ffbc;
-}
-.last-5-records_li {
-  padding-bottom: 50px;
-}
 li::marker {
   color: #095efdbc;
 }
@@ -323,23 +322,40 @@ option[value='-1'] {
   color: #a9a9a9;
 }
 
-#project_name,
+/* #project_name,
 #category_of_costs,
 #hours,
 #minuts {
   padding-left: 12px;
-}
-
-.tl_telegram_share_btn {
-  display: inline-block;
+} */
+.header__btn {
   border-radius: 16px;
   background-color: #4786ff;
   cursor: pointer;
-  line-height: 22px;
-  padding: 5px 17px 5px 11px;
+  /* padding: 5px 17px 5px 11px; */
   color: #fff;
   font-weight: lighter;
   text-decoration: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+
+  height: 40px;
+  width: 100px;
+}
+
+.tl_telegram_share_btn {
+  /* border-radius: 16px;
+  background-color: #4786ff;
+  cursor: pointer;
+  padding: 5px 17px 5px 11px;
+  color: #fff;
+  font-weight: lighter;
+  text-decoration: none; */
+  width: 195px;
 }
 
 i.tl_telegram_share_icon {
@@ -357,65 +373,4 @@ i.tl_telegram_share_icon {
   vertical-align: top;
   display: inline-block;
   text-decoration: none;
-}
-
-.red {
-  color: red;
-}
-.green {
-  color: #06a77d;
-}
-.project {
-  margin-top: 50px;
-  font-size: 22px;
-}
-.project__title {
-  font-size: 24px;
-}
-.project p {
-  margin-bottom: 10px;
-}
-.project__title {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.stage {
-  font-size: 20px;
-  font-weight: 400;
-  padding-left: 35px;
-  padding-top: 26px;
-  padding-right: 165px;
-  padding-bottom: 30px;
-
-  margin-top: 23px;
-  border: solid #32a1ce;
-  width: 1000px;
-}
-
-.stage__title {
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-.stage p {
-  margin-bottom: 10px;
-}
-.employee {
-  font-size: 16px;
-}
-.employee__line {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  display: flex;
-  border-bottom: 1px solid #c4c4c4;
-}
-.employee__block:first-child {
-  width: 311px;
-}
-
-.employee__title {
-  font-size: 18px;
 }

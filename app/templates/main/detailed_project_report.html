@@ -1,4 +1,9 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+<!-- prettier-ignore -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pages/detailed-project-report.css' ) }}" />
+{% endblock styles %} {% block content %}
 
 <section class="page-section detailed-project">
   <div class="container">
@@ -11,16 +16,21 @@
         <div class="alert alert-error">{{ ', '.join(errors) }}</div>
         {% endfor %}
       </div>
-      <form method="POST" action="{{ url_for('main.detailed_project_report') }}">
+      <form method="POST" class="detailed-project-report-form" action="{{ url_for('main.detailed_project_report') }}">
+        <h3 class="select-input-title">Проект:</h3>
         {{ form.csrf_token }} {{form.project_name(class='select')}}
-        <p>{{form.submit(class='link')}}</p>
+        <!-- {{form.submit(class='link')}} -->
+        <div class="detailed-project-report-form__btns">
+          <button class="btn" type="submit">Создать отчет</button>
+          <a class="btn btn_back" type="submit">Назад</a>
+        </div>
       </form>
     </div>
     {% if project_report %}
     <hr />
 
     <div class="project">
-      <h2 class="project__title">{{ project_report["p_name"] }}</h2>
+      <h2 class="title">{{ project_report["p_name"] }}</h2>
       <p>Планируемые трудозатраты: {{ project_report["plan_time"] // 60 // 8 }} чел/д</p>
       <p>
         Фактические трудозатраты:
@@ -43,47 +53,153 @@
     </div>
     <div class="stage">
       {% for cat_cost_name in project_report["cat_cost_list"] %}
-      <p></p>
-      <h2 class="stage__title">{{ cat_cost_name }}</h2>
-      <p>П: {{ project_report["cat_cost_list"][cat_cost_name]["cat_cost_plan"] // 60 // 8 }} чел/д</p>
+      <div class="stage__header">
+        <h2 class="stage__title">{{ cat_cost_name }}</h2>
 
-      <p>
-        Ф: {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д {{
-        project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 480 // 60 }} чел/ч {{
-        project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 60 }} чел/мин
-      </p>
+        <div class="stage__costs">
+          <p>П: {{ project_report["cat_cost_list"][cat_cost_name]["cat_cost_plan"] // 60 // 8 }} чел/д</p>
 
-      <p>
-        Р: {% if project_report["cat_cost_list"][cat_cost_name]["abs_diff"] > 0 %}
-        <b><span class="green">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] // 60 // 8 }} чел/д</span></b>
-        {% else %}
-        <b><span class="red">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] }} чел/д</span></b>
-        {% endif %} {% if project_report["cat_cost_list"][cat_cost_name]["rel_diff"] > 0 %}
-        <b><span class="green">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
-        {% else %}
-        <b><span class="red">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
-        {% endif %}
-      </p>
+          <p>
+            Ф: {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д {{
+            project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 480 // 60 }} чел/ч {{
+            project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 60 }} чел/мин
+          </p>
 
-      <hr />
-
-      <div class="employee">
-        <div class="employee__line">
-          <div class="employee__block employee__title">Сотрудник</div>
-          <div class="employee__block employee__title">Время работы</div>
+          <p>
+            Р: {% if project_report["cat_cost_list"][cat_cost_name]["abs_diff"] > 0 %}
+            <b><span class="green">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] // 60 // 8 }} чел/д</span></b>
+            {% else %}
+            <b><span class="red">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] }} чел/д</span></b>
+            {% endif %} {% if project_report["cat_cost_list"][cat_cost_name]["rel_diff"] > 0 %}
+            <b><span class="green">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
+            {% else %}
+            <b><span class="red">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
+            {% endif %}
+          </p>
         </div>
-        {% for emp_login in project_report["cat_cost_list"][cat_cost_name]["emp_list"] %}
+      </div>
 
-        <div class="employee__line">
-          <div class="employee__block">{{ emp_login.upper() }}:</div>
-          <div class="employee__block">
-            {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) // 60 // 8 }} чел/д {{
-            sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 480 // 60 }} чел/ч {{
-            sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 60 }} чел/мин
+      <div class="stage__body">
+        <div class="employee">
+          <div class="employee__line">
+            <div class="employee__block employee__title">Сотрудник</div>
+            <div class="employee__block employee__title">Время работы</div>
           </div>
-        </div>
+          {% for emp_login in project_report["cat_cost_list"][cat_cost_name]["emp_list"] %}
 
-        {% endfor %}
+          <div class="employee__line">
+            <div class="employee__block">{{ emp_login.upper() }}:</div>
+            <div class="employee__block">
+              {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) // 60 // 8 }} чел/д {{
+              sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 480 // 60 }} чел/ч {{
+              sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 60 }} чел/мин
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+    <div class="stage">
+      {% for cat_cost_name in project_report["cat_cost_list"] %}
+      <div class="stage__header">
+        <h2 class="stage__title">{{ cat_cost_name }}</h2>
+
+        <div class="stage__costs">
+          <p>П: {{ project_report["cat_cost_list"][cat_cost_name]["cat_cost_plan"] // 60 // 8 }} чел/д</p>
+
+          <p>
+            Ф: {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д {{
+            project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 480 // 60 }} чел/ч {{
+            project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 60 }} чел/мин
+          </p>
+
+          <p>
+            Р: {% if project_report["cat_cost_list"][cat_cost_name]["abs_diff"] > 0 %}
+            <b><span class="green">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] // 60 // 8 }} чел/д</span></b>
+            {% else %}
+            <b><span class="red">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] }} чел/д</span></b>
+            {% endif %} {% if project_report["cat_cost_list"][cat_cost_name]["rel_diff"] > 0 %}
+            <b><span class="green">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
+            {% else %}
+            <b><span class="red">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="stage__body">
+        <div class="employee">
+          <div class="employee__line">
+            <div class="employee__block employee__title">Сотрудник</div>
+            <div class="employee__block employee__title">Время работы</div>
+          </div>
+          {% for emp_login in project_report["cat_cost_list"][cat_cost_name]["emp_list"] %}
+
+          <div class="employee__line">
+            <div class="employee__block">{{ emp_login.upper() }}:</div>
+            <div class="employee__block">
+              {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) // 60 // 8 }} чел/д {{
+              sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 480 // 60 }} чел/ч {{
+              sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 60 }} чел/мин
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+    <div class="stage">
+      {% for cat_cost_name in project_report["cat_cost_list"] %}
+      <div class="stage__header">
+        <h2 class="stage__title">{{ cat_cost_name }}</h2>
+
+        <div class="stage__costs">
+          <p>П: {{ project_report["cat_cost_list"][cat_cost_name]["cat_cost_plan"] // 60 // 8 }} чел/д</p>
+
+          <p>
+            Ф: {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д {{
+            project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 480 // 60 }} чел/ч {{
+            project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 60 }} чел/мин
+          </p>
+
+          <p>
+            Р: {% if project_report["cat_cost_list"][cat_cost_name]["abs_diff"] > 0 %}
+            <b><span class="green">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] // 60 // 8 }} чел/д</span></b>
+            {% else %}
+            <b><span class="red">{{ project_report["cat_cost_list"][cat_cost_name]["abs_diff"] }} чел/д</span></b>
+            {% endif %} {% if project_report["cat_cost_list"][cat_cost_name]["rel_diff"] > 0 %}
+            <b><span class="green">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
+            {% else %}
+            <b><span class="red">{{ project_report["cat_cost_list"][cat_cost_name]["rel_diff"] }} %</span></b>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="stage__body">
+        <div class="employee">
+          <div class="employee__line">
+            <div class="employee__block employee__title">Сотрудник</div>
+            <div class="employee__block employee__title">Время работы</div>
+          </div>
+          {% for emp_login in project_report["cat_cost_list"][cat_cost_name]["emp_list"] %}
+
+          <div class="employee__line">
+            <div class="employee__block">{{ emp_login.upper() }}:</div>
+            <div class="employee__block">
+              {{ sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) // 60 // 8 }} чел/д {{
+              sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 480 // 60 }} чел/ч {{
+              sum(project_report["cat_cost_list"][cat_cost_name]["emp_list"][emp_login]["total_perf_time"]) % 60 }} чел/мин
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
       </div>
 
       {% endfor %}

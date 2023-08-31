@@ -1,46 +1,46 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container">
-    {% for cat, msg in get_flashed_messages(True) %}
-        <div class="space flash {{cat}}">{{msg}}</div>
-    {% endfor %}
-    
+  {% for cat, msg in get_flashed_messages(True) %}
+  <div class="space flash {{cat}}">{{msg}}</div>
+  {% endfor %}
+
+  <p>
+    Форма редактирования статей расходов в проекте <br />
+    <strong>{{ session.get("gip_project", "Проект не выбран") }}</strong>
+  </p>
+  <hr />
+  <form action="{{ url_for('gip.edit_cat_cost') }}" method="POST">
+    <p>Введите новое имя для статьи расходов и плановый показатель:</p>
+
+    <label for="cost_name" style="display: block"><b>Новая статья расходов</b></label>
+    <input type="text" placeholder="Имя статьи расходов" name="cost_name" style="display: block" />
+
+    <label for="man_days" style="display: block"><b>Планируемое количество трудозатрат (чел/день)</b></label>
+    <input type="number" min="1" placeholder="чел/день" name="man_days" style="display: block" value="default" />
+    <hr />
     <p>
-        Форма редактирования статей расходов в проекте <br>
-        <strong>{{ session.get("gip_project", "Проект не выбран") }}</strong>
+      Изменение плановых показателей статьи расходов:<br />
+      Выберете статью из списка и обновите плановые показатели
     </p>
-    <hr>
-    <form action="{{ url_for('gip.edit_cat_cost') }}" method="POST">
-        <p>Введите новое имя для статьи расходов и плановый показатель:</p>
 
-        <label for="cost_name" style="display: block;"><b>Новая статья расходов</b></label>
-        <input type="text" placeholder="Имя статьи расходов" name="cost_name" style="display: block;">
+    <label for="old_cost_list" style="display: block"><b>Cтатьи расходов</b></label>
+    <select name="old_cost_list" multiple>
+      <option selected value="default">Не выбрано</option>
+      {% for cat in added_cost -%}
+      <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+" чел/день"+")" }}</option>
+      {% endfor %}
+    </select>
 
-        <label for="man_days" style="display: block;"><b>Планируемое количество трудозатрат (чел/день)</b></label>
-        <input type="number" min="1" placeholder="чел/день" name="man_days" style="display: block;" value="default">
-        <hr>
-        <p>Изменение плановых показателей статьи расходов:<br>
-            Выберете статью из списка и обновите плановые показатели</p>
+    <label style="display: block" for="updated_man_days"><b>Плановый показатель (чел/день)</b></label>
+    <input type="number" min="1" placeholder="чел/день" name="updated_man_days" value="default" />
 
-        <label for="old_cost_list" style="display: block;"><b>Cтатьи расходов</b></label>
-        <select name="old_cost_list"  multiple>
-            <option selected value="default">Не выбрано</option>
-            {% for cat in added_cost -%}
-                <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+" чел/день"+")" }}</option>
-            {% endfor %}
-        </select> 
+    <input style="display: block" type="submit" value="Сохранить" />
+  </form>
+  <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
 
-        <label style="display: block;" for="updated_man_days"><b>Плановый показатель (чел/день)</b></label>
-        <input  type="number" min="1" placeholder="чел/день" name="updated_man_days" value="default">
-
-        <input style="display: block;" type="submit" value="Сохранить">
-    </form> 
-    <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
-
-    {% if session.get("emp_role", "Нет роли") == 'gip' -%}
-        <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
-        <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
-    {% endif %}
-
+  {% if session.get("emp_role", "Нет роли") == 'gip' -%}
+  <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
+  <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
+  {% endif %}
 </div>
 {% endblock content %}
