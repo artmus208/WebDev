@@ -33,7 +33,7 @@
   width: 1000px;
 }
 
-.open {
+/* .open {
 }
 .open .stage__header {
   background-color: #fff;
@@ -79,7 +79,7 @@
   max-height: 0px;
   overflow: hidden;
   transition: all 0.2s;
-}
+} */
 
 .stage__header,
 .stage__body {

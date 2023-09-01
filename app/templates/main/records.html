@@ -5,10 +5,14 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='pages/record.css' ) }}" />
 {% endblock styles %} {% block content %}
 
-<section class="main">
+<section class="page-section main">
   <div class="container">
     <div class="main__inner">
       <div class="data">
+        <h1 class="main__title">Ваша роль: {{session.get("emp_role", "Нет роли")}}</h1>
+
+        {% include 'base_parts/reports_btns.html' %}
+
         <div class="space">
           {% for cat, msg in get_flashed_messages(True) %}
           <div class="space flash {{cat}}">{{msg}}</div>
@@ -47,7 +51,6 @@
         <a href="{{ url_for('admin.hello_admin') }}" class="gips-btn"> Привет админ! </a>
         {% endif %}
       </div>
-
       <div class="last-records">
         <h2 class="title">Недавние записи</h2>
         <ul>

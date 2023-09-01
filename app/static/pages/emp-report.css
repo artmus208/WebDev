@@ -1,0 +1,65 @@
+.form-emp_report {
+  margin-top: 35px;
+}
+
+.form-emp_report__employee select {
+  width: 400px;
+}
+.form-emp_report__period {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.form-emp_report__lower-date {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.form-emp_report__upper-date {
+  margin-bottom: 43px;
+}
+
+.project {
+  font-size: 20px;
+  font-weight: 400;
+
+  border-left: 2px solid #4786ff;
+  border-right: 2px solid #4786ff;
+
+  margin-top: 23px;
+  background-color: #fff;
+
+  width: 1000px;
+}
+
+.project__title {
+  font-size: 22px;
+
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.project__subtitle {
+  font-size: 20px;
+
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.project__stage {
+  margin-bottom: 30px;
+}
+
+.project-record__line {
+  font-size: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  border-bottom: 1px solid #c4c4c4;
+}
+
+.emp_report__period {
+  margin-top: 51px;
+}

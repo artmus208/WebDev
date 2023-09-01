@@ -10,11 +10,9 @@ function disable_date(checkboxElem) {
   }
 }
 
-const stageHeaders = document.querySelectorAll('.stage__header')
+const stageHeaders = document.querySelectorAll('.accordion__header')
 
 stageHeaders &&
   stageHeaders.forEach(item => {
-    item.addEventListener('click', () => {
-      item.closest('.stage').classList.toggle('open')
-    })
+    item.addEventListener('click', () => item.closest('.accordion').classList.toggle('accordion_open'))
   })

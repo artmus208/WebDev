@@ -1,88 +1,104 @@
-{% from 'utils.j2' import colorize_it %}
+{% from 'utils.j2' import colorize_it %} {% extends "base.html" %}
 
-{% extends "base.html" %}
+<!-- prettier-ignore -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pages/report-weekly.css' ) }}" />
+{% endblock styles %}
+
+<!-- prettier-ignore -->
 colorize_it(value, conditional_value, class_red, class_green)
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='weekly_report.css') }}">
-<div class="main-container">
-  <div class="container">
-    <div class="content__inner">
-      <h1>Еженедельный отчет по проекту</h1>
-        <div class="space">
-          {% for cat, msg in get_flashed_messages(True) %}
-            <div class="space flash {{cat}}">{{msg}}</div>
-          {% endfor %}
 
-          {% for field, errors in form.errors.items() %}
-            <div class="alert alert-error">
-              {{ ', '.join(errors) }}
-            </div>
-          {% endfor %}
+
+<section class="page-section report-weekly">
+  <div class="container">
+    {% include 'base_parts/reports_btns.html' %}
+
+    <div class="report-weekly__inner">
+      <h1 class="title">Еженедельный отчет по проекту</h1>
+      <div class="space">
+        {% for cat, msg in get_flashed_messages(True) %}
+        <div class="space flash {{cat}}">{{msg}}</div>
+        {% endfor %} {% for field, errors in form.errors.items() %}
+        <div class="alert alert-error">{{ ', '.join(errors) }}</div>
+        {% endfor %}
 
         <form method="POST" action="{{ url_for('report.weekly') }}">
           {{ form.csrf_token }}
-          <p> {{form.project_name()}} </p>
-          <p> {{form.submit()}} </p>
-        </form>
+          {{form.project_name(class='select')}}
 
+          <div class="btns">
+            {{form.submit(class='btn')}}
+            <a class="btn" href="/record">Назад</a>
+          </div>
+          
+        </form>
       </div>
 
-      <hr>
+      <hr />
       {% if report %}
-        <table>
-        <caption>{{ caption }} </caption>
-          
-          <thead>
-            <tr>
-              <th>Статьи расходов</th>
-              <th>План,<br> чел/д</th>
-              <th>Факт,<br> чел/д</th>
-              <th>Отклонение, <br> чел/д</th>
-              <th>Отклонение, <br>(отн) </th>
-              <th>За неделю,<br> чел/д</th>
-            </tr>
-          </thead>
+      <table>
+        <caption>
+          {{ caption }}
+        </caption>
 
-          <tbody>
-            {% for cc_name in report %}
-              <tr>
-                <td style="text-align: left;">{{cc_name}}</td>
-                <td style="color: gray;">{{ colorize_it(report[cc_name]["plan_labor"], 0, "color_red", "")}}</td>
-                <td style="font-weight: bold;">{{ colorize_it(report[cc_name]["fact_labor"], report[cc_name]["plan_labor"], "color_green", "color_red")}}</td>
-                <td>{{ colorize_it(report[cc_name]["delta"], 0, "color_red", "")}}</td>
-                <td>{{ colorize_it(report[cc_name]["progress"], 0, "color_red", "") }} %</td>
-                <td>
-                  {% if report[cc_name]["week_labor"] != 0 %}
-                    +{{ report[cc_name]["week_labor"] }}
-                  {% else %}
-                    {{ colorize_it(report[cc_name]["week_labor"], -1, "color_red", "") }}
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
+        <thead>
+          <tr>
+            <th>Статьи расходов</th>
+            <th>
+              План,<br />
+              чел/д
+            </th>
+            <th>
+              Факт,<br />
+              чел/д
+            </th>
+            <th>
+              Отклонение, <br />
+              чел/д
+            </th>
+            <th>Отклонение, <br />(отн)</th>
+            <th>
+              За неделю,<br />
+              чел/д
+            </th>
+          </tr>
+        </thead>
 
-          <tfoot>
-            <tr>
-              <td style="text-align: right;">Итого:</td>
-              <td style="color: gray">{{ colorize_it(summury["plan_labor"], 0, "color_red", "") }}</td>
-              <td>{{ colorize_it(summury["fact_labor"], summury["plan_labor"], "color_green", "color_red") }}</td>
-              <td>{{ colorize_it(summury["delta"], 0, "color_red", "") }}</td>
-              <td>{{ colorize_it(summury["progress"], 0, "color_red", "")}} %</td>
-              <td>
-                {% if summury["week_labor"] != 0 %}
-                  +{{ summury["week_labor"] }}
-                {% else %}
-                  {{ colorize_it(summury["week_labor"], -1, "color_red", "") }}
-                {% endif %}
-                
-              </td>
-            </tr>
-          </tfoot>
+        <tbody>
+          {% for cc_name in report %}
+          <tr>
+            <td style="text-align: left">{{cc_name}}</td>
+            <td style="color: gray">{{ colorize_it(report[cc_name]["plan_labor"], 0, "color_red", "")}}</td>
+            <td style="font-weight: bold">
+              {{ colorize_it(report[cc_name]["fact_labor"], report[cc_name]["plan_labor"], "color_green", "color_red")}}
+            </td>
+            <td>{{ colorize_it(report[cc_name]["delta"], 0, "color_red", "")}}</td>
+            <td>{{ colorize_it(report[cc_name]["progress"], 0, "color_red", "") }} %</td>
+            <td>
+              {% if report[cc_name]["week_labor"] != 0 %} +{{ report[cc_name]["week_labor"] }} {% else %} {{
+              colorize_it(report[cc_name]["week_labor"], -1, "color_red", "") }} {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
 
-        </table>
+        <tfoot>
+          <tr>
+            <td style="text-align: right">Итого:</td>
+            <td style="color: gray">{{ colorize_it(summury["plan_labor"], 0, "color_red", "") }}</td>
+            <td>{{ colorize_it(summury["fact_labor"], summury["plan_labor"], "color_green", "color_red") }}</td>
+            <td>{{ colorize_it(summury["delta"], 0, "color_red", "") }}</td>
+            <td>{{ colorize_it(summury["progress"], 0, "color_red", "")}} %</td>
+            <td>
+              {% if summury["week_labor"] != 0 %} +{{ summury["week_labor"] }} {% else %} {{ colorize_it(summury["week_labor"], -1,
+              "color_red", "") }} {% endif %}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
       {% endif %}
     </div>
   </div>
-</div> 
+</Ы>
 {% endblock content %}

@@ -51,9 +51,9 @@
         {% endif %}
       </p>
     </div>
-    <div class="stage">
+    <div class="accordion stage">
       {% for cat_cost_name in project_report["cat_cost_list"] %}
-      <div class="stage__header">
+      <div class="accordion__header stage__header">
         <h2 class="stage__title">{{ cat_cost_name }}</h2>
 
         <div class="stage__costs">
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <div class="stage__body">
+      <div class="accordion__body stage__body">
         <div class="employee">
           <div class="employee__line">
             <div class="employee__block employee__title">Сотрудник</div>

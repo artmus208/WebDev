@@ -1,36 +1,40 @@
 @font-face {
-  font-family: 'OpenSans';
+  font-family: 'accordion_openSans';
   font-display: swap;
-  src: local('OpenSans-Bold'), url('fonts/OpenSans/OpenSans-Bold.woff2') format('woff2'),
-    url('fonts/OpenSans/OpenSans-Bold.woff') format('woff'), url('fonts/OpenSans/OpenSans-Bold.eot') format('eot'),
-    url('fonts/OpenSans/OpenSans-Bold.ttf') format('ttf');
+  src: local('accordion_openSans-Bold'), url('fonts/accordion_openSans/accordion_openSans-Bold.woff2') format('woff2'),
+    url('fonts/accordion_openSans/accordion_openSans-Bold.woff') format('woff'),
+    url('fonts/accordion_openSans/accordion_openSans-Bold.eot') format('eot'),
+    url('fonts/accordion_openSans/accordion_openSans-Bold.ttf') format('ttf');
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
-  font-family: 'OpenSans';
+  font-family: 'accordion_openSans';
   font-display: swap;
-  src: local('OpenSans-Medium'), url('fonts/OpenSans/OpenSans-Medium.woff2') format('woff2'),
-    url('fonts/OpenSans/OpenSans-Medium.woff') format('woff'), url('fonts/OpenSans/OpenSans-Medium.eot') format('eot'),
-    url('fonts/OpenSans/OpenSans-Medium.ttf') format('ttf');
+  src: local('accordion_openSans-Medium'), url('fonts/accordion_openSans/accordion_openSans-Medium.woff2') format('woff2'),
+    url('fonts/accordion_openSans/accordion_openSans-Medium.woff') format('woff'),
+    url('fonts/accordion_openSans/accordion_openSans-Medium.eot') format('eot'),
+    url('fonts/accordion_openSans/accordion_openSans-Medium.ttf') format('ttf');
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
-  font-family: 'OpenSans';
+  font-family: 'accordion_openSans';
   font-display: swap;
-  src: local('OpenSans-Regular'), url('fonts/OpenSans/OpenSans-Regular.woff2') format('woff2'),
-    url('fonts/OpenSans/OpenSans-Regular.woff') format('woff'), url('fonts/OpenSans/OpenSans-Regular.eot') format('eot'),
-    url('fonts/OpenSans/OpenSans-Regular.ttf') format('ttf');
+  src: local('accordion_openSans-Regular'), url('fonts/accordion_openSans/accordion_openSans-Regular.woff2') format('woff2'),
+    url('fonts/accordion_openSans/accordion_openSans-Regular.woff') format('woff'),
+    url('fonts/accordion_openSans/accordion_openSans-Regular.eot') format('eot'),
+    url('fonts/accordion_openSans/accordion_openSans-Regular.ttf') format('ttf');
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
-  font-family: 'OpenSans';
+  font-family: 'accordion_openSans';
   font-display: swap;
-  src: local('OpenSans-Regular'), url('fonts/OpenSans/OpenSans-Light.woff2') format('woff2'),
-    url('fonts/OpenSans/OpenSans-Light.woff') format('woff'), url('fonts/OpenSans/OpenSans-Light.eot') format('eot'),
-    url('fonts/OpenSans/OpenSans-Light.ttf') format('ttf');
+  src: local('accordion_openSans-Regular'), url('fonts/accordion_openSans/accordion_openSans-Light.woff2') format('woff2'),
+    url('fonts/accordion_openSans/accordion_openSans-Light.woff') format('woff'),
+    url('fonts/accordion_openSans/accordion_openSans-Light.eot') format('eot'),
+    url('fonts/accordion_openSans/accordion_openSans-Light.ttf') format('ttf');
   font-weight: 200;
   font-style: normal;
 }
@@ -50,7 +54,7 @@ input {
 
 body {
   background-image: url('images/backgrounds/4.png');
-  font-family: 'OpenSans';
+  font-family: 'accordion_openSans';
   font-weight: 400;
   font-size: 20px;
 }
@@ -258,6 +262,12 @@ content {
   border: 2px solid #4786ff;
   font-weight: 500px;
 }
+.btns {
+  display: flex;
+  gap: 45px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
 
 .otchet {
 }
@@ -374,4 +384,87 @@ i.tl_telegram_share_icon {
   vertical-align: top;
   display: inline-block;
   text-decoration: none;
+}
+
+.reports-btns {
+  display: flex;
+}
+.reports-btns__btn {
+  background: #e7f0fd;
+  color: #4786ff;
+  font-weight: 600;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.reports-btns__btn:first-child {
+  border-radius: 5px 0px 0px 5px;
+}
+.reports-btns__btn:last-child {
+  border-radius: 0px 5px 5px 0px;
+}
+
+/* ======== */
+
+.accordion_open .accordion__header {
+  background-color: #fff;
+  color: inherit;
+}
+.accordion_open .accordion__body {
+  max-height: 1500px;
+  padding-top: 10px;
+  border-bottom: 2px solid #4786ff;
+  padding-bottom: 30px;
+}
+.accordion_open .accordion__header::after {
+  transform: translateY(-50%) rotate(180deg);
+  background-image: url('../images/arrow.png');
+}
+
+.accordion__header {
+  padding-top: 23px;
+  border-top: 2px solid #4786ff;
+  border-bottom: 2px solid #4786ff;
+  padding-bottom: 25px;
+  position: relative;
+
+  background: #4786ff;
+  color: #fff;
+  cursor: pointer;
+}
+.accordion__header::after {
+  position: absolute;
+  content: '';
+  right: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-image: url('../images/arrow-white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  transition: all 0.2s;
+}
+.accordion__body {
+  max-height: 0px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.accordion__header,
+.accordion__body {
+  padding-left: 35px;
+  padding-right: 165px;
+}
+
+.accordion__title {
+  font-size: 22px;
+
+  font-weight: 400;
+  margin-bottom: 12px;
 }
