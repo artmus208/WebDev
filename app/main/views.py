@@ -98,7 +98,13 @@ def record():
             task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id).first().id
             hours = form.hours.data
             minuts = form.minuts.data
-            rec = Records(employee_id, project_id, cost_id, task_id_, hours, minuts)
+            rec = Records(
+                employee_id=employee_id,
+                project_id=project_id,
+                cost_id=cost_id,
+                task_id=task_id_,
+                hours=hours,
+                minuts=minuts)
             rec.save()
             flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))
@@ -108,7 +114,7 @@ def record():
             return render_template('main/records.html', form=form,
                                     login=login, last_5_records=last_5_records)
     except Exception as e:
-        logger.warning(f"In record page fail has been ocured: {e}")
+        logger.exception(f"In record page fail has been ocured: {e}")
         flash('Что-то пошло не так...', category="error")
         time.sleep(1)
         return redirect(url_for('main.record', login=login))
@@ -185,12 +191,12 @@ def add_project():
             for cost_id_fk in form.cat_costs.data:
                 new_project_costs = ProjectCosts(
                                     cost_id=cost_id_fk,
-                                    man_days=100,
+                                    man_days=0,
                                     project_id=new_project.id)
                 new_project_costs.save()
                 new_costs_tasks = CostsTasks(
                     task_name_fk=1,
-                    man_days=100,
+                    man_days=0,
                     cost_id=new_project_costs.id)
                 new_costs_tasks.save()
             flash("Проект добавлен", category='success')
