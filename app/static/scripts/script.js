@@ -10,15 +10,11 @@ function disable_date(checkboxElem) {
   }
 }
 
-// const stage = document.querySelector('.stage')
 const stageHeaders = document.querySelectorAll('.stage__header')
-// const stageBody = document.querySelector('.stage__body')
 
-// stageHeader.addEventListener('click', () => {
-//   stage.classList.toggle('open')
-// })
-stageHeaders.forEach(item => {
-  item.addEventListener('click', () => {
-    item.closest('.stage').classList.toggle('open')
+stageHeaders &&
+  stageHeaders.forEach(item => {
+    item.addEventListener('click', () => {
+      item.closest('.stage').classList.toggle('open')
+    })
   })
-})
