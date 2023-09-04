@@ -509,3 +509,22 @@ input[type='checkbox'] + label::before {
 input[type='checkbox']:checked + label::before {
   background-image: url('/static/images/check-mark.svg');
 }
+
+input[type='date'] {
+  position: relative;
+  width: 260px;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  color: transparent;
+  content: url('images/arrow.png');
+  background: none;
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 25px;
+  height: 25px;
+}
