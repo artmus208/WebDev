@@ -156,6 +156,19 @@ header {
   height: 40px;
 }
 
+.underline {
+  position: relative;
+}
+.underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0px;
+  width: 100%;
+  height: 2px;
+  background-color: #4786ff;
+}
+
 content {
   display: flex;
   justify-content: center;
@@ -388,6 +401,7 @@ i.tl_telegram_share_icon {
 
 .reports-btns {
   display: flex;
+  margin-bottom: 35px;
 }
 .reports-btns__btn {
   background: #e7f0fd;

@@ -7,12 +7,6 @@
 
 <section class="page-section emp-report">
   <div class="container">
-    <div class="reports-btns">
-      <a class="reports-btns__btn" href="{{url_for('main.detailed_project_report')}}"><span>Отчет по проектам</span></a>
-      <a class="reports-btns__btn" href="{{ url_for('main.emp_report') }}"><span>Отчет по сотроднику</span></a>
-      <a class="reports-btns__btn" href="{{ url_for('main.emp_report') }}"><span>Еженедельный отчет по проекту</span></a>
-    </div>
-
     <div class="emp-report__inner">
       <div class="space">
         {% for cat, msg in get_flashed_messages(True) %}
@@ -21,6 +15,9 @@
         <div class="alert alert-error">{{ ', '.join(errors) }}</div>
         {% endfor %}
       </div>
+
+      {% include 'base_parts/reports_btns.html' %}
+
       <form method="POST" class="form-emp_report" action="{{ url_for('main.emp_report') }}">
         {{ form.csrf_token }}
         <h1 class="title">Отчет по сотруднику</h1>

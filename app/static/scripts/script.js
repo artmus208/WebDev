@@ -10,9 +10,18 @@ function disable_date(checkboxElem) {
   }
 }
 
+// Вертикальный аккордеон
 const stageHeaders = document.querySelectorAll('.accordion__header')
-
 stageHeaders &&
   stageHeaders.forEach(item => {
     item.addEventListener('click', () => item.closest('.accordion').classList.toggle('accordion_open'))
   })
+
+const reportsBtns = document.querySelectorAll('.reports-btns__btn ')
+const windowLocationPathname = window.location.pathname
+
+reportsBtns.forEach(btn => {
+  // console.log(windowLocationPathname)
+  // console.log(btn.href)
+  btn.href.includes(windowLocationPathname) && btn.querySelector('span').classList.add('underline')
+})
