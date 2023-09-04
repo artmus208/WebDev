@@ -482,3 +482,30 @@ i.tl_telegram_share_icon {
   font-weight: 400;
   margin-bottom: 12px;
 }
+
+input[type='checkbox'] {
+  display: none;
+}
+
+input[type='checkbox'] + label {
+  width: 20px;
+  height: 20px;
+}
+
+input[type='checkbox'] + label::before {
+  cursor: pointer;
+  content: '';
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border: 1px solid #4786ff;
+  border-radius: 0.25em;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+input[type='checkbox']:checked + label::before {
+  background-image: url('/static/images/check-mark.svg');
+}
