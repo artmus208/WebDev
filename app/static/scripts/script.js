@@ -17,11 +17,13 @@ stageHeaders &&
     item.addEventListener('click', () => item.closest('.accordion').classList.toggle('accordion_open'))
   })
 
+// Выделение текущего пункта
 const reportsBtns = document.querySelectorAll('.reports-btns__btn ')
 const windowLocationPathname = window.location.pathname
 
-reportsBtns.forEach(btn => {
-  // console.log(windowLocationPathname)
-  // console.log(btn.href)
-  btn.href.includes(windowLocationPathname) && btn.querySelector('span').classList.add('underline')
-})
+reportsBtns &&
+  reportsBtns.forEach(btn => {
+    console.log(windowLocationPathname)
+    console.log(btn.href)
+    btn.href.includes(windowLocationPathname.slice(0, -1)) && btn.querySelector('span').classList.add('underline')
+  })

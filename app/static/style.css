@@ -1,40 +1,36 @@
 @font-face {
-  font-family: 'accordion_openSans';
+  font-family: 'openSans';
   font-display: swap;
-  src: local('accordion_openSans-Bold'), url('fonts/accordion_openSans/accordion_openSans-Bold.woff2') format('woff2'),
-    url('fonts/accordion_openSans/accordion_openSans-Bold.woff') format('woff'),
-    url('fonts/accordion_openSans/accordion_openSans-Bold.eot') format('eot'),
-    url('fonts/accordion_openSans/accordion_openSans-Bold.ttf') format('ttf');
+  src: local('openSans-Bold'), url('fonts/openSans/openSans-Bold.woff2') format('woff2'),
+    url('fonts/openSans/openSans-Bold.woff') format('woff'), url('fonts/openSans/openSans-Bold.eot') format('eot'),
+    url('fonts/openSans/openSans-Bold.ttf') format('ttf');
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
-  font-family: 'accordion_openSans';
+  font-family: 'openSans';
   font-display: swap;
-  src: local('accordion_openSans-Medium'), url('fonts/accordion_openSans/accordion_openSans-Medium.woff2') format('woff2'),
-    url('fonts/accordion_openSans/accordion_openSans-Medium.woff') format('woff'),
-    url('fonts/accordion_openSans/accordion_openSans-Medium.eot') format('eot'),
-    url('fonts/accordion_openSans/accordion_openSans-Medium.ttf') format('ttf');
+  src: local('openSans-Medium'), url('fonts/openSans/openSans-Medium.woff2') format('woff2'),
+    url('fonts/openSans/openSans-Medium.woff') format('woff'), url('fonts/openSans/openSans-Medium.eot') format('eot'),
+    url('fonts/openSans/openSans-Medium.ttf') format('ttf');
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
-  font-family: 'accordion_openSans';
+  font-family: 'openSans';
   font-display: swap;
-  src: local('accordion_openSans-Regular'), url('fonts/accordion_openSans/accordion_openSans-Regular.woff2') format('woff2'),
-    url('fonts/accordion_openSans/accordion_openSans-Regular.woff') format('woff'),
-    url('fonts/accordion_openSans/accordion_openSans-Regular.eot') format('eot'),
-    url('fonts/accordion_openSans/accordion_openSans-Regular.ttf') format('ttf');
+  src: local('openSans-Regular'), url('fonts/openSans/openSans-Regular.woff2') format('woff2'),
+    url('fonts/openSans/openSans-Regular.woff') format('woff'), url('fonts/openSans/openSans-Regular.eot') format('eot'),
+    url('fonts/openSans/openSans-Regular.ttf') format('ttf');
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
-  font-family: 'accordion_openSans';
+  font-family: 'openSans';
   font-display: swap;
-  src: local('accordion_openSans-Regular'), url('fonts/accordion_openSans/accordion_openSans-Light.woff2') format('woff2'),
-    url('fonts/accordion_openSans/accordion_openSans-Light.woff') format('woff'),
-    url('fonts/accordion_openSans/accordion_openSans-Light.eot') format('eot'),
-    url('fonts/accordion_openSans/accordion_openSans-Light.ttf') format('ttf');
+  src: local('openSans-Regular'), url('fonts/openSans/openSans-Light.woff2') format('woff2'),
+    url('fonts/openSans/openSans-Light.woff') format('woff'), url('fonts/openSans/openSans-Light.eot') format('eot'),
+    url('fonts/openSans/openSans-Light.ttf') format('ttf');
   font-weight: 200;
   font-style: normal;
 }
@@ -54,7 +50,7 @@ input {
 
 body {
   background-image: url('images/backgrounds/4.png');
-  font-family: 'accordion_openSans';
+  font-family: 'openSans';
   font-weight: 400;
   font-size: 20px;
 }
@@ -112,6 +108,8 @@ select {
 }
 
 .select-input-title {
+  font-size: 20px;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 
@@ -504,6 +502,7 @@ input[type='checkbox'] + label::before {
   border-radius: 0.25em;
   background-repeat: no-repeat;
   background-position: center center;
+  background-size: contain;
 }
 
 input[type='checkbox']:checked + label::before {

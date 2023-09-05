@@ -1,40 +1,30 @@
-/* html,
-body {
-    padding: 0px;
-    margin: 0px;
-    height: 100%;
-} */
-/* 
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-} */
-
 table {
-  width: 650px;
-  border: 1px solid #4786ff;
+  width: 1043px;
+  border: 1px solid #c4c4c4;
   border-collapse: collapse;
   background-color: white;
-  margin-top: 40px;
+
+  font-size: 16px;
 }
 
 caption {
-  text-align: left;
-  padding: 7px 7px 7px 0px;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
 
 thead {
-  border-top: 3px solid #4786ff;
+  /* border-top: 3px solid #4786ff; */
 }
 
 td,
 th {
-  border: 1px solid #4786ff;
-  padding: 7px;
+  border-bottom: 1px solid #c4c4c4;
+  /* padding: 7px; */
+  height: 50px;
+}
+tr {
+  width: 50px;
 }
 
 tbody,
@@ -42,7 +32,20 @@ tfoot {
   text-align: center;
 }
 
-tfoot {
-  border-top: 2px solid #4786ff;
-  font-weight: 700;
+tbody td:first-child {
+  padding-left: 19px;
+  text-align: left;
+}
+
+th:first-child,
+td:first-child {
+  width: 200px;
+}
+
+/* цвета */
+.color_red {
+  color: #d7263d;
+}
+.color_green {
+  color: #06a77d;
 }

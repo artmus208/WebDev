@@ -1,0 +1,16 @@
+.edit_cat_cost__subtitle {
+  font-size: 22px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #4786ff;
+  margin-bottom: 20px;
+  max-width: 1001px;
+}
+
+.edit_cat_cost input,
+.edit_cat_cost select {
+  width: 350px;
+}
+
+.edit_cat_cost__btn {
+  width: 184px;
+}

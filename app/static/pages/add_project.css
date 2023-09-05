@@ -1,0 +1,30 @@
+.form-add_project {
+  font-size: 16px;
+}
+
+.form-add_project label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: auto !important;
+  height: auto !important;
+}
+.form-add_project label::before {
+  /* margin-right: 20px; */
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.add_project__subtitle {
+  font-size: 16px;
+  color: #545454;
+  margin-bottom: 8px;
+}
+
+.form-add_project__employee {
+  width: 350px;
+}
+
+.form-add_project__btn {
+  width: 184px;
+}
