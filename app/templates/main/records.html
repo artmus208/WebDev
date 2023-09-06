@@ -3,7 +3,16 @@
 <!-- prettier-ignore -->
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='pages/record.css' ) }}" />
-{% endblock styles %} {% block content %}
+{% endblock styles %}
+
+<!-- prettier-ignore -->
+{% block error%}
+<div class="space">
+  {% for cat, msg in get_flashed_messages(True) %}
+  <div class="space flash {{cat}}">{{msg}}</div>
+  {% endfor %}
+</div>
+{% endblock error %} {% block content %}
 
 <section class="page-section main">
   <div class="container">
@@ -11,11 +20,6 @@
     {% include 'base_parts/reports_btns.html' %}
     <div class="main__inner">
       <div class="data">
-        <div class="space">
-          {% for cat, msg in get_flashed_messages(True) %}
-          <div class="space flash {{cat}}">{{msg}}</div>
-          {% endfor %}
-        </div>
         {% for field, errors in form.errors.items() %}
         <div class="alert alert-error">{{ ', '.join(errors) }}</div>
         {% endfor %}

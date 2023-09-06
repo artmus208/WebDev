@@ -6,6 +6,7 @@
 {% endblock styles %} {% block content %}
 
 <section class="page-section detailed-project">
+  <div class="space"></div>
   <div class="container">
     {% include 'base_parts/reports_btns.html' %}
     <h1 class="title">Подробный отчет по проекту</h1>
@@ -52,8 +53,8 @@
         {% endif %}
       </p>
     </div>
+    {% for cat_cost_name in project_report["cat_cost_list"] %}
     <div class="accordion stage">
-      {% for cat_cost_name in project_report["cat_cost_list"] %}
       <div class="accordion__header stage__header">
         <h2 class="stage__title">{{ cat_cost_name }}</h2>
 
@@ -100,10 +101,9 @@
           {% endfor %}
         </div>
       </div>
-
-      {% endfor %}
     </div>
-    {% endif %}
+
+    {% endfor %} {% endif %}
   </div>
 </section>
 {% endblock content %}

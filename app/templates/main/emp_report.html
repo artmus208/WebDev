@@ -3,19 +3,24 @@
 <!-- prettier-ignore -->
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='pages/emp-report.css' ) }}" />
-{% endblock styles %} {% block content %}
+{% endblock styles %}
+
+<!-- prettier-ignore -->
+{% block error%}
+{% for cat, msg in get_flashed_messages(True) %}
+<div class="space flash {{cat}}">{{msg}}</div>
+{% endfor %} {% for field, errors in form.errors.items() %}
+<div class="container">
+  <div class="alert alert-error">{{ ', '.join(errors) }}</div>
+</div>
+{% endfor %} {% endblock error %}
+
+<!-- prettier-ignore -->
+{% block content %}
 
 <section class="page-section emp-report">
   <div class="container">
     <div class="emp-report__inner">
-      <div class="space">
-        {% for cat, msg in get_flashed_messages(True) %}
-        <div class="space flash {{cat}}">{{msg}}</div>
-        {% endfor %} {% for field, errors in form.errors.items() %}
-        <div class="alert alert-error">{{ ', '.join(errors) }}</div>
-        {% endfor %}
-      </div>
-
       {% include 'base_parts/reports_btns.html' %}
 
       <form method="POST" class="form-emp_report" action="{{ url_for('main.emp_report') }}">

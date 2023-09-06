@@ -62,6 +62,10 @@ label {
   margin-bottom: 5px;
 }
 
+main {
+  padding-top: 60px;
+}
+
 .container {
   margin: 0 auto;
   padding-left: 15px;
@@ -128,7 +132,7 @@ header {
 }
 
 .page-section {
-  padding-top: 110px;
+  /* padding-top: 60px; */
 }
 
 .header_project {
@@ -172,6 +176,9 @@ content {
   justify-content: center;
 }
 
+.errors {
+  margin-bottom: 50px;
+}
 /* .project {
   margin-top: 55px;
 }
@@ -434,7 +441,7 @@ i.tl_telegram_share_icon {
 }
 .accordion_open .accordion__header::after {
   transform: translateY(-50%) rotate(180deg);
-  background-image: url('../images/arrow.png');
+  background-image: url('images/arrow.png');
 }
 
 .accordion__header {
@@ -454,7 +461,7 @@ i.tl_telegram_share_icon {
   right: 45px;
   top: 50%;
   transform: translateY(-50%);
-  background-image: url('../images/arrow-white.png');
+  background-image: url('images/arrow-white.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

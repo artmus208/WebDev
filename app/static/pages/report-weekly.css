@@ -1,6 +1,6 @@
 table {
   width: 1043px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #4786ff;
   border-collapse: collapse;
   background-color: white;
 
@@ -11,6 +11,7 @@ caption {
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 20px;
+  text-align: left;
 }
 
 thead {
@@ -19,7 +20,7 @@ thead {
 
 td,
 th {
-  border-bottom: 1px solid #c4c4c4;
+  border: 1px solid #4786ff;
   /* padding: 7px; */
   height: 50px;
 }
@@ -40,6 +41,7 @@ tbody td:first-child {
 th:first-child,
 td:first-child {
   width: 200px;
+  padding-right: 15px;
 }
 
 /* цвета */

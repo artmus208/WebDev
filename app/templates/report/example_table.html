@@ -10,30 +10,29 @@ colorize_it(value, conditional_value, class_red, class_green)
 
 {% block content %}
 
+
+
+
+
 <section class="page-section report-weekly">
   <div class="container">
+  
+    
     {% include 'base_parts/reports_btns.html' %}
 
     <div class="report-weekly__inner">
       <h1 class="title">Еженедельный отчет по проекту</h1>
-      <div class="space">
-        {% for cat, msg in get_flashed_messages(True) %}
-        <div class="space flash {{cat}}">{{msg}}</div>
-        {% endfor %} {% for field, errors in form.errors.items() %}
-        <div class="alert alert-error">{{ ', '.join(errors) }}</div>
-        {% endfor %}
 
-        <form method="POST" action="{{ url_for('report.weekly') }}">
-          {{ form.csrf_token }}
-          {{form.project_name(class='select')}}
+      <form method="POST" action="{{ url_for('report.weekly') }}">
+        {{ form.csrf_token }}
+        {{form.project_name(class='select')}}
 
-          <div class="btns">
-            {{form.submit(class='btn')}}
-            <a class="btn btn_back" href="/record">Назад</a>
-          </div>
-          
-        </form>
-      </div>
+        <div class="btns">
+          {{form.submit(class='btn')}}
+          <a class="btn btn_back" href="/record">Назад</a>
+        </div>
+        
+      </form>
 
       <hr />
       {% if report %}

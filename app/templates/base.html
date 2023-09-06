@@ -52,7 +52,17 @@
     </div>
   </header>
 
-  {% block content %} {% endblock content %}
+
+
+  <main>
+    <div class="errors">
+      {% block error %} 
+    
+      {% endblock error %}
+    </div>
+    {% block content %} {% endblock content %}
+  </main>
+
 </body>
 <script type="text/javascript" src="{{ url_for('static', filename='/scripts/script.js') }}"></script>
 </html>

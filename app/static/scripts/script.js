@@ -23,7 +23,5 @@ const windowLocationPathname = window.location.pathname
 
 reportsBtns &&
   reportsBtns.forEach(btn => {
-    console.log(windowLocationPathname)
-    console.log(btn.href)
     btn.href.includes(windowLocationPathname.slice(0, -1)) && btn.querySelector('span').classList.add('underline')
   })
