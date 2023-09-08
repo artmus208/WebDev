@@ -200,17 +200,22 @@ content {
   transition: background-color 0.2s linear;
 }
 .btn_back {
-  width: 131px;
+  /* width: 131px; */
+  width: 13.1rem;
   background-color: #fff;
   color: #4786ff;
-  border: 2px solid #4786ff;
-  font-weight: 500px;
+  /* border: 2px solid #4786ff; */
+  border: 0.2rem solid #4786ff;
+  font-weight: 500;
 }
 .btns {
   display: flex;
-  gap: 45px;
+  /* gap: 45px;
   margin-top: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 30px; */
+  gap: 4.5rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 .flash.success {
@@ -341,10 +346,12 @@ option[value='-1'] {
 }
 
 .accordion__header {
-  padding-top: 23px;
+  /* padding-top: 23px; */
+  padding-top: 2.3rem;
   border-top: 2px solid #4786ff;
   border-bottom: 2px solid #4786ff;
-  padding-bottom: 25px;
+  /* padding-bottom: 25px; */
+  padding-bottom: 2.5rem;
   position: relative;
 
   background: #4786ff;
@@ -354,15 +361,18 @@ option[value='-1'] {
 .accordion__header::after {
   position: absolute;
   content: '';
-  right: 45px;
+  /* right: 45px; */
+  right: 4.5rem;
   top: 50%;
   transform: translateY(-50%);
   background-image: url('images/arrow-white.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  width: 30px;
-  height: 30px;
+  /* width: 30px;
+  height: 30px; */
+  width: 3rem;
+  height: 3rem;
   transition: all 0.2s;
 }
 .accordion__body {
@@ -373,15 +383,19 @@ option[value='-1'] {
 
 .accordion__header,
 .accordion__body {
-  padding-left: 35px;
-  padding-right: 165px;
+  /* padding-left: 35px;
+  padding-right: 165px; */
+  padding-left: 3.5rem;
+  padding-right: 16.5rem;
 }
 
 .accordion__title {
-  font-size: 22px;
+  /* font-size: 22px; */
+  /* margin-bottom: 12px; */
+  font-size: 2.2rem;
+  margin-bottom: 1.2rem;
 
   font-weight: 400;
-  margin-bottom: 12px;
 }
 
 input[type='checkbox'] {
@@ -397,8 +411,10 @@ input[type='checkbox'] + label::before {
   cursor: pointer;
   content: '';
   display: inline-block;
-  width: 30px;
-  height: 30px;
+  /* width: 30px;
+  height: 30px; */
+  width: 3rem;
+  height: 3rem;
   flex-shrink: 0;
   flex-grow: 0;
   border: 1px solid #4786ff;
@@ -414,7 +430,8 @@ input[type='checkbox']:checked + label::before {
 
 input[type='date'] {
   position: relative;
-  width: 260px;
+  /* width: 260px; */
+  width: 26rem;
 }
 
 input[type='date']::-webkit-calendar-picker-indicator {
@@ -427,13 +444,16 @@ input[type='date']::-webkit-calendar-picker-indicator {
   top: 50%;
   right: 10px;
   transform: translateY(-50%);
-  width: 25px;
-  height: 25px;
+  /* width: 25px;
+  height: 25px; */
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .reports-btns {
   display: flex;
-  margin-bottom: 35px;
+  /* margin-bottom: 35px; */
+  margin-bottom: 3.5rem;
 }
 .reports-btns__btn {
   background: #e7f0fd;

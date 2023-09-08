@@ -1,11 +1,15 @@
 .gip__btn {
-  width: 160px;
+  /* width: 160px;
   margin-top: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 30px; */
+  width: 16rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 .gip__link {
-  font-size: 22px;
+  /* font-size: 22px; */
+  font-size: 2.2rem;
   font-weight: 600;
 }
 

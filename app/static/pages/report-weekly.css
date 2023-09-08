@@ -1,16 +1,21 @@
 table {
-  width: 1043px;
+  /* width: 1043px; */
+  width: 104rem;
   border: 1px solid #4786ff;
   border-collapse: collapse;
   background-color: white;
 
-  font-size: 16px;
+  /* font-size: 16px; */
+  font-size: 1.6rem;
 }
 
 caption {
-  font-size: 22px;
+  /* font-size: 22px;
+  margin-bottom: 20px; */
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+
   font-weight: 600;
-  margin-bottom: 20px;
   text-align: left;
 }
 
@@ -22,10 +27,12 @@ td,
 th {
   border: 1px solid #4786ff;
   /* padding: 7px; */
-  height: 50px;
+  /* height: 50px; */
+  height: 5rem;
 }
 tr {
-  width: 50px;
+  /* width: 50px; */
+  width: 5rem;
 }
 
 tbody,
@@ -34,14 +41,17 @@ tfoot {
 }
 
 tbody td:first-child {
-  padding-left: 19px;
+  /* padding-left: 19px; */
+  padding-left: 1.9rem;
   text-align: left;
 }
 
 th:first-child,
 td:first-child {
-  width: 200px;
-  padding-right: 15px;
+  /* width: 200px;
+  padding-right: 15px; */
+  width: 20rem;
+  padding-right: 1.5rem;
 }
 
 /* цвета */

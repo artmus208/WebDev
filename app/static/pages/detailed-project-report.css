@@ -21,16 +21,17 @@
 }
 
 .stage {
-  font-size: 20px;
   font-weight: 400;
 
   border-left: 2px solid #4786ff;
   border-right: 2px solid #4786ff;
 
-  margin-top: 23px;
+  /* margin-top: 23px; */
+  margin-top: 2.3rem;
   background-color: #fff;
 
-  width: 1000px;
+  /* width: 1000px; */
+  width: 100rem;
 }
 
 /* .open {
@@ -81,37 +82,46 @@
   transition: all 0.2s;
 } */
 
-.stage__header,
+/* .stage__header,
 .stage__body {
   padding-left: 35px;
   padding-right: 165px;
 }
+*/
 
 .stage__title {
-  font-size: 22px;
+  /* font-size: 22px; */
+  font-size: 2.2rem;
 
   font-weight: 400;
   margin-bottom: 12px;
+  margin-bottom: 1.2rem;
 }
 
 .stage__costs {
   display: flex;
-  gap: 30px;
+  /* gap: 30px; */
+  gap: 3rem;
 }
 
 .employee {
-  font-size: 16px;
+  /* font-size: 16px; */
+  font-size: 1.6rem;
 }
 .employee__line {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  /* padding-top: 10px;
+  padding-bottom: 10px; */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   display: flex;
   border-bottom: 1px solid #c4c4c4;
 }
 .employee__block:first-child {
-  width: 311px;
+  /* width: 311px; */
+  width: 31.1rem;
 }
 
 .employee__title {
-  font-size: 18px;
+  /* font-size: 18px; */
+  font-size: 1.8rem;
 }
