@@ -42,10 +42,6 @@
           </div>
 
           {{form.submit(class="btn record-submit")}}
-          <div class="buttons">
-            <!-- <a class="btn" ">Отчет по проектам</a> -->
-            <!-- <a class="btn" href="{{url_for('auth.logout')}}">Выйти</a> -->
-          </div>
         </form>
         {% if session.get("emp_is_gip", False) -%}
         <!-- <a href="{{ url_for('gip.gips_project') }}" class="gips-btn">Мой проект</a> -->

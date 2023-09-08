@@ -43,7 +43,9 @@
         </div>
         <div class="header__btns">
           <a href="https://t.me/artmus208" class="header__btn tl_telegram_share_btn">
-            <i class="tl_telegram_share_icon"></i>
+            <!-- <i class="tl_telegram_share_icon"></i> -->
+
+            <img src="{{ url_for('static', filename='/images/telega.svg') }}" class="telegram-icon" alt="">
             <span class="tl_telegram_share_label">Обратная связь</span>
           </a>
           <a class="header__btn" href="{{url_for('auth.logout')}}">Выйти</a>
