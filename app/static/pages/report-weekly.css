@@ -1,7 +1,8 @@
 table {
   /* width: 1043px; */
   width: 104rem;
-  border: 1px solid #4786ff;
+  /* border: 1px solid #4786ff; */
+  border: 0.1rem solid #4786ff;
   border-collapse: collapse;
   background-color: white;
 
@@ -25,7 +26,8 @@ thead {
 
 td,
 th {
-  border: 1px solid #4786ff;
+  /* border: 1px solid #4786ff; */
+  border: 0.1rem solid #4786ff;
   /* padding: 7px; */
   /* height: 50px; */
   height: 5rem;

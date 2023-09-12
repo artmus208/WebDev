@@ -30,9 +30,10 @@
 
 .project {
   font-weight: 400;
-
-  border-left: 2px solid #4786ff;
-  border-right: 2px solid #4786ff;
+  /* border-left: 2px solid #4786ff;
+  border-right: 2px solid #4786ff; */
+  /* border-radius: 5px; */
+  border-radius: 0.5rem;
 
   background-color: #fff;
 
@@ -61,17 +62,29 @@
 }
 
 .project-record__line {
-  /* font-size: 16px;
-  padding-top: 10px;
+  font-size: 16px;
+  /* padding-top: 10px;
   padding-bottom: 10px; */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   font-size: 1.6rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
   display: flex;
-  border-bottom: 1px solid #c4c4c4;
+  /* border-bottom: 1px solid #c4c4c4; */
+  border-bottom: 0.1rem solid #c4c4c4;
+}
+
+.project-record__line_blue {
+  border-color: #4786ff;
 }
 
 .emp_report__period {
   /* margin-top: 51px; */
   margin-top: 5.1rem;
+  /* padding-bottom: 40px; */
+}
+
+.dates {
+  margin-top: 2rem;
 }

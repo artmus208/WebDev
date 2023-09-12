@@ -45,7 +45,8 @@
 
 .last-records {
   padding-left: 4rem;
-  border-left: 3px solid #4787ffbc;
+  /* border-left: 3px solid #4787ffbc; */
+  border-left: 0.3rem solid #4787ffbc;
 }
 .last-records__title {
   font-size: 2rem;
@@ -59,8 +60,10 @@
   padding-left: 2.2rem;
   padding-top: 1.4rem;
   padding-right: 2rem;
-  border-radius: 7px;
-  box-shadow: 0px 4px 7px 0px rgba(0, 0, 0, 0.1);
+  /* border-radius: 7px; */
+  border-radius: 0.7rem;
+  /* box-shadow: 0px 4px 7px 0px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0px 0.4rem 0.7rem 0px rgba(0, 0, 0, 0.1);
   background-color: #fff;
 }
 .last-records_li {
