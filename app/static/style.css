@@ -53,8 +53,7 @@ textarea:focus {
   outline: none;
 }
 
-select,
-input {
+select {
   cursor: pointer;
   background-repeat: no-repeat;
   /* background-position: calc(100% - 14px) center; */

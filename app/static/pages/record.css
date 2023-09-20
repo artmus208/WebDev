@@ -33,6 +33,9 @@
 .item__title {
   margin-bottom: 2rem;
 }
+.item select {
+  width: 40rem;
+}
 
 .hours-minutes {
   display: flex;

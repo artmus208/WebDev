@@ -55,7 +55,13 @@ td:first-child {
   width: 20rem;
   padding-right: 1.5rem;
 }
+td:nth-child(2) {
+  color: grey;
+}
 
+tfoot {
+  font-weight: 700;
+}
 /* цвета */
 .color_red {
   color: #d7263d;
