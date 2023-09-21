@@ -43,11 +43,6 @@
 
           {{form.submit(class="btn record-submit")}}
         </form>
-        {% if session.get("emp_is_gip", False) -%}
-        <!-- <a href="{{ url_for('gip.gips_project') }}" class="gips-btn">Мой проект</a> -->
-        {% endif %} {% if session.get("emp_is_admin", False) -%}
-        <a href="{{ url_for('admin.hello_admin') }}" class="gips-btn"> Привет админ! </a>
-        {% endif %}
       </div>
       <div class="last-records">
         <h2 class="title last-records__title">Недавние записи</h2>
