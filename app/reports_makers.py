@@ -127,8 +127,6 @@ def project_report2(p_id):
         "rel_diff": 0
     }
 
-
-
     for cat_cost_id in Records.get_cat_costs_ids_by_project_id(p_id):
         cat_cost_name = ProjectCosts.get_cat_cost_name_by_id(cat_cost_id)
         if not (cat_cost_name in project_report["cat_cost_list"]): 
@@ -172,7 +170,12 @@ def project_report2(p_id):
         project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
      
     project_report["abs_diff"] = project_report["plan_time"] - project_report["total_perf_time"]
-    project_report["rel_diff"] = round((project_report["abs_diff"] / project_report["plan_time"])*100, 2)
+    
+    if project_report["plan_time"]:
+        project_report["rel_diff"] = round((project_report["abs_diff"] / project_report["plan_time"])*100, 2)
+    else:
+        project_report["rel_diff"] = 0
+        
     return project_report
 
 
