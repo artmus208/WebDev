@@ -162,9 +162,12 @@ def project_report2(p_id):
         cat_cost_fact = sum(total_cat_cost_time)
         project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] = cat_cost_fact
         project_report["cat_cost_list"][cat_cost_name]["abs_diff"] = cat_cost_plan - cat_cost_fact
-        project_report["cat_cost_list"][cat_cost_name]["rel_diff"] = round(
-            100*(cat_cost_plan - cat_cost_fact)/cat_cost_plan, 2
-        )
+        if cat_cost_plan:
+            project_report["cat_cost_list"][cat_cost_name]["rel_diff"] = round(
+                100*(cat_cost_plan - cat_cost_fact)/cat_cost_plan, 2
+            )
+        else:
+            project_report["cat_cost_list"][cat_cost_name]["rel_diff"] = 0
 
     for cat_cost_name in project_report["cat_cost_list"]:
         project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
