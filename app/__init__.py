@@ -14,16 +14,7 @@ def create_app_db():
     app.config.from_object(Config)
     db = SQLAlchemy()
     data_base_URI = None
-    if os.name == 'posix':
-        data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
-            connectorname="mysql+mysqlconnector",
-            username="artmus208",
-            password="pesk-2020",
-            hostname="artmus208.mysql.pythonanywhere-services.com",
-            databasename="artmus208$time_managment_web_app",
-            )
-    else:
-        data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
+    data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
             connectorname="mariadb+mariadbconnector",
             username="root",
             password="pesk-2020",
