@@ -10,3 +10,4 @@ test.txt
 side_work/
 .venv/
 .tcsenv/
+env_vars.sh

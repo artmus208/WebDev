@@ -13,14 +13,21 @@ def create_app_db():
     app = Flask(__name__)
     app.config.from_object(Config)
     db = SQLAlchemy()
-    data_base_URI = None
-    data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
-            connectorname="mariadb+mariadbconnector",
-            username="root",
-            password="pesk-2020",
-            hostname="127.0.0.1:3306",
-            databasename="time_managment_web_app",
-            )
+    
+    os.system("source ./env_vars.sh")
+    
+    bd_connectorname = os.environ.get("TCS_BD_CONNECTOR")
+    bd_username = os.environ.get("TCS_BD_USER")
+    bd_password = os.environ.get("TCS_BD_PASSWORD")
+    bd_host = os.environ.get("TCS_BD_HOST")
+    bd_name = os.environ.get("TCS_BD_NAME")
+    
+    if not all([bd_connectorname, bd_username, bd_password, bd_host, bd_name]):
+        raise Exception(f"DSN error: {[bd_connectorname, bd_username, bd_password, bd_host, bd_name]}")
+        
+    
+    data_base_URI = f"{bd_connectorname}://{bd_username}:{bd_password}@{bd_host}/{bd_name}"
+    
     app.config['SQLALCHEMY_DATABASE_URI'] = data_base_URI
     db.init_app(app)
     return app, db
