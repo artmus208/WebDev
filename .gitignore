@@ -9,3 +9,4 @@ Backups/
 test.txt
 side_work/
 .venv/
+.tcsenv/
