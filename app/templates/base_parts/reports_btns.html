@@ -3,6 +3,6 @@
   <a class="reports-btns__btn" href="{{ url_for('main.emp_report') }}"><span>Отчет по сотруднику</span></a>
   <a class="reports-btns__btn" href="{{ url_for('report.weekly') }}"><span>Еженедельный отчет по проекту</span></a>
   {% if session.get("emp_is_gip", False) -%}
-    <a class="reports-btns__btn" href="/gip"><span>Мой проект</span></a>
+    <a class="reports-btns__btn" href="{{ url_for('gip.gips_project') }}"><span>Мой проект</span></a>
   {% endif %}
 </div>
