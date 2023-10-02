@@ -14,13 +14,12 @@ def create_app_db():
     app.config.from_object(Config)
     db = SQLAlchemy()
     
-    os.system("source ./env_vars.sh")
     
-    bd_connectorname = os.environ.get("TCS_BD_CONNECTOR")
-    bd_username = os.environ.get("TCS_BD_USER")
-    bd_password = os.environ.get("TCS_BD_PASSWORD")
-    bd_host = os.environ.get("TCS_BD_HOST")
-    bd_name = os.environ.get("TCS_BD_NAME")
+    bd_connectorname = os.environ.get("TCS_BD_CONNECTOR", "mariadb+mariadbconnector")
+    bd_username = os.environ.get("TCS_BD_USER", "root")
+    bd_password = os.environ.get("TCS_BD_PASSWORD", "pesk-2020")
+    bd_host = os.environ.get("TCS_BD_HOST", "127.0.0.1:3306")
+    bd_name = os.environ.get("TCS_BD_NAME", "time_managment_web_app")
     
     if not all([bd_connectorname, bd_username, bd_password, bd_host, bd_name]):
         raise Exception(f"DSN error: {[bd_connectorname, bd_username, bd_password, bd_host, bd_name]}")
