@@ -32,14 +32,14 @@ def weekly():
             proj_id = int(form.project_name.data)
             report, summury, caption = weekly_project_report(project_id=proj_id)
             return render_template(
-                "report/example_table.html", 
+                "report/weekly_report.html", 
                 form=form,
                 report=report,
                 summury=summury,
                 caption=caption
             )
         else:
-            return render_template("report/example_table.html", form=form)    
+            return render_template("report/weekly_report.html", form=form)    
     except:
         flash("Произошла ошибка при генерации отчета", category="error")
         logger.exception("Еженедельный отчет")
