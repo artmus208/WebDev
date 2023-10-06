@@ -1,0 +1,37 @@
+{% from 'utils.j2' import colorize_it %} {% extends "base.html" %}
+
+<!-- prettier-ignore -->
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='pages/report-weekly.css' ) }}" />
+{% endblock styles %}
+
+<!-- prettier-ignore -->
+colorize_it(value, conditional_value, class_red, class_green)
+
+{% block content %}
+
+<section class="page-section report-weekly">
+  <div class="container">
+     
+    {% include 'base_parts/reports_btns.html' %}
+
+    <div class="report-weekly__inner">
+      <h1 class="title">Проекты с незаполненными показателями</h1>
+      <hr/>
+      <ul>
+        {% for p in report %}
+          <li>
+              {{p["p_name"]}} ГИП: <b>{{p["gip"].upper()}}</b>
+            <ul>
+              {% for c in p["c_list"] %}
+                <li style="margin-left: 10px;">{{c}}</li>
+              {% endfor %}    
+            </ul>
+          </li>
+          <br>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+{% endblock content %}

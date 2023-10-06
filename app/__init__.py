@@ -28,6 +28,7 @@ def create_app_db():
     data_base_URI = f"{bd_connectorname}://{bd_username}:{bd_password}@{bd_host}/{bd_name}"
     
     app.config['SQLALCHEMY_DATABASE_URI'] = data_base_URI
+    app.config['SQLALCHEMY_ECHO'] = False
     db.init_app(app)
     return app, db
 

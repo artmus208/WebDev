@@ -46,9 +46,9 @@
       </div>
       <div class="last-records">
         <h2 class="title last-records__title">Недавние записи</h2>
-        <ul>
+        <ul style="list-style: none;">
           {% for r in last_5_records %}
-          <li class="last-records_li">
+          <li class="last-records_li" style="list-style: none;">
             {{r[1]}}<br />
             <b>{{r[2]}}</b> инвестировал {{r[-2]}} ч. {{r[-1]}} мин. на "{{r[4]}}" в проекте {{r[3]}}
           </li>

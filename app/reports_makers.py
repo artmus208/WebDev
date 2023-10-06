@@ -329,7 +329,36 @@ def report_about_employee(employee_id, lower_date=None, upper_date=None):
     return data
 
 
+def get_projects_with_unfilled_costs():
+    """Для Даши отображение Статей расходов, у которых не заполнены плановые показатели
+    
+    res_scheme = [{
+        "p_name": "p_name",
+        "gip": "gip",
+        "c_list": [
+            "cost1", "cost2"
+        ],
+    },]
+    """
 
+    res = []
+    all_p = Projects.query.all()
+    p: Projects
+    c: ProjectCosts
+    for p in all_p: # type: Projects
+        proj_dict = {"p_name": 0, "gip": 0, "c_list": []}
+        for c in p.project_costs.all(): # type: Costs    
+            if c.man_days == 0:
+                if proj_dict["p_name"] == 0:
+                    proj_dict["p_name"] = p.project_name
+                    proj_dict["gip"] = p.gips.Employees.login
+                    proj_dict["c_list"].append(c.Costs.cost_name)
+                else:
+                    proj_dict["c_list"].append(c.Costs.cost_name) if c.Costs.cost_name not in proj_dict["c_list"] else None
+        if proj_dict["p_name"]:
+            res.append(proj_dict)
+            
+    return res
 
 if __name__ == "__main__":
     res = get_project_report_dict(all_records=list_of_dicts,p_name="Project 1")

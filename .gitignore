@@ -11,3 +11,6 @@ side_work/
 .venv/
 .tcsenv/
 env_vars.sh
+config.py
+.env
+.flaskenv

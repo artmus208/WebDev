@@ -152,7 +152,7 @@ class Records(db.Model, MyBaseClass):
         except Exception as e:
             db.session.rollback()
             logger.exception(f"in Records class {e}")
-            
+        
     @classmethod
     def get_labors_by_cat_cost_id(cls, cat_cost_id, project_id, date_from=MIN_DATETIME, date_to=MAX_DATETIME):
         try:

@@ -30,7 +30,9 @@ from app.reports_makers import (
     get_project_report_dict,
     replace_id_to_name_in_record_dict,
     report_about_employee,
-    project_report2)
+    project_report2,
+    get_projects_with_unfilled_costs
+)
 
 from . import main
 
@@ -47,7 +49,12 @@ def index():
     else:
         print("Redirect to make record")
         return redirect(url_for('.record', login=emp.login))
+    
 
+@main.route("/inspect")   
+def inspect():
+    report = get_projects_with_unfilled_costs()
+    return render_template("report/inspect.html", report=report)
 
 @main.route("/_update_dropdown")
 def update_cat_costs_list():
