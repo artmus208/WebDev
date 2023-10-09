@@ -44,10 +44,8 @@ from . import main
 def index():
     emp = g.emp
     if emp is None:
-        print("Redirect to login")
         return redirect(url_for('auth.login'))
     else:
-        print("Redirect to make record")
         return redirect(url_for('.record', login=emp.login))
     
 

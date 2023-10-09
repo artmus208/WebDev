@@ -14,3 +14,4 @@ env_vars.sh
 config.py
 .env
 .flaskenv
+.vscode/

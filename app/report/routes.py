@@ -1,4 +1,5 @@
 import time
+
 from flask import (
     Blueprint, flash, redirect,
     render_template, request,
@@ -43,8 +44,32 @@ def weekly():
     except:
         flash("Произошла ошибка при генерации отчета", category="error")
         logger.exception("Еженедельный отчет")
-        time.sleep(1)
         return redirect(url_for('report.weekly'))
+    
+@report.route("/inspect-2", methods=['GET'])
+def inspect_2():
+    if g.emp is None:
+        return redirect(url_for('auth.login'))
+    try:
+        report = []
+        all_p = Projects.query.all()
+        for p in all_p:
+            inner = {"caption": None, "costs": []}
+            p_report, summury, caption = weekly_project_report(project_id=p.id)
+            for c in p_report:
+                if p_report[c]["week_labor"] == 0.0:
+                    if inner["caption"] is None:
+                        inner["caption"] = caption
+                    inner["costs"].append(c)
+            if inner["caption"] is not None:
+                report.append(inner)
+        return render_template("report/inspect_weekly_rec.html", report=report)
+    except:
+        flash("Ошибка inspect-2")
+        logger.exception("inspect-2")
+        return redirect(url_for("main.index"))
+        
+    
         
     
     
