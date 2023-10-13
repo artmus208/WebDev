@@ -28,7 +28,7 @@ RANDOM_ORDER_CC_NAMES = [
     "Программирование",
 ]
 
-def weekly_project_report(project_id):
+def weekly_project_report(project_id, is_before_last_week=False):
     """Краткий отчет по проекту за прошлую неделю, все значения в чел/д
     
     report = {
@@ -47,9 +47,11 @@ def weekly_project_report(project_id):
         "plan_labor": 0,
         "delta": 0,
         "progress": 0,
-        "week_labor": 0
+        "week_labor": 0,
+        "count": 0
     }
-    prev_monday_date, prev_friday_date = get_end_week_dates()
+    # cc_count = {}
+    prev_monday_date, prev_friday_date = get_end_week_dates(is_before_last_week=is_before_last_week)
     p = Projects.get(project_id)
     project_name = p.project_name
     gip_id = p.gip_id
@@ -76,6 +78,12 @@ def weekly_project_report(project_id):
     for cc_id in reversed(all_cat_costs_id):
         cc_name = ProjectCosts.get_cat_cost_name_by_id(cc_id)
         current_cc_report = report.get(cc_name, cc_report)
+        current_cc_report["count"] += Records.count_project_records(project_id, cc_id, prev_monday_date, prev_friday_date)
+        
+        # if cc_name in cc_count:
+        #     cc_count[cc_name] += Records.count_project_records(project_id, cc_id, prev_monday_date, prev_friday_date)
+        # else:
+        #     cc_count[cc_name] = 0
         
         labors_plan_days = ProjectCosts.get(cc_id).man_days
          
@@ -127,12 +135,12 @@ def weekly_project_report(project_id):
     else:
         summury["progress"] = 0
     
+       
     report = dict(
         sorted(
             report.items(), key=lambda item: RIGHT_ORDER_CC_NAMES.index(item[0]) if item[0] in RIGHT_ORDER_CC_NAMES else len(RIGHT_ORDER_CC_NAMES)
         )
     )
-    
     
     return report, summury, caption
     

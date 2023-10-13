@@ -219,6 +219,18 @@ class Records(db.Model, MyBaseClass):
                 self.time_created.strftime("%d.%m.%Y %H:%M"),
                 emp_login, project_name, cost_name, self.hours, self.minuts)
         
+    @classmethod
+    def count_project_records(cls, project_id, cost_id, lower_date, upper_date):
+        stmt = select(func.count(cls.id)).where(
+            cls.project_id == project_id, 
+            cls.time_created.between(lower_date, upper_date),
+            cls.cost_id == cost_id
+        )
+        res = execute(stmt).scalar_one()
+        return res
+        
+        
+        
 class Employees(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())

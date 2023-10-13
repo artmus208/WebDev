@@ -2,7 +2,7 @@ import datetime
 from datetime import date
 
 
-def get_end_week_dates(date_from: date = datetime.date.today()):
+def get_end_week_dates(date_from: date = datetime.date.today(), is_before_last_week: bool = False):
     """Возврат дат понедельника и пятницы предыдущей недели"""
     
     today = date_from
@@ -17,4 +17,7 @@ def get_end_week_dates(date_from: date = datetime.date.today()):
     last_monday = datetime.datetime.combine(last_monday, datetime.datetime.min.time())
     last_friday = datetime.datetime.combine(last_friday, datetime.time(23, 59, 59))
     
-    return last_monday, last_friday
+    if not is_before_last_week:
+        return last_monday, last_friday
+    else:
+        return last_monday - datetime.timedelta(days=7), last_friday

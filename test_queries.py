@@ -18,34 +18,40 @@ from app.report.reports_generators import weekly_project_report
 from utils import timeit
 
 
+# with app.app_context():
+#     # Для Даши ispect3 - отображение проектов и статей расходов
+#     # и общих трудозатрат с количеством записей за последние две недели
+#     m, f = get_end_week_dates(is_before_last_week=True)
+#     count = Records.count_project_records(22, m, f) # 22 - это id TCS
 
-with app.app_context():
-    # Для Даши отображение Статей расходов, у которых не заполнены плановые показатели
+
+# with app.app_context():
+#     # Для Даши отображение Статей расходов, у которых не заполнены плановые показатели
     
-    res_scheme = [{
-        "p_name": "p_name",
-        "gip": "gip",
-        "c_list": [
-            "cost1", "cost2"
-        ],
-    }]
+#     res_scheme = [{
+#         "p_name": "p_name",
+#         "gip": "gip",
+#         "c_list": [
+#             "cost1", "cost2"
+#         ],
+#     }]
 
-    res = []
-    all_p = Projects.query.all()
-    p: Projects
-    c: ProjectCosts
-    for p in all_p: # type: Projects
-        proj_dict = {"p_name": 0, "gip": 0, "c_list": []}
-        for c in p.project_costs.all(): # type: Costs    
-            if c.man_days == 0:
-                if proj_dict["p_name"] == 0:
-                    proj_dict["p_name"] = p.project_name
-                    proj_dict["gip"] = p.gips.Employees.login
-                    proj_dict["c_list"].append(c.Costs.cost_name)
-                else:
-                    proj_dict["c_list"].append(c.Costs.cost_name) if c.Costs.cost_name not in proj_dict["c_list"] else None
-        if proj_dict["p_name"]:
-            res.append(proj_dict)
+#     res = []
+#     all_p = Projects.query.all()
+#     p: Projects
+#     c: ProjectCosts
+#     for p in all_p: # type: Projects
+#         proj_dict = {"p_name": 0, "gip": 0, "c_list": []}
+#         for c in p.project_costs.all(): # type: Costs    
+#             if c.man_days == 0:
+#                 if proj_dict["p_name"] == 0:
+#                     proj_dict["p_name"] = p.project_name
+#                     proj_dict["gip"] = p.gips.Employees.login
+#                     proj_dict["c_list"].append(c.Costs.cost_name)
+#                 else:
+#                     proj_dict["c_list"].append(c.Costs.cost_name) if c.Costs.cost_name not in proj_dict["c_list"] else None
+#         if proj_dict["p_name"]:
+#             res.append(proj_dict)
 
 # with app.app_context():
 #     proj_id = 3
@@ -59,11 +65,11 @@ with app.app_context():
 #         all_cc_labors.append(Records.get_labors_by_cat_cost_id(cc_id))
 #     print(all_cc_names)
     
-# with app.app_context():
-#     report, summury, caption = weekly_project_report(22)
-#     print(caption)
-#     for key in report:
-#         print(f"{key}\n{report[key]}")
+with app.app_context():
+    report, summury, caption = weekly_project_report(22, True)
+    print(caption)
+    for key in report:
+        print(f"{key}\n{report[key]}")
     
 #     for key in summury:
 #         print(f"{key}:{summury[key]}")
