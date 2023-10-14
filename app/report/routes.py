@@ -68,7 +68,29 @@ def inspect_2():
         flash("Ошибка inspect-2")
         logger.exception("inspect-2")
         return redirect(url_for("main.index"))
-        
+    
+@report.route("/inspect-3", methods=['GET'])
+def inspect_3():
+    if g.emp is None:
+        return redirect(url_for("auth.login"))
+    try:
+        report = []
+        all_p = Projects.query.all()
+        for p in all_p:
+            inner = {"caption": None, "p_report": {}}
+            p_report, summury, caption = weekly_project_report(project_id=p.id, is_before_last_week=True)
+            report.append(
+                {
+                    "caption": caption,
+                    "p_report": p_report
+                }
+            )
+        return render_template("report/inspect3.html", report=report)
+    
+    except:
+        flash("Ошибка в inspect-3")
+        logger.exception("inspect-3")
+        return redirect(url_for("main.index"))
     
         
     

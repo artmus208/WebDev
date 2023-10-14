@@ -80,11 +80,6 @@ def weekly_project_report(project_id, is_before_last_week=False):
         current_cc_report = report.get(cc_name, cc_report)
         current_cc_report["count"] += Records.count_project_records(project_id, cc_id, prev_monday_date, prev_friday_date)
         
-        # if cc_name in cc_count:
-        #     cc_count[cc_name] += Records.count_project_records(project_id, cc_id, prev_monday_date, prev_friday_date)
-        # else:
-        #     cc_count[cc_name] = 0
-        
         labors_plan_days = ProjectCosts.get(cc_id).man_days
          
         iter_labors_gen_fact = Records.get_labors_by_cat_cost_id(cc_id, project_id)

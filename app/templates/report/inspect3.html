@@ -1,0 +1,54 @@
+{% from 'utils.j2' import colorize_it %} {% extends "base.html" %}
+
+<!-- prettier-ignore -->
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='pages/report-weekly.css' ) }}" />
+{% endblock styles %}
+
+<!-- prettier-ignore -->
+colorize_it(value, conditional_value, class_red, class_green)
+
+{% block content %}
+
+<section class="page-section report-weekly">
+  <div class="container">
+     
+    {% include 'base_parts/reports_btns.html' %}
+
+    <div class="report-weekly__inner">
+      <h1 class="title">Сводный отчет по проектам за две недели</h1>
+      <hr/>
+
+        {% for p in report %}
+          <table>
+            <caption>
+              {{ p["caption"] }} 
+            </caption>
+            
+            <thead>
+              <tr>
+                <th>Статьи расходов</th>
+                <th>За две недели, чел/д</th>
+                <th>Количество записей</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for c_name in p["p_report"] %}
+                <tr>
+                  <td>{{ c_name }}</td>
+                  <td>
+                    {% if p["p_report"][c_name]["week_labor"] != 0 %} +{{ p["p_report"][c_name]["week_labor"] }} {% else %}
+                    {{ colorize_it(p["p_report"][c_name]["week_labor"], -1, "", "color_red") }} {% endif %}
+                  </td>
+                  <td>{{ p["p_report"][c_name]["count"] }}</td>
+                </tr>
+              {% endfor %}   
+            </tbody>
+            <br>
+          </table>
+        {% endfor %}
+    </div>
+  </div>
+
+{% endblock content %}
