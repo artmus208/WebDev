@@ -10,6 +10,8 @@
   <div class="container">
     {% include 'base_parts/reports_btns.html' %}
     <h1 class="title">Подробный отчет по проекту</h1>
+    
+    {% if form %}
     <div class="detailed-project__inner">
       <div class="space">
         {% for cat, msg in get_flashed_messages(True) %}
@@ -28,6 +30,8 @@
         </div>
       </form>
     </div>
+    {% endif %}
+
     {% if project_report %}
     <hr />
 

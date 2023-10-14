@@ -22,7 +22,7 @@ colorize_it(value, conditional_value, class_red, class_green)
         {% for p in report %}
           <table>
             <caption>
-              {{ p["caption"] }} 
+              {{ p["caption"] }}
             </caption>
             
             <thead>
@@ -45,8 +45,9 @@ colorize_it(value, conditional_value, class_red, class_green)
                 </tr>
               {% endfor %}   
             </tbody>
-            <br>
           </table>
+          <a style="color: blue;" href="{{ url_for('report.detailed', p_id=p['p_id']) }}">Подробный отчет</a>
+          <br><br>
         {% endfor %}
     </div>
   </div>

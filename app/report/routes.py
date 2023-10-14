@@ -15,6 +15,7 @@ from app.models import (
     CostsTasks, Records, Admins
 )
 from app.report.reports_generators import weekly_project_report
+from app.reports_makers import project_report2
 
 report = Blueprint(
     'report',
@@ -82,7 +83,8 @@ def inspect_3():
             report.append(
                 {
                     "caption": caption,
-                    "p_report": p_report
+                    "p_report": p_report,
+                    "p_id": p.id
                 }
             )
         return render_template("report/inspect3.html", report=report)
@@ -91,6 +93,23 @@ def inspect_3():
         flash("Ошибка в inspect-3")
         logger.exception("inspect-3")
         return redirect(url_for("main.index"))
+    
+    
+@report.route("/detailed/<int:p_id>")
+def detailed(p_id):
+    if g.emp is None:
+        return redirect(url_for("auth.login"))
+    try:
+        project_report = project_report2(p_id=p_id)
+        return render_template('main/detailed_project_report.html', project_report=project_report)
+    except:
+        flash("Ошибка при составлении отчета")
+        logger.exception("detailed")
+        return redirect(url_for("report.inspect_3"))
+        
+        
+    
+    
     
         
     
