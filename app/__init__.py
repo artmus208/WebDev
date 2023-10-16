@@ -29,6 +29,11 @@ def create_app_db():
     
     app.config['SQLALCHEMY_DATABASE_URI'] = data_base_URI
     app.config['SQLALCHEMY_ECHO'] = False
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_size': 10,
+        'pool_recycle': 60,
+        'pool_pre_ping': True
+    }
     db.init_app(app)
     return app, db
 
