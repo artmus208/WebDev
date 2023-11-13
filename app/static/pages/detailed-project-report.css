@@ -1,8 +1,8 @@
 .red {
-  /* color: red; */
+  color: red;
 }
 .green {
-  color: inherit;
+  color: green;
 }
 .open .green {
   color: #06a77d;
