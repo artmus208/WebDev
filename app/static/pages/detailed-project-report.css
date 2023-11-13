@@ -2,7 +2,7 @@
   color: red;
 }
 .green {
-  color: green;
+  color: rgb(0, 238, 238);
 }
 .open .green {
   color: #06a77d;
