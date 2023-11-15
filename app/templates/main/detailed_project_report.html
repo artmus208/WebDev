@@ -52,7 +52,9 @@
           <span class="green">{{ project_report["abs_diff"] // 60 // 8 }} чел/д</span>
         {% else %}
           <span class="red">{{ project_report["abs_diff"] // 60 // 8 }} чел/д </span>
-        {% endif %} {% if project_report["rel_diff"] > 0 %}
+        {% endif %} 
+        
+        {% if project_report["rel_diff"] > 0 %}
           <span class="green">{{ project_report["rel_diff"] }} %</span>
         {% else %}
           <span class="red">{{ project_report["rel_diff"] }} %</span>

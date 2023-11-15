@@ -173,7 +173,7 @@ class Records(db.Model, MyBaseClass):
         """
         Возврат общего времени сотрудника под ЭТОЙ статьей расходов и в ЭТОМ проекте
         внутри функция просто делает запросы к БД с вычислением суммы по часам и минутам
-        Возврат: (часы, минуты, логин сотрудника)
+        Возврат: минуты общих трудозатрат
         """
         stmt = select(func.sum(cls.hours)).where(
             cls.project_id==project_id, cls.cost_id==project_cost_id, cls.employee_id==employee_id)
