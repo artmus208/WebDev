@@ -15,3 +15,5 @@ config.py
 .env
 .flaskenv
 .vscode/
+test_reports.py
+xls/

@@ -1,8 +1,10 @@
+from datetime import datetime
+from io import BytesIO
 import time
 
 from flask import (
     Blueprint, flash, redirect,
-    render_template, request,
+    render_template, request, send_file,
     session, g, url_for
 )
 
@@ -15,6 +17,7 @@ from app.models import (
     CostsTasks, Records, Admins
 )
 from app.report.reports_generators import weekly_project_report
+from app.report.reports_in_xl import brief_p_report_xl
 from app.reports_makers import project_report2
 
 report = Blueprint(
@@ -22,6 +25,14 @@ report = Blueprint(
     __name__,
     url_prefix="/report"
 )
+
+
+@report.route("/xl/p/<int:p_id>")
+def xl_p_report(p_id):
+    file_stream, p_code = brief_p_report_xl(p_id)
+    date = datetime.now().strftime('%d.%m.%Y')
+    return send_file(file_stream, download_name=f"Отчет {p_code} {date}.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    
 
 @report.route("/weekly", methods=["GET", "POST"])
 def weekly():
