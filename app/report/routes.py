@@ -29,9 +29,16 @@ report = Blueprint(
 
 @report.route("/xl/p/<int:p_id>")
 def xl_p_report(p_id):
-    file_stream, p_code = brief_p_report_xl(p_id)
-    date = datetime.now().strftime('%d.%m.%Y')
-    return send_file(file_stream, download_name=f"Отчет {p_code} {date}.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    try:
+        file_stream, p_code = brief_p_report_xl(p_id)
+        date = datetime.now().strftime('%d.%m.%Y')
+        return send_file(
+            file_stream, download_name=f"Отчет {p_code} {date}.xlsx", 
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    except:
+        flash("Ошибка при составлении XL документа")
+        logger.exception("XL")
+        return redirect(url_for("report.detailed"))
     
 
 @report.route("/weekly", methods=["GET", "POST"])
@@ -116,7 +123,7 @@ def detailed(p_id):
     except:
         flash("Ошибка при составлении отчета")
         logger.exception("detailed")
-        return redirect(url_for("report.inspect_3"))
+        return redirect(url_for("report.detailed"))
         
         
     
