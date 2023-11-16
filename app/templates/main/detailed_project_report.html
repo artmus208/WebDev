@@ -36,7 +36,12 @@
     <hr />
 
     <div class="project">
-      <h2 class="title">{{ project_report["p_name"] }}</h2>
+      <div style="display: flex;">
+        <h2 class="title">{{ project_report["p_name"] }}</h2>
+        <a href="/report/xl/p/{{project_report['p_id']}}" style="margin-left: 100px">
+          <img src="{{ url_for('static', filename='images/xl.svg') }}" width="50px" height="50px" alt="">
+        </a>
+      </div>
       <p>Планируемые трудозатраты: {{ project_report["plan_time"] // 60 // 8 }} чел/д</p>
       <p>
         Фактические трудозатраты:
