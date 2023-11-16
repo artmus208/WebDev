@@ -38,7 +38,7 @@ def xl_p_report(p_id):
     except:
         flash("Ошибка при составлении XL документа")
         logger.exception("XL")
-        return redirect(url_for("report.detailed"))
+        return redirect(url_for("main.detailed_project_report"))
     
 
 @report.route("/weekly", methods=["GET", "POST"])
@@ -123,7 +123,7 @@ def detailed(p_id):
     except:
         flash("Ошибка при составлении отчета")
         logger.exception("detailed")
-        return redirect(url_for("report.detailed"))
+        return redirect(url_for("main.detailed_project_report"))
         
         
     
