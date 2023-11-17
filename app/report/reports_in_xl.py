@@ -11,6 +11,7 @@ from openpyxl.worksheet.worksheet import Worksheet
 
 from app.reports_makers import project_report2
 
+from app import app
 
 def autosize_columns(worksheet):
     def value_of(value):
@@ -23,7 +24,12 @@ def autosize_columns(worksheet):
 
     return worksheet
 
+# TIPS: Эту функцию надо рефакторить обязательно
 def brief_p_report_xl(p_id=14):
+
+    # TODO:
+    # [ ]: Вынести Workbook в аргументы
+    
     detailed_p_report = project_report2(p_id)
     
     p_title = detailed_p_report["p_name"]
@@ -95,10 +101,58 @@ def brief_p_report_xl(p_id=14):
     wb.close()
     return file_stream, p_code
 
+def write_emps_dict(ws: Worksheet, emps_dict: dict):
+    """Функционал записи общего списка сотрудников по трудозатратам в этом проекте"""
+    pass
+
+def write_p_common_info(ws: Worksheet, p_common_info):
+    """Функционал записи названия, общих показателей"""
+    pass
 
 
+def in_emps_dict(emp_data: dict):
+    """Функционал составления общего списка сотрудников и их трудозатрат"""
+    pass
+
+def write_labor_table(ws: Worksheet, start_coord="E5", cc_name:str="Проектирование", cc_data:dict={}):
+    """Функция записи таблицы с трудозатратами сотрудников по статьям расходов"""
+    t_captions = ["Сотрудник", "Факт, чел/д"]
+    
+    emp_list = cc_data["emp_list"]
+    
+    min_row = int(start_coord[1])                      # Номер строки с названием статьи расходов
+    min_col = column_index_from_string(start_coord[0]) # Номер колонки с названием статьи расходов
+    max_row = 3 + len(emp_list) + min_row-1            # Номер строки для итого
+    max_col = min_col + 1                              # Номер колонки последней ячейки в итого
+    
+    iter_rows = ws.iter_rows(min_row=min_row, max_row=max_row-1, min_col=min_col, max_col=max_col)
+    cc_row = next(iter_rows)
+    cc_row[0].value = cc_name
+    
+    caption_row = next(iter_rows)
+    caption_row[0].value, caption_row[1].value = t_captions
+    
+    for row, emp in zip(iter_rows, emp_list):
+        row[0].value = emp
+        row[1].value = round(emp_list[emp]["total_perf_time"][0] / 60 / 8, 1)
+        
+                
+    # TODO
+    # Оформить её как table
+    return max_row
 
 
+with app.app_context():
+    p_detail_report = project_report2(p_id=14)
 
+p_title = p_detail_report["p_name"]
+p_code = p_title.split()[0]
 
+wb = Workbook()
+ws = wb.create_sheet(f"Подробный отчет {p_code}")
 
+cc_name = list(p_detail_report["cat_cost_list"].keys())[0]
+cc_data = p_detail_report["cat_cost_list"][cc_name]
+write_labor_table(ws=ws, cc_name=cc_name, cc_data=cc_data)
+
+wb.save("test_detail_report.xlsx")
