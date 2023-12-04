@@ -142,17 +142,17 @@ def write_labor_table(ws: Worksheet, start_coord="E5", cc_name:str="Проект
     return max_row
 
 
-with app.app_context():
-    p_detail_report = project_report2(p_id=14)
+# with app.app_context():
+#     p_detail_report = project_report2(p_id=14)
 
-p_title = p_detail_report["p_name"]
-p_code = p_title.split()[0]
+# p_title = p_detail_report["p_name"]
+# p_code = p_title.split()[0]
 
-wb = Workbook()
-ws = wb.create_sheet(f"Подробный отчет {p_code}")
+# wb = Workbook()
+# ws = wb.create_sheet(f"Подробный отчет {p_code}")
 
-cc_name = list(p_detail_report["cat_cost_list"].keys())[0]
-cc_data = p_detail_report["cat_cost_list"][cc_name]
-write_labor_table(ws=ws, cc_name=cc_name, cc_data=cc_data)
+# cc_name = list(p_detail_report["cat_cost_list"].keys())[0]
+# cc_data = p_detail_report["cat_cost_list"][cc_name]
+# write_labor_table(ws=ws, cc_name=cc_name, cc_data=cc_data)
 
-wb.save("test_detail_report.xlsx")
+# wb.save("test_detail_report.xlsx")
