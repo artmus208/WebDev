@@ -52,18 +52,20 @@
         </b>
       </p>
       <p>
-        Разница: 
-        {% if project_report["abs_diff"] > 0 %}
-          <span class="green">{{ project_report["abs_diff"] // 60 // 8 }} чел/д</span>
-        {% else %}
-          <span class="red">{{ project_report["abs_diff"] // 60 // 8 }} чел/д </span>
-        {% endif %} 
-        
-        {% if project_report["rel_diff"] > 0 %}
-          <span class="green">{{ project_report["rel_diff"] }} %</span>
-        {% else %}
-          <span class="red">{{ project_report["rel_diff"] }} %</span>
-        {% endif %}
+        Разница:
+            <b>
+              {% if project_report["abs_diff"] > 0 %}
+                <span class="green">{{ project_report["abs_diff"] // 60 // 8 }} чел/д</span>
+              {% else %}
+                <span class="red">{{ project_report["abs_diff"] // 60 // 8 }} чел/д </span>
+              {% endif %} 
+              
+              {% if project_report["rel_diff"] > 0 %}
+                <span class="green">{{ project_report["rel_diff"] }} %</span>
+              {% else %}
+                <span class="red">{{ project_report["rel_diff"] }} %</span>
+              {% endif %}
+        </b> 
       </p>
     </div>
     {% for cat_cost_name in project_report["cat_cost_list"] %}
@@ -73,7 +75,7 @@
 
         <div class="stage__costs">
           <p>П: {{ project_report["cat_cost_list"][cat_cost_name]["cat_cost_plan"] // 60 // 8 }} чел/д</p>
-          
+
           <p>
             Ф: {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д
             {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 480 // 60 }} чел/ч 
