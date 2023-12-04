@@ -73,11 +73,11 @@
 
         <div class="stage__costs">
           <p>П: {{ project_report["cat_cost_list"][cat_cost_name]["cat_cost_plan"] // 60 // 8 }} чел/д</p>
-
+          
           <p>
-            Ф: {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д {{
-            project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 480 // 60 }} чел/ч {{
-            project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 60 }} чел/мин
+            Ф: {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] // 60 // 8 }} чел/д
+            {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 480 // 60 }} чел/ч 
+            {{ project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] % 60 }} чел/мин
           </p>
 
           <p>
