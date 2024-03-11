@@ -6,7 +6,7 @@ import time
 from flask import (
     Response, abort, render_template, redirect, 
     url_for, flash, session, g, request,
-    jsonify)
+    jsonify, current_app)
 from sqlalchemy import func
 
 import schedule
@@ -293,27 +293,25 @@ def background_process():
 
         if sleep_time is not None and sleep_time > 0:
             sleep_time_formatted = time.strftime('%H:%M:%S', time.gmtime(sleep_time))
-            print(f"будет спать еще {sleep_time_formatted}")
+            logger.info(f"будет спать еще {sleep_time_formatted}")
 
             # Ожидание до следующей задачи
             time.sleep(sleep_time)
         else:
-            print("Задач нет, спать 1 секунду")
+            logger.info("Задач нет, спать 1 секунду")
             time.sleep(1)
 
 
 def notification1645():
-    with open('users.json', 'r') as file:
+    with open("./app/static/users.json", 'r', encoding="utf-8") as file:
         data = json.load(file)
 
         for tg_id in data:
-            print(tg_id['tg_id'])
             message_text = (f'🔔❗️{tg_id["first_name"]}, не забудьте внести трудозатраты за сегодняшний день.\n'
                             f'Сделайте это прямо сейчас в приложении <a href="https://tcs.pesk.spb.ru/auth/login">TaskPesk</a>🔔❗️')
             params = {'chat_id': tg_id['tg_id'], 'text': message_text, 'parse_mode': 'HTML'}  #
             response = requests.post(url, data=params)
 
-    print(123)
 
 
 schedule.every().day.at("16:45").do(notification1645)
@@ -327,7 +325,8 @@ lock = threading.Lock()
 
 def add_user(data):
     with lock:
-        file_path = Path('users.json')
+        # file_path = Path(url_for('static', filename='users.json'))
+        file_path = Path("./app/static/users.json")
 
         if file_path.is_file():
             with open(file_path, 'r', encoding='utf-8') as file:
@@ -353,7 +352,6 @@ def notification():
         message = data['message']
 
         if 'text' in message:
-            print(data)
             content = f"Текст: {message['text']}" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
             message_text = data['message']['text']
             if message_text.endswith("@pesk.spb.ru"):
@@ -371,26 +369,24 @@ def notification():
                 mess = f"Спасибо 😊"
                 params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
                 requests.post(url, data=params1)
-                print(message)
             else:
                 mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
                 params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
                 requests.post(url, data=params1)
 
-                print(f"--NO-- {data['message']['from']['id']}")
 
         elif 'sticker' in message:
             mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
             params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
             requests.post(url, data=params1)
-            print(message)
+
 
             content = f"Стикер: {message['sticker'].get('emoji', 'Нет эмодзи')}" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
         elif 'photo' in message:
             mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
             params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
             requests.post(url, data=params1)
-            print(message)
+
 
             content = "Фото получено" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
         elif 'video' in message:

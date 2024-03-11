@@ -41,6 +41,9 @@
           <p class="header_text"></p>
         </div>
         <div class="header__btns">
+          <a class="header__btn" href="https://t.me/taskpesk_bot">
+            <img src="{{ url_for('static', filename='/images/notification-icon.svg') }}" class="telegram-notifier">
+          </a>
           <a href="https://t.me/artmus208" class="header__btn tl_telegram_share_btn">
             <!-- <i class="tl_telegram_share_icon"></i> -->
 
@@ -48,6 +51,7 @@
             <span class="tl_telegram_share_label">Обратная связь</span>
           </a>
           <a class="header__btn" href="{{url_for('auth.logout')}}">Выйти</a>
+
         </div>
       </div>
     </div>
