@@ -303,14 +303,18 @@ def background_process():
 
 
 def notification1645():
-    with open("./app/static/users.json", 'r', encoding="utf-8") as file:
-        data = json.load(file)
+    day_without_notice = datetime.now().weekday()
+    if day_without_notice != 5 and day_without_notice != 6:
+        with open('users.json', 'r') as file:
+            data = json.load(file)
 
-        for tg_id in data:
-            message_text = (f'рџ””вќ—пёЏ{tg_id["first_name"]}, РЅРµ Р·Р°Р±СѓРґСЊС‚Рµ РІРЅРµСЃС‚Рё С‚СЂСѓРґРѕР·Р°С‚СЂР°С‚С‹ Р·Р° СЃРµРіРѕРґРЅСЏС€РЅРёР№ РґРµРЅСЊ.\n'
-                            f'РЎРґРµР»Р°Р№С‚Рµ СЌС‚Рѕ РїСЂСЏРјРѕ СЃРµР№С‡Р°СЃ РІ РїСЂРёР»РѕР¶РµРЅРёРё <a href="https://tcs.pesk.spb.ru/auth/login">TaskPesk</a>рџ””вќ—пёЏ')
-            params = {'chat_id': tg_id['tg_id'], 'text': message_text, 'parse_mode': 'HTML'}  #
-            response = requests.post(url, data=params)
+            for tg_id in data:
+                print(tg_id['tg_id'])
+                message_text = (f'????{tg_id["first_name"]}, не забудьте внести трудозатраты за сегодняшний день.\n'
+                                f'Сделайте это прямо сейчас в приложении <a href="https://tcs.pesk.spb.ru/auth/login">TaskPesk</a>????')
+                params = {'chat_id': tg_id['tg_id'], 'text': message_text, 'parse_mode': 'HTML'}  #
+                response = requests.post(url, data=params)
+
 
 
 
