@@ -351,7 +351,7 @@ def notification():
         data = request.json
 
         data = request.json
-        message = data['message']
+        message = data.get('message', [])
 
         if 'text' in message:
             content = f"Текст: {message['text']}" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
@@ -428,11 +428,14 @@ def notification():
 
             content = "Контакт получен" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
         else:
-            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
-            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
-            requests.post(url, data=params1)
+            try:
+                mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+                params1 = {'chat_id': message['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+                requests.post(url, data=params1)
 
-            content = "Неподдерживаемый тип сообщения" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+                content = "Неподдерживаемый тип сообщения" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+            except:
+                abort(403)
 
         return Response('ok', status=200)
 
