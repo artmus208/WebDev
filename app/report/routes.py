@@ -19,6 +19,7 @@ from app.models import (
 from app.report.reports_generators import weekly_project_report
 from app.report.reports_in_xl import brief_p_report_xl
 from app.reports_makers import project_report2
+from app.report.reports_all_in_xl import create_xl_project, get_info_project
 
 report = Blueprint(
     'report',
@@ -39,6 +40,31 @@ def xl_p_report(p_id):
         flash("Ошибка при составлении XL документа")
         logger.exception("XL")
         return redirect(url_for("main.detailed_project_report"))
+
+
+@report.route("/xl/all/p")
+def all_xl_report():
+    projects_data = {}
+
+    all_projects = Projects.query.all()
+    for project in all_projects:
+        list_project = project.project_name.split()
+        code = list_project[0]
+        name_project = ''.join(list_project[1:-1])
+
+        info_project_list = get_info_project(project.id)
+
+        projects_data[code] = [[name_project] + i for i in info_project_list]
+
+
+    p_code = 'Все проекты'
+    date = f"до {datetime.now().strftime('%d.%m.%Y')} включительно"
+
+    file_stream = create_xl_project(projects_data)
+    return send_file(
+        file_stream, download_name=f"Отчет {p_code} {date}.xlsx",
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
     
 
 @report.route("/weekly", methods=["GET", "POST"])

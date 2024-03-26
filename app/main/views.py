@@ -159,6 +159,7 @@ def project_report():
 
 @main.route('/detailed-project-report', methods=['GET', 'POST'])
 def detailed_project_report():
+
     if g.emp is None:
         return redirect(url_for('auth.login'))
     form = ReportProjectForm()
@@ -310,8 +311,8 @@ def notification1645():
 
             for tg_id in data:
                 print(tg_id['tg_id'])
-                message_text = (f'????{tg_id["first_name"]}, не забудьте внести трудозатраты за сегодн€шний день.\n'
-                                f'—делайте это пр€мо сейчас в приложении <a href="https://tcs.pesk.spb.ru/auth/login">TaskPesk</a>????')
+                message_text = (f'????{tg_id["first_name"]},.\n'
+                                f'<a href="https://tcs.pesk.spb.ru/auth/login">TaskPesk</a>????')
                 params = {'chat_id': tg_id['tg_id'], 'text': message_text, 'parse_mode': 'HTML'}  #
                 response = requests.post(url, data=params)
 

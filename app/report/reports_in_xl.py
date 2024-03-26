@@ -74,6 +74,8 @@ def brief_p_report_xl(p_id=14):
         for row in ws.iter_rows(min_row=6+i, max_row=6+i, min_col=index_c_col, max_col=index_g_col):
             for cell, value in zip(row, d_p_row):
                 cell.value = value
+
+    print(d_p_row)
             
 
 

@@ -20,9 +20,15 @@
         <div class="alert alert-error">{{ ', '.join(errors) }}</div>
         {% endfor %}
       </div>
+
       <form method="POST" class="detailed-project-report-form" action="{{ url_for('main.detailed_project_report') }}">
         <h3 class="select-input-title">Проект:</h3>
-        {{ form.csrf_token }} {{form.project_name(class='select')}}
+        <div style="display: flex;flex-direction: row;justify-content: flex-start;align-content: center;flex-wrap: wrap;align-items: center;">
+          {{ form.csrf_token }} {{form.project_name(class='select')}}
+          <a href="/report/xl/all/p" style="margin-left: 50px">
+            <img src="{{ url_for('static', filename='images/all_xl.svg') }}" width="50px" height="50px" alt="">
+          </a>
+        </div>
         <!-- {{form.submit(class='link')}} -->
         <div class="btns">
           <button class="btn" type="submit">Создать отчет</button>
