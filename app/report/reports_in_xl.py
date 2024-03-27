@@ -31,7 +31,15 @@ def brief_p_report_xl(p_id=14):
     # [ ]: Вынести Workbook в аргументы
     
     detailed_p_report = project_report2(p_id)
-    
+
+    plan_labor_costs = f"Планируемые трудозатраты: {detailed_p_report['plan_time'] // 60 // 8 } чел/д"
+    actual_labor_costs = f"Фактические трудозатраты: {detailed_p_report['total_perf_time'] // 60 // 8 } чел/д"
+    abs_diff = f"Разница: {detailed_p_report['abs_diff'] // 60 // 8 } чел/д"
+    interest = f"Разница в %: {detailed_p_report['rel_diff']} %"
+
+    values_for_column_b = [detailed_p_report['plan_time'] // 60 // 8, detailed_p_report['total_perf_time'] // 60 // 8, detailed_p_report['abs_diff'] // 60 // 8, detailed_p_report['rel_diff']]
+
+
     p_title = detailed_p_report["p_name"]
     p_code = p_title.split()[0]
 
@@ -42,9 +50,9 @@ def brief_p_report_xl(p_id=14):
     count_cat_costs = len(detailed_p_report["cat_cost_list"])
     count_rows = count_cat_costs + 4 + 1 # 4 - потому что таблица не от верхней границы, а от 4 строки вниз, 1 потмоу что есть ещё заголовок
 
-    ref = ["C5", f"G{count_rows}"]
+    ref = ["E5", f"I{count_rows}"]
 
-    caption_range = ws["C5":"G5"][0]
+    caption_range = ws["E5":"I5"][0]
 
     for cell in caption_range:
         cell.font = Font(bold=True)
@@ -60,8 +68,8 @@ def brief_p_report_xl(p_id=14):
     for cell, caption  in zip(caption_range, caption_list):
         cell.value = caption
     
-    index_c_col = column_index_from_string("C")
-    index_g_col = column_index_from_string("G")
+    index_c_col = column_index_from_string("E")
+    index_g_col = column_index_from_string("I")
     c_c_list = detailed_p_report["cat_cost_list"]
     for i, c_c_name in enumerate(c_c_list):
         d_p_row = [
@@ -75,21 +83,21 @@ def brief_p_report_xl(p_id=14):
             for cell, value in zip(row, d_p_row):
                 cell.value = value
 
-    print(d_p_row)
-            
-
-
     tab = Table(displayName="brief_project_report", ref=":".join(ref))
     style = TableStyleInfo(name="BriefStyle", showFirstColumn=False,
                        showLastColumn=False, showRowStripes=False, showColumnStripes=False)
     tab.tableStyleInfo = style
     ws.add_table(tab)
     autosize_columns(ws)
-    ws.column_dimensions["C"].width = 20
+    ws.column_dimensions["A"].width = 40
+    ws.column_dimensions["B"].width = 10
+    ws.column_dimensions["C"].width = 10
     ws.column_dimensions["D"].width = 20
     ws.column_dimensions["E"].width = 20
     ws.column_dimensions["F"].width = 20
     ws.column_dimensions["G"].width = 20
+    ws.column_dimensions["H"].width = 20
+    ws.column_dimensions["I"].width = 20
 
     info = [f"Сжатый отчет по проекту", f"{p_title}", f"до {datetime.now().strftime('%d.%m.%Y')} включительно"]
     for i, row in enumerate(ws.iter_rows(min_row=1, max_row=3, min_col=1, max_col=1)):
@@ -97,6 +105,15 @@ def brief_p_report_xl(p_id=14):
             cell.value = info[i]
             if i == 1:
                 cell.font = Font(bold=True)
+
+    new_rows_values = ["Плаинируемые трудозатраты:", "Фактические трудозатраты:", "Разница:", "Разница в %:"]
+    for i, value in enumerate(new_rows_values, start=5):  # Начинаем с 5-й строки
+        ws[f"A{i}"] = value
+
+    for i, value in enumerate(values_for_column_b, start=5):  # Начинаем с 5-й строки
+        ws[f"B{i}"].value = value
+        ws[f"C{i}"].value = "чел/д" if i != 8 else "%"
+
     file_stream = BytesIO()
     wb.save(file_stream)
     file_stream.seek(0)
