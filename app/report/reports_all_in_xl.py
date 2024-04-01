@@ -3,6 +3,7 @@ from io import BytesIO
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
+from app.report.reports_in_xl import autosize_columns
 from app.reports_makers import project_report2
 
 
@@ -35,7 +36,8 @@ def create_xl_project(projects_data):
 
     for col in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
         ws.column_dimensions[col].width = 30
-
+        
+    autosize_columns(ws)
     file_stream = BytesIO()
     wb.save(file_stream)
     file_stream.seek(0)
