@@ -50,7 +50,7 @@ def all_xl_report():
     for project in all_projects:
         list_project = project.project_name.split()
         code = list_project[0]
-        name_project = ''.join(list_project[1:-1])
+        name_project = ' '.join(list_project[1:-1])
 
         info_project_list = get_info_project(project.id)
 
