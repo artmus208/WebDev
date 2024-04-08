@@ -11,9 +11,6 @@ colorize_it(value, conditional_value, class_red, class_green)
 {% block content %}
 
 
-
-
-
 <section class="page-section report-weekly">
   <div class="container">
   
@@ -30,12 +27,19 @@ colorize_it(value, conditional_value, class_red, class_green)
         <div class="btns">
           {{form.submit(class='btn')}}
           <a class="btn btn_back" href="/record">Назад</a>
+
         </div>
         
       </form>
 
       <hr />
       {% if report %}
+      <div style="display: flex;">
+        <h2 class="title">Еженедельный отчет по проекту</h2>
+        <a href="/report/xl/weekly/project/{{project_id}}" style="margin-left: 100px">
+          <img src="{{ url_for('static', filename='images/xl.svg') }}" width="50px" height="50px" alt="">
+        </a>
+      </div>
       <table>
         <caption>
           {{ caption }}

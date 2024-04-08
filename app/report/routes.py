@@ -17,7 +17,7 @@ from app.models import (
     CostsTasks, Records, Admins
 )
 from app.report.reports_generators import weekly_project_report
-from app.report.reports_in_xl import brief_p_report_xl
+from app.report.reports_in_xl import brief_p_report_xl, week_create_xl
 from app.reports_makers import project_report2
 from app.report.reports_all_in_xl import create_xl_project, get_info_project
 
@@ -67,6 +67,23 @@ def all_xl_report():
     )
     
 
+@report.route("/xl/weekly/project/<int:p_id>")
+def xl_weekly_project(p_id):
+    try:
+        report, summury, caption, project_id = weekly_project_report(p_id)
+        # print(report)
+
+        date = datetime.now().strftime('%d.%m.%Y')
+        file_stream, p_code = week_create_xl(report)
+        return send_file(
+            file_stream, download_name=f"Отчет {date}.xlsx",
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    except:
+        flash("Ошибка при составлении XL документа")
+        logger.exception("XL")
+        return redirect(url_for("main.detailed_project_report"))
+
+
 @report.route("/weekly", methods=["GET", "POST"])
 def weekly():
     if g.emp is None:
@@ -76,13 +93,17 @@ def weekly():
     try:
         if form.validate_on_submit():
             proj_id = int(form.project_name.data)
-            report, summury, caption = weekly_project_report(project_id=proj_id)
+            report, summury, caption, project_id = weekly_project_report(project_id=proj_id)
+            print(report)
+            print(summury)
+            print(caption)
             return render_template(
                 "report/weekly_report.html", 
                 form=form,
                 report=report,
                 summury=summury,
-                caption=caption
+                caption=caption,
+                project_id=project_id
             )
         else:
             return render_template("report/weekly_report.html", form=form)    

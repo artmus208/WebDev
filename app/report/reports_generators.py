@@ -137,7 +137,7 @@ def weekly_project_report(project_id, is_before_last_week=False):
         )
     )
     
-    return report, summury, caption
+    return report, summury, caption, project_id
     
     
     

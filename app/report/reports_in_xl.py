@@ -57,6 +57,10 @@ def brief_p_report_xl(p_id=14):
     for cell in caption_range:
         cell.font = Font(bold=True)
 
+    grey_font = Font(color="808080")
+    red_font = Font(color="FF0000")
+    green_font = Font(color="00B800")
+
     caption_list = [
         "Статьи расходов", 
         "План, чел/день", 
@@ -65,7 +69,7 @@ def brief_p_report_xl(p_id=14):
         "Отклонение, %", 
     ]
 
-    for cell, caption  in zip(caption_range, caption_list):
+    for cell, caption in zip(caption_range, caption_list):
         cell.value = caption
     
     index_c_col = column_index_from_string("E")
@@ -80,8 +84,26 @@ def brief_p_report_xl(p_id=14):
         round(c_c_list[c_c_name]["rel_diff"], 1),
     ]
         for row in ws.iter_rows(min_row=6+i, max_row=6+i, min_col=index_c_col, max_col=index_g_col):
+            print(d_p_row)
+            index = 0
             for cell, value in zip(row, d_p_row):
                 cell.value = value
+
+                if index == 1:
+                    cell.font = Font(color="808080", bold=True)
+                elif index == 2:
+                    if d_p_row[2] > d_p_row[1]:
+                        cell.font = Font(color="FF0000", bold=True)
+                    else:
+                        cell.font = Font(color="06a77d", bold=True)
+                elif index == 3:
+                    if d_p_row[3] < 0:
+                        cell.font = Font(color="FF0000", bold=True)
+                elif index == 4:
+                    if d_p_row[4] < 0:
+                        cell.font = Font(color="FF0000", bold=True)
+
+                index += 1
 
     tab = Table(displayName="brief_project_report", ref=":".join(ref))
     style = TableStyleInfo(name="BriefStyle", showFirstColumn=False,
@@ -161,6 +183,56 @@ def write_labor_table(ws: Worksheet, start_coord="E5", cc_name:str="Проект
     return max_row
 
 
+def week_create_xl(projects_data):
+    dict_pd = projects_data
+
+    wb = Workbook()
+    ws = wb.active
+
+    headers = [
+        "Статьи расходов",
+        "План, чел/д",
+        "Факт, чел/д",
+        "Отклонение, чел/д",
+        "Отклонение(отн)",
+        "За неделю, чел/д"
+    ]
+    bold_font = Font(bold=True)
+
+    for col_num, header in enumerate(headers, start=4):
+        cell = ws.cell(row=4, column=col_num, value=header)
+        cell.font = bold_font
+
+    grey_bold_font = Font(color="808080")
+
+    row_number = 5
+    for index, (item, value) in enumerate(dict_pd.items(), start=row_number):
+
+        ws.cell(row=index, column=4, value=item)
+        val_list = [value['plan_labor'], value['fact_labor'], value['delta'], value['progress'] + "%",
+                    value['week_labor']]
+
+        for col_num, val in enumerate(val_list, start=5):
+            cell = ws.cell(row=index, column=col_num, value=val)
+            cell.font = grey_bold_font
+
+    ws.auto_filter.ref = f"D4:I{ws.max_row}"
+
+    for col in ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'I', 'J']:
+        ws.column_dimensions[col].width = 26
+
+    for row in range(1, ws.max_row + 1):
+        ws.row_dimensions[row].height = 20
+
+    p_code = '123'
+
+    file_stream = BytesIO()
+    wb.save(file_stream)
+    file_stream.seek(0)
+    return file_stream, p_code
+
+
+
 # with app.app_context():
 #     p_detail_report = project_report2(p_id=14)
 
@@ -175,3 +247,14 @@ def write_labor_table(ws: Worksheet, start_coord="E5", cc_name:str="Проект
 # write_labor_table(ws=ws, cc_name=cc_name, cc_data=cc_data)
 
 # wb.save("test_detail_report.xlsx")
+
+
+    # thin_border = Border(left=Side(style='thin', color=Color('4786ff')),
+    #                      right=Side(style='thin', color=Color('4786ff')),
+    #                      top=Side(style='thin', color=Color('4786ff')),
+    #                      bottom=Side(style='thin', color=Color('4786ff')))
+    #
+    # # Применение границ к каждой ячейке в диапазоне таблицы
+    # for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=7):
+    #     for cell in row:
+    #         cell.border = thin_border
