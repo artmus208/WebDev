@@ -24,6 +24,18 @@ def autosize_columns(worksheet):
 
     return worksheet
 
+def autosize_columns_by_head(worksheet: Worksheet):
+    def value_of(value):
+        return (str(value) if value is not None else "")
+
+    for cells in worksheet.iter_rows(min_row=1, max_row=1, min_col=1, max_col=7):
+        length = max(len(value_of(cell.value)) for cell in cells) + 3
+        column_letter = get_column_letter(cells[0].column)
+        worksheet.column_dimensions[column_letter].width = length
+
+    return worksheet
+
+
 # TIPS: Эту функцию надо рефакторить обязательно
 def brief_p_report_xl(p_id=14):
 

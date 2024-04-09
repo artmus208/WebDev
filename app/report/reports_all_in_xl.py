@@ -3,6 +3,8 @@ from io import BytesIO
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Border, Side, Color
 
+from app.report.reports_in_xl import autosize_columns
+from app.report.reports_in_xl import autosize_columns_by_head
 from app.reports_makers import project_report2
 
 
@@ -76,6 +78,9 @@ def create_xl_project(projects_data):
     for row in range(1, ws.max_row + 1):
         ws.row_dimensions[row].height = 20
 
+        ws.column_dimensions[col].width = 30
+        
+    autosize_columns_by_head(ws)
     file_stream = BytesIO()
     wb.save(file_stream)
     file_stream.seek(0)

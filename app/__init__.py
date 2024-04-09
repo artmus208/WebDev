@@ -17,9 +17,9 @@ def create_app_db():
     
     bd_connectorname = os.environ.get("TCS_BD_CONNECTOR", "mariadb+mariadbconnector")
     bd_username = os.environ.get("TCS_BD_USER", "root")
-    bd_password = os.environ.get("TCS_BD_PASSWORD", "root")
+    bd_password = os.environ.get("TCS_BD_PASSWORD", "pesk-2020")
     bd_host = os.environ.get("TCS_BD_HOST", "127.0.0.1:3306")
-    bd_name = os.environ.get("TCS_BD_NAME", "tcsv1")
+    bd_name = os.environ.get("TCS_BD_NAME", "time_managment_web_app")
     
     if not all([bd_connectorname, bd_username, bd_password, bd_host, bd_name]):
         raise Exception(f"DSN error: {[bd_connectorname, bd_username, bd_password, bd_host, bd_name]}")
