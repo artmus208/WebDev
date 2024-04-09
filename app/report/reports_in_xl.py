@@ -203,8 +203,6 @@ def week_create_xl(projects_data):
         cell = ws.cell(row=4, column=col_num, value=header)
         cell.font = bold_font
 
-    grey_bold_font = Font(color="808080")
-
     row_number = 5
     for index, (item, value) in enumerate(dict_pd.items(), start=row_number):
 
@@ -213,8 +211,7 @@ def week_create_xl(projects_data):
                     value['week_labor']]
 
         for col_num, val in enumerate(val_list, start=5):
-            cell = ws.cell(row=index, column=col_num, value=val)
-            cell.font = grey_bold_font
+            ws.cell(row=index, column=col_num, value=val)
 
     ws.auto_filter.ref = f"D4:I{ws.max_row}"
 
@@ -230,7 +227,6 @@ def week_create_xl(projects_data):
     wb.save(file_stream)
     file_stream.seek(0)
     return file_stream, p_code
-
 
 
 # with app.app_context():

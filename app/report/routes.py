@@ -71,7 +71,6 @@ def all_xl_report():
 def xl_weekly_project(p_id):
     try:
         report, summury, caption, project_id = weekly_project_report(p_id)
-        # print(report)
 
         date = datetime.now().strftime('%d.%m.%Y')
         file_stream, p_code = week_create_xl(report)
