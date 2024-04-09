@@ -210,9 +210,9 @@ def week_create_xl(projects_data, caption,):
     count_cat_costs = len(projects_data)
     count_rows = count_cat_costs + 4 + 1  # 4 - потому что таблица не от верхней границы, а от 4 строки вниз, 1 потмоу что есть ещё заголовок
 
-    ref = ["D5", f"I{count_rows}"]
+    ref = ["C5", f"H{count_rows}"]
 
-    caption_range = ws["D5":"I5"][0]
+    caption_range = ws["C5":"H5"][0]
 
     for cell in caption_range:
         cell.font = Font(bold=True)
@@ -233,8 +233,8 @@ def week_create_xl(projects_data, caption,):
     for cell, caption in zip(caption_range, caption_list):
         cell.value = caption
 
-    index_c_col = column_index_from_string("D")
-    index_g_col = column_index_from_string("I")
+    index_c_col = column_index_from_string("C")
+    index_g_col = column_index_from_string("H")
 
     for i, c_c_name in enumerate(dict_pd):
 
@@ -270,8 +270,8 @@ def week_create_xl(projects_data, caption,):
     tab.tableStyleInfo = style
     ws.add_table(tab)
     autosize_columns(ws)
-    for col in ['A', 'D', 'E', 'F', 'G', 'H', 'I']:
-        ws.column_dimensions[col].width = 25 if col != 'A' else 45
+    for col in ['A', 'C', 'D', 'E', 'F', 'G', 'H']:
+        ws.column_dimensions[col].width = 23 if col != 'A' else 45
 
     for row in range(1, ws.max_row + 1):
         ws.row_dimensions[row].height = 20
