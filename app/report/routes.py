@@ -73,7 +73,7 @@ def xl_weekly_project(p_id):
         report, summury, caption, project_id = weekly_project_report(p_id)
 
         date = datetime.now().strftime('%d.%m.%Y')
-        file_stream, p_code = week_create_xl(report)
+        file_stream, p_code = week_create_xl(report, caption)
         return send_file(
             file_stream, download_name=f"Отчет {date}.xlsx",
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

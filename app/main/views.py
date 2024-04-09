@@ -294,6 +294,7 @@ def background_process():
 
         if sleep_time is not None and sleep_time > 0:
             sleep_time_formatted = time.strftime('%H:%M:%S', time.gmtime(sleep_time))
+            print(f"будет спать еще {sleep_time_formatted}")
             logger.info(f"будет спать еще {sleep_time_formatted}")
 
             # Ожидание до следующей задачи

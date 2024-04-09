@@ -3,7 +3,7 @@ from datetime import datetime
 from io import BytesIO
 
 from openpyxl import Workbook
-from openpyxl.styles import Font
+from openpyxl.styles import Font, Alignment
 from openpyxl.utils import get_column_letter
 from openpyxl.utils import column_index_from_string
 from openpyxl.worksheet.table import Table, TableStyleInfo
@@ -183,13 +183,33 @@ def write_labor_table(ws: Worksheet, start_coord="E5", cc_name:str="Проект
     return max_row
 
 
-def week_create_xl(projects_data):
+def week_create_xl(projects_data, caption,):
     dict_pd = projects_data
 
-    wb = Workbook()
-    ws = wb.active
+    name_report = caption.split(",")
 
-    headers = [
+    p_title = name_report[0]
+    p_code = p_title.split()[0]
+
+    wb = Workbook()
+
+    ws: Worksheet = wb.create_sheet(f"Сжатый отчет {p_code}", 0)
+
+    count_cat_costs = len(projects_data)
+    count_rows = count_cat_costs + 4 + 1  # 4 - потому что таблица не от верхней границы, а от 4 строки вниз, 1 потмоу что есть ещё заголовок
+
+    ref = ["D5", f"I{count_rows}"]
+
+    caption_range = ws["D5":"I5"][0]
+
+    for cell in caption_range:
+        cell.font = Font(bold=True)
+
+    grey_font = Font(color="808080")
+    red_font = Font(color="FF0000")
+    green_font = Font(color="00B800")
+
+    caption_list = [
         "Статьи расходов",
         "План, чел/д",
         "Факт, чел/д",
@@ -197,35 +217,72 @@ def week_create_xl(projects_data):
         "Отклонение(отн)",
         "За неделю, чел/д"
     ]
-    bold_font = Font(bold=True)
 
-    for col_num, header in enumerate(headers, start=4):
-        cell = ws.cell(row=4, column=col_num, value=header)
-        cell.font = bold_font
+    for cell, caption in zip(caption_range, caption_list):
+        cell.value = caption
 
-    row_number = 5
-    for index, (item, value) in enumerate(dict_pd.items(), start=row_number):
+    index_c_col = column_index_from_string("D")
+    index_g_col = column_index_from_string("I")
 
-        ws.cell(row=index, column=4, value=item)
-        val_list = [value['plan_labor'], value['fact_labor'], value['delta'], value['progress'] + "%",
-                    value['week_labor']]
+    for i, c_c_name in enumerate(dict_pd):
 
-        for col_num, val in enumerate(val_list, start=5):
-            ws.cell(row=index, column=col_num, value=val)
+        val_list = [c_c_name, dict_pd[c_c_name]['plan_labor'], dict_pd[c_c_name]['fact_labor'],
+                    dict_pd[c_c_name]['delta'], str(dict_pd[c_c_name]['progress']) + "%",
+                    dict_pd[c_c_name]['week_labor']]
 
-    ws.auto_filter.ref = f"D4:I{ws.max_row}"
+        for row in ws.iter_rows(min_row=6 + i, max_row=6 + i, min_col=index_c_col, max_col=index_g_col):
+            index = 0
+            for cell, value in zip(row, val_list):
+                cell.value = value
+                if index == 1:
+                    cell.font = Font(bold=True, color="808080")
+                elif index == 2:
+                    if dict_pd[c_c_name]['fact_labor'] > dict_pd[c_c_name]['plan_labor']:
+                        cell.font = Font(bold=True, color="FF0000")
+                    else:
+                        cell.font = Font(bold=True, color="06a77d")
+                elif index == 3:
+                    if dict_pd[c_c_name]['delta'] < 0:
+                        cell.font = Font(bold=True, color="FF0000")
+                elif index == 4:
+                    if dict_pd[c_c_name]['progress'] < 0:
+                        cell.font = Font(bold=True, color="FF0000")
+                cell.alignment = Alignment(horizontal="right")
 
-    for col in ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'I', 'J']:
-        ws.column_dimensions[col].width = 26
+                index += 1
+
+
+    tab = Table(displayName="brief_project_report", ref=":".join(ref))
+    style = TableStyleInfo(name="BriefStyle", showFirstColumn=False,
+                           showLastColumn=False, showRowStripes=False, showColumnStripes=False)
+    tab.tableStyleInfo = style
+    ws.add_table(tab)
+    autosize_columns(ws)
+    for col in ['A', 'D', 'E', 'F', 'G', 'H', 'I']:
+        ws.column_dimensions[col].width = 25 if col != 'A' else 45
 
     for row in range(1, ws.max_row + 1):
         ws.row_dimensions[row].height = 20
 
-    p_code = '123'
+    info = [f"{p_title}", f"Сжатый {name_report[1]}", f"{name_report[-1]}"]
+    for i, row in enumerate(ws.iter_rows(min_row=1, max_row=3, min_col=1, max_col=1)):
+        for cell in row:
+            cell.value = info[i]
+            if i == 1:
+                cell.font = Font(bold=True)
+
+    # new_rows_values = ["Плаинируемые трудозатраты:", "Фактические трудозатраты:", "Разница:", "Разница в %:"]
+    # for i, value in enumerate(new_rows_values, start=5):  # Начинаем с 5-й строки
+    #     ws[f"A{i}"] = value
+    #
+    # for i, value in enumerate(values_for_column_b, start=5):  # Начинаем с 5-й строки
+    #     ws[f"B{i}"].value = value
+    #     ws[f"C{i}"].value = "чел/д" if i != 8 else "%"
 
     file_stream = BytesIO()
     wb.save(file_stream)
     file_stream.seek(0)
+    wb.close()
     return file_stream, p_code
 
 
