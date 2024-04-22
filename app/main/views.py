@@ -307,7 +307,7 @@ def background_process():
 def notification1645():
     day_without_notice = datetime.now().weekday()
     if day_without_notice != 5 and day_without_notice != 6:
-        with open('users.json', 'r') as file:
+        with open(Path("./app/static/users.json"), 'r') as file:
             data = json.load(file)
 
             for tg_id in data:
