@@ -352,7 +352,10 @@ def notification():
         data = request.json
 
         data = request.json
-        message = data.get('message', 'no_message')
+        message = data.get('message', False)
+        
+        if not message:
+            return Response('ok', status=200)
 
         if 'text' in message:
             content = f"Текст: {message['text']}" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
