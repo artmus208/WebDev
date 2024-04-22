@@ -311,7 +311,7 @@ def notification1645():
             data = json.load(file)
 
             for tg_id in data:
-                message_text = (f'🔔❗️{tg_id["first_name"]}не забудьте внести трудозатраты за сегодняшний день. Сделайте это прямо сейчас в приложении\n'
+                message_text = (f'🔔❗️{tg_id["first_name"]}, не забудьте внести трудозатраты за сегодняшний день. Сделайте это прямо сейчас в приложении\n'
                                 f'<a href="https://tcs.pesk.spb.ru/auth/login">TaskPesk</a>🔔❗️')
                 params = {'chat_id': tg_id['tg_id'], 'text': message_text, 'parse_mode': 'HTML'}  #
                 response = requests.post(url, data=params)
@@ -352,7 +352,7 @@ def notification():
         data = request.json
 
         data = request.json
-        message = data['message']
+        message = data.get('message', 'no_message')
 
         if 'text' in message:
             content = f"Текст: {message['text']}" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
