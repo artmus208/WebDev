@@ -8,7 +8,7 @@ from transliterate import translit
 from app import db, app
 from app.models import (
     Employees, Projects, Records,
-    Costs, Tasks, ProjectCosts, CostsTasks
+    Costs, Tasks, ProjectCosts, CostsTasks, GIPs
 )
 from app import logger
 from utils import timeit
@@ -117,9 +117,15 @@ def project_report2(p_id):
                     }
             
     """
+    p = Projects.get(p_id)
+    project_name = p.project_name
+    gip_id = p.gip_id
+    
+    gip_symbols:str = Employees.get(GIPs.get(gip_id).employee_id).login
+    gip_symbols = gip_symbols.upper()
     project_report = {
         "p_id": p_id,
-        "p_name": Projects.get_project_name_by_id(p_id),
+        "p_name": project_name + " ГИП: " + gip_symbols,
         "cat_cost_list": {},
         "total_perf_time": 0,
         "plan_time": 0,
