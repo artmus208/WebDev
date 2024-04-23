@@ -132,8 +132,7 @@ def project_report2(p_id):
         "abs_diff": 0,
         "rel_diff": 0
     }
-
-    for cat_cost_id in Records.get_cat_costs_ids_by_project_id(p_id):
+    for cat_cost_id in ProjectCosts.get_name_costs_ids_by_project_id(p_id):
         cat_cost_name = ProjectCosts.get_cat_cost_name_by_id(cat_cost_id)
         if not (cat_cost_name in project_report["cat_cost_list"]): 
             cat_cost_plan = ProjectCosts.get(cat_cost_id).man_days * 8 * 60 
