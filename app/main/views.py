@@ -122,8 +122,7 @@ def record():
         else:
             flash('Кажется, кто-то ошибся при заполнении формы...', category="error")
             logger.info(f"cost_id:{form.category_of_costs.data}, type: {type(form.category_of_costs.data)}")
-            return render_template('main/records.html', form=form,
-                                    login=login, last_5_records=last_5_records)
+            return redirect(url_for('main.record', login=login))
     except Exception as e:
         logger.exception(f"In record page fail has been ocured: {e}")
         flash('Что-то пошло не так...', category="error")
@@ -311,7 +310,7 @@ def notification1645():
             data = json.load(file)
 
             for tg_id in data:
-                message_text = (f'🔔❗️{tg_id["first_name"]}не забудьте внести трудозатраты за сегодняшний день. Сделайте это прямо сейчас в приложении\n'
+                message_text = (f'🔔❗️{tg_id["first_name"]} не забудьте внести трудозатраты за сегодняшний день. Сделайте это прямо сейчас в приложении\n'
                                 f'<a href="https://tcs.pesk.spb.ru/auth/login">TaskPesk</a>🔔❗️')
                 params = {'chat_id': tg_id['tg_id'], 'text': message_text, 'parse_mode': 'HTML'}  #
                 response = requests.post(url, data=params)

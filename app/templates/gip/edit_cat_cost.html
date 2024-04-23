@@ -17,7 +17,7 @@
       <h2 class="edit_cat_cost__subtitle">{{ session.get("gip_project", "Проект не выбран") }}</h2>
 
       <hr />
-      <form action="{{ url_for('gip.edit_cat_cost') }}" method="POST">
+      <form action="{{ url_for('gip.edit_cat_cost') }}" method="POST" style="display: flex; flex-direction: column;">
         <h3 class="select-input-title">Введите новое имя для статьи расходов и плановый показатель:</h3>
 
         <h3 class="select-input-title" for="cost_name">Новая статья расходов</h3>
@@ -30,12 +30,24 @@
         <h3 class="select-input-title">Выберете статью из списка и обновите плановые показатели</h3>
 
         <label for="old_cost_list">Cтатьи расходов</label>
-        <select class="select" name="old_cost_list">
+        <select class="select" name="old_cost_list" id="old_cost_list">
           <option selected value="default">Не выбрано</option>
           {% for cat in added_cost -%}
-          <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+" чел/день"+")" }}</option>
+          <option value="{{ cat[0] }}">{{ cat[1] + " " + "(" + cat[2] + " чел/день" + ")" }}</option>
           {% endfor %}
         </select>
+
+        <label for="new_name" style=" margin-top: 8px;">Новое название статьи расходов</label>
+        <input value="" type="text" class="select" id="selected_value_display" name="new_name">
+
+        <script>
+          document.getElementById('old_cost_list').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var optionText = selectedOption.text;
+            var textBeforeParenthesis = optionText.substring(0, optionText.indexOf('(')).trim();
+            document.getElementById('selected_value_display').value = textBeforeParenthesis;
+          });
+        </script>
 
         <h3 class="select-input-title" for="updated_man_days">Плановый показатель (чел/день)</h3>
         <input class="input" type="number" min="1" placeholder="чел/день" name="updated_man_days" value="default" />
