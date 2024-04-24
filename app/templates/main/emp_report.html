@@ -76,11 +76,11 @@
             <div class="project__stage">
               <h3 class="project__subtitle">{{ cost }}</h3>
               <p class="project-record__line project-record__line_blue">
-                Общие трудозатраты в этой статье расходов:
+                Общие трудозатраты в этой статье расходов: 
                 <span>
-                  {{ project["projects_costs"][cost]["total_cost_time"] // 60 // 8 }} чел/д {{
-                  project["projects_costs"][cost]["total_cost_time"] % 480 // 60 }} чел/ч {{
-                  project["projects_costs"][cost]["total_cost_time"] % 60 }} чел/мин
+                  {{ project["projects_costs"][cost]["total_cost_time"] // 60 // 8 }} чел/д 
+                  {{ project["projects_costs"][cost]["total_cost_time"] % 480 // 60 }} чел/ч 
+                  {{ project["projects_costs"][cost]["total_cost_time"] % 60 }} чел/мин
                 </span>
               </p>
 
