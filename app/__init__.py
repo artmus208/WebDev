@@ -3,6 +3,8 @@ import logging
 import pathlib
 import os
 
+from dotenv import load_dotenv
+
 from flask import Flask, redirect, render_template, url_for, jsonify, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
@@ -14,6 +16,8 @@ def create_app_db():
     app.config.from_object(Config)
     db = SQLAlchemy()
     
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    load_dotenv(os.path.join(basedir, '.env'))
     
     bd_connectorname = os.environ.get("TCS_BD_CONNECTOR", "mariadb+mariadbconnector")
     bd_username = os.environ.get("TCS_BD_USER", "root")

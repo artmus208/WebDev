@@ -420,6 +420,12 @@ class ProjectCosts(db.Model, MyBaseClass):
         self.project_id = project_id
 
     @classmethod
+    def get_name_costs_ids_by_project_id(cls, project_id):
+        stmt = select(cls.id).where(cls.project_id==project_id)
+        res = set(execute(stmt).scalars().all())
+        return list(res)
+
+    @classmethod
     def add(cls, new_cost_id, man_days, project_id):
         cls.cost_name_fk = new_cost_id
         cls.man_days = man_days

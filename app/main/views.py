@@ -122,8 +122,7 @@ def record():
         else:
             flash('Кажется, кто-то ошибся при заполнении формы...', category="error")
             logger.info(f"cost_id:{form.category_of_costs.data}, type: {type(form.category_of_costs.data)}")
-            return render_template('main/records.html', form=form,
-                                    login=login, last_5_records=last_5_records)
+            return redirect(url_for('main.record', login=login))
     except Exception as e:
         logger.exception(f"In record page fail has been ocured: {e}")
         flash('Что-то пошло не так...', category="error")
