@@ -3,6 +3,8 @@ import logging
 import pathlib
 import os
 
+from dotenv import load_dotenv
+
 from flask import Flask, redirect, render_template, url_for, jsonify, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
@@ -13,33 +15,29 @@ def create_app_db():
     app = Flask(__name__)
     app.config.from_object(Config)
     db = SQLAlchemy()
-    data_base_URI = None
-    if os.name == 'posix':
-        data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
-            connectorname="mysql+mysqlconnector",
-            username="artmus208",
-            password="pesk-2020",
-            hostname="artmus208.mysql.pythonanywhere-services.com",
-            databasename="artmus208$time_managment_web_app",
-            )
-    else:
-        data_base_URI = "{connectorname}://{username}:{password}@{hostname}/{databasename}".format(
-            connectorname="mariadb+mariadbconnector",
-            username="root",
-            password="pesk-2020",
-            hostname="127.0.0.1:3306",
-            databasename="time_managment_web_app",
-            )
+    
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    load_dotenv(os.path.join(basedir, '.env'))
+    
+    bd_connectorname = os.environ.get("TCS_BD_CONNECTOR", "mariadb+mariadbconnector")
+    bd_username = os.environ.get("TCS_BD_USER", "root")
+    bd_password = os.environ.get("TCS_BD_PASSWORD", "pesk-2020")
+    bd_host = os.environ.get("TCS_BD_HOST", "127.0.0.1:3306")
+    bd_name = os.environ.get("TCS_BD_NAME", "time_managment_web_app")
+    
+    if not all([bd_connectorname, bd_username, bd_password, bd_host, bd_name]):
+        raise Exception(f"DSN error: {[bd_connectorname, bd_username, bd_password, bd_host, bd_name]}")
+        
+    
+    data_base_URI = f"{bd_connectorname}://{bd_username}:{bd_password}@{bd_host}/{bd_name}"
+    
     app.config['SQLALCHEMY_DATABASE_URI'] = data_base_URI
-    # @app.teardown_appcontext
-    # def shutdown_session(exception=None):
-    #     db.session.remove()
-
-    @app.before_first_request
-    def create_database():
-        with app.app_context():
-            db.create_all()
-
+    app.config['SQLALCHEMY_ECHO'] = False
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_size': 10,
+        'pool_recycle': 60,
+        'pool_pre_ping': True
+    }
     db.init_app(app)
     return app, db
 
@@ -65,8 +63,13 @@ from app.main.views import main
 from app.auth.views import auth
 from app.gip.views import gip
 from app.admin import admin
+from app.report.routes import report 
 
 app.register_blueprint(main)
 app.register_blueprint(auth)
 app.register_blueprint(gip)
 app.register_blueprint(admin)
+app.register_blueprint(report)
+
+with app.app_context():
+    db.create_all()

@@ -16,9 +16,11 @@ class RecordsForm(FlaskForm):
     def validate_category_of_costs(form, field):
         if int(field.data) == -1:
             raise ValidationError("Пожалуйста, выберите статью расходов")
-    task = StringField(label='Задача',
-                        default="blank_task",
-                        render_kw={'disabled':''})
+    task = StringField(
+        label='Задача',
+        default="blank_task",
+        render_kw={'disabled':''}
+    )
     hours = IntegerField(label='Кол-во часов', default=0, render_kw={"min": 0})
     minuts = IntegerField(label='Кол-во минут', default=0, render_kw={"min": 0})
     submit = SubmitField('Подтвердить')
@@ -73,7 +75,7 @@ class ProjectButton(FlaskForm):
 
 class ReportProjectForm(FlaskForm):
     project_name = SelectField(u'Проект')
-    submit = SubmitField('Создать отчет по проекту')
+    submit = SubmitField('Создать отчет')
 
 class ReturnButton(FlaskForm):
     submit = SubmitField('Выйти')

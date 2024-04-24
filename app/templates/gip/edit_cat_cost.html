@@ -1,46 +1,68 @@
 {% extends "base.html" %}
-{% block content %}
-<div class="container">
-    {% for cat, msg in get_flashed_messages(True) %}
-        <div class="space flash {{cat}}">{{msg}}</div>
-    {% endfor %}
-    
-    <p>
-        Форма редактирования статей расходов в проекте <br>
-        <strong>{{ session.get("gip_project", "Проект не выбран") }}</strong>
-    </p>
-    <hr>
-    <form action="{{ url_for('gip.edit_cat_cost') }}" method="POST">
-        <p>Введите новое имя для статьи расходов и плановый показатель:</p>
 
-        <label for="cost_name" style="display: block;"><b>Новая статья расходов</b></label>
-        <input type="text" placeholder="Имя статьи расходов" name="cost_name" style="display: block;">
+<!-- prettier-ignore -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pages/edit_cat_cost.css' ) }}" />
+{% endblock styles %} {% block content %}
 
-        <label for="man_days" style="display: block;"><b>Планируемое количество трудозатрат (чел/день)</b></label>
-        <input type="number" min="1" placeholder="чел/день" name="man_days" style="display: block;" value="default">
-        <hr>
-        <p>Изменение плановых показателей статьи расходов:<br>
-            Выберете статью из списка и обновите плановые показатели</p>
+<section class="page-section edit_cat_cost">
+  <div class="container">
+    <div class="edit_cat_cost__inner">
+      {% for cat, msg in get_flashed_messages(True) %}
+      <div class="space flash {{cat}}">{{msg}}</div>
+      {% endfor %}
 
-        <label for="old_cost_list" style="display: block;"><b>Cтатьи расходов</b></label>
-        <select name="old_cost_list"  multiple>
-            <option selected value="default">Не выбрано</option>
-            {% for cat in added_cost -%}
-                <option value="{{ cat[0] }}">{{ cat[1]+" "+"("+cat[2]+" чел/день"+")" }}</option>
-            {% endfor %}
-        </select> 
+      <h1 class="title">Редактор статей расходов в проекте</h1>
+      <!-- Форма редактирования статей расходов в проекте <br /> -->
+      <h2 class="edit_cat_cost__subtitle">{{ session.get("gip_project", "Проект не выбран") }}</h2>
 
-        <label style="display: block;" for="updated_man_days"><b>Плановый показатель (чел/день)</b></label>
-        <input  type="number" min="1" placeholder="чел/день" name="updated_man_days" value="default">
+      <hr />
+      <form action="{{ url_for('gip.edit_cat_cost') }}" method="POST" style="display: flex; flex-direction: column;">
+        <h3 class="select-input-title">Введите новое имя для статьи расходов и плановый показатель:</h3>
 
-        <input style="display: block;" type="submit" value="Сохранить">
-    </form> 
-    <a class="about-button" href="{{ url_for('main.index') }}">Вернуться на главную</a>
+        <h3 class="select-input-title" for="cost_name">Новая статья расходов</h3>
+        <input class="input" type="text" placeholder="Имя статьи расходов" name="cost_name" />
 
-    {% if session.get("emp_role", "Нет роли") == 'gip' -%}
-        <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
-        <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
-    {% endif %}
+        <h3 class="select-input-title" for="man_days">Планируемое количество трудозатрат (чел/день)</h3>
+        <input class="input" type="number" min="0" placeholder="чел/день" name="man_days" value="default" />
 
-</div>
+        <h3 class="select-input-title">Изменение плановых показателей статьи расходов</h3>
+        <h3 class="select-input-title">Выберете статью из списка и обновите плановые показатели</h3>
+
+        <label for="old_cost_list">Cтатьи расходов</label>
+        <select class="select" name="old_cost_list" id="old_cost_list">
+          <option selected value="default">Не выбрано</option>
+          {% for cat in added_cost -%}
+          <option value="{{ cat[0] }}">{{ cat[1] + " " + "(" + cat[2] + " чел/день" + ")" }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="new_name" style=" margin-top: 8px;">Новое название статьи расходов</label>
+        <input value="" type="text" class="select" id="selected_value_display" name="new_name">
+
+        <script>
+          document.getElementById('old_cost_list').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var optionText = selectedOption.text;
+            var textBeforeParenthesis = optionText.substring(0, optionText.indexOf('(')).trim();
+            document.getElementById('selected_value_display').value = textBeforeParenthesis;
+          });
+        </script>
+
+        <h3 class="select-input-title" for="updated_man_days">Плановый показатель (чел/день)</h3>
+        <input class="input" type="number" min="1" placeholder="чел/день" name="updated_man_days" value="default" />
+
+        <div class="btns">
+          <button class="btn edit_cat_cost__btn" type="submit">Сохранить</button>
+          <a class="btn btn_back" href="{{ url_for('main.index') }}">Назад</a>
+        </div>
+      </form>
+
+      {% if session.get("emp_role", "Нет роли") == 'gip' -%}
+      <a href="{{url_for('gip.gips_project')}}" class="gips-btn">Мой проект</a>
+      <!-- <a href="{{ url_for('gip.edit_task') }}" class="">Радактировать задачи</a> -->
+      {% endif %}
+    </div>
+  </div>
+</section>
 {% endblock content %}

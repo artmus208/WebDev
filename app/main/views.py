@@ -1,12 +1,18 @@
+from pathlib import Path
 from typing import List
 from datetime import time as time_dt
 from datetime import datetime
 import time
 from flask import (
-    render_template, redirect, 
+    Response, abort, render_template, redirect, 
     url_for, flash, session, g, request,
-    jsonify)
+    jsonify, current_app)
 from sqlalchemy import func
+
+import schedule
+import requests
+import threading
+import json
 
 from app import logger
 from app.forms import (
@@ -30,24 +36,29 @@ from app.reports_makers import (
     get_project_report_dict,
     replace_id_to_name_in_record_dict,
     report_about_employee,
-    project_report2)
+    project_report2,
+    get_projects_with_unfilled_costs
+)
 
 from . import main
 
 # TODO:
 # [x]: Добавить реальных ГИПов в реальные проекты на проде
-# [ ]: Заняться динамическими выпадающими списками 
+# [ ]: Заняться динамическими выпадающими списками  
 
 @main.route("/", methods=['GET', 'POST'])
 def index():
     emp = g.emp
     if emp is None:
-        print("Redirect to login")
         return redirect(url_for('auth.login'))
     else:
-        print("Redirect to make record")
         return redirect(url_for('.record', login=emp.login))
+    
 
+@main.route("/inspect")   
+def inspect():
+    report = get_projects_with_unfilled_costs()
+    return render_template("report/inspect.html", report=report)
 
 @main.route("/_update_dropdown")
 def update_cat_costs_list():
@@ -98,17 +109,22 @@ def record():
             task_id_ = CostsTasks.query.filter_by(task_name_fk=task_id, cost_id=cost_id).first().id
             hours = form.hours.data
             minuts = form.minuts.data
-            rec = Records(employee_id, project_id, cost_id, task_id_, hours, minuts)
+            rec = Records(
+                employee_id=employee_id,
+                project_id=project_id,
+                cost_id=cost_id,
+                task_id=task_id_,
+                hours=hours,
+                minuts=minuts)
             rec.save()
             flash('Запись добавлена. Несите следующую!', category="success")
             return redirect(url_for('main.record', login=login))
         else:
             flash('Кажется, кто-то ошибся при заполнении формы...', category="error")
             logger.info(f"cost_id:{form.category_of_costs.data}, type: {type(form.category_of_costs.data)}")
-            return render_template('main/records.html', form=form,
-                                    login=login, last_5_records=last_5_records)
+            return redirect(url_for('main.record', login=login))
     except Exception as e:
-        logger.warning(f"In record page fail has been ocured: {e}")
+        logger.exception(f"In record page fail has been ocured: {e}")
         flash('Что-то пошло не так...', category="error")
         time.sleep(1)
         return redirect(url_for('main.record', login=login))
@@ -142,6 +158,7 @@ def project_report():
 
 @main.route('/detailed-project-report', methods=['GET', 'POST'])
 def detailed_project_report():
+
     if g.emp is None:
         return redirect(url_for('auth.login'))
     form = ReportProjectForm()
@@ -156,7 +173,7 @@ def detailed_project_report():
             return render_template('main/detailed_project_report.html', form=form)    
     except Exception as e:
         flash("Произошла ошибка при генерации подробного отчета (возможно нет записей)", category="error")
-        logger.warning(f"detailed_project_report: {e}")
+        logger.exception(f"detailed_project_report")
         time.sleep(1)
         return redirect(url_for('main.detailed_project_report'))
 
@@ -185,12 +202,12 @@ def add_project():
             for cost_id_fk in form.cat_costs.data:
                 new_project_costs = ProjectCosts(
                                     cost_id=cost_id_fk,
-                                    man_days=100,
+                                    man_days=0,
                                     project_id=new_project.id)
                 new_project_costs.save()
                 new_costs_tasks = CostsTasks(
                     task_name_fk=1,
-                    man_days=100,
+                    man_days=0,
                     cost_id=new_project_costs.id)
                 new_costs_tasks.save()
             flash("Проект добавлен", category='success')
@@ -262,3 +279,165 @@ def handle_error(err):
     logger.warning(f'Error 500: {messages}')
     time.sleep(1)
     return redirect(url_for("main.index"))
+
+######################### TG BOT NOTIFIER ###################################################
+
+url = 'https://api.telegram.org/bot6985903476:AAHb_dmARjQXg7lBBqGCJnpBgR07VWEoJmQ/sendMessage'
+
+
+def background_process():
+    while True:
+        schedule.run_pending()
+
+        sleep_time = schedule.idle_seconds()
+
+        if sleep_time is not None and sleep_time > 0:
+            sleep_time_formatted = time.strftime('%H:%M:%S', time.gmtime(sleep_time))
+            print(f"будет спать еще {sleep_time_formatted}")
+            logger.info(f"будет спать еще {sleep_time_formatted}")
+
+            # Ожидание до следующей задачи
+            time.sleep(sleep_time)
+        else:
+            logger.info("Задач нет, спать 1 секунду")
+            time.sleep(1)
+
+
+def notification1645():
+    day_without_notice = datetime.now().weekday()
+    if day_without_notice != 5 and day_without_notice != 6:
+        with open(Path("./app/static/users.json"), 'r') as file:
+            data = json.load(file)
+
+            for tg_id in data:
+                message_text = (f'🔔❗️{tg_id["first_name"]}, не забудьте внести трудозатраты за сегодняшний день. Сделайте это прямо сейчас в приложении\n'
+                                f'<a href="https://tcs.pesk.spb.ru/auth/login">TaskPesk</a>🔔❗️')
+                params = {'chat_id': tg_id['tg_id'], 'text': message_text, 'parse_mode': 'HTML'}  #
+                response = requests.post(url, data=params)
+
+
+schedule.every().day.at("16:45").do(notification1645)
+
+
+bg_process = threading.Thread(target=background_process)
+bg_process.daemon = True
+bg_process.start()
+
+lock = threading.Lock()
+
+def add_user(data):
+    with lock:
+        # file_path = Path(url_for('static', filename='users.json'))
+        file_path = Path("./app/static/users.json")
+
+        if file_path.is_file():
+            with open(file_path, 'r', encoding='utf-8') as file:
+                users = json.load(file)
+        else:
+            users = []
+
+        existing_user = next((user for user in users if user['tg_id'] == data['tg_id']), None)
+        if existing_user:
+            existing_user.update(data)
+        else:
+            users.append(data)
+
+        with open(file_path, 'w', encoding='utf-8') as file:
+            json.dump(users, file, ensure_ascii=False, indent=4)
+
+@main.route('/notification', methods=['POST'])
+def notification():
+    if request.headers.get('content-type') == 'application/json':
+        data = request.json
+
+        data = request.json
+        message = data.get('message', False)
+        
+        if not message:
+            return Response('ok', status=200)
+
+        if 'text' in message:
+            content = f"Текст: {message['text']}" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+            message_text = data['message']['text']
+            if message_text.endswith("@pesk.spb.ru"):
+                user_id = data['message']['from']['id']
+                user_name = data['message']['from']['first_name']
+                user_json = {
+                    'first_name': user_name,
+                    'post_name': 'admin',
+                    'email': message_text,
+                    'tg_id': user_id
+                }
+
+                add_user(user_json)
+
+                mess = f"Спасибо 😊"
+                params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+                requests.post(url, data=params1)
+            else:
+                mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+                params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+                requests.post(url, data=params1)
+
+
+        elif 'sticker' in message:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+
+            content = f"Стикер: {message['sticker'].get('emoji', 'Нет эмодзи')}" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+        elif 'photo' in message:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+
+            content = "Фото получено" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+        elif 'video' in message:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+            content = "Видео получено" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+        elif 'audio' in message:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+            content = "Аудио получено" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+        elif 'voice' in message:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+            content = "Голосовое сообщение получено" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+        elif 'document' in message:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+            content = "Документ получен" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+        elif 'location' in message:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+            content = "Локация получена" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+        elif 'contact' in message:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+            content = "Контакт получен" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+        else:
+            mess = f"Мне нужна только ваша корпоративная почта.\n\n<i>Я бот для уведомлений, старайся не засорять этот чат.</i>😊"
+            params1 = {'chat_id': data['message']['from']['id'], 'text': mess, 'parse_mode': 'HTML'}
+            requests.post(url, data=params1)
+
+            content = "Неподдерживаемый тип сообщения" + f" id: {message['from']['id']} Name: {message['from']['first_name']}"
+
+        return Response('ok', status=200)
+
+    else:
+        abort(403)

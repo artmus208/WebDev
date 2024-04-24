@@ -15,7 +15,7 @@ admin = Blueprint('admin',
                   static_url_path="/static/admin", 
                   static_folder="/static/admin")
 
-@admin.before_app_first_request
+@admin.before_request
 def ping_connect():
     try:
         # logger.info("Ping DB")

@@ -2,13 +2,12 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, session, url_for, g
 )
 
-
-
 from app.models import (
     GIPs, Projects,
     ProjectCosts, Tasks,
     Costs, CostsTasks 
-    )
+)
+
 from app import logger
 from app.helper_functions import is_empty_default_or_none, sorting_projects_names
 
@@ -65,10 +64,8 @@ def edit_cat_cost():
             man_days = request.form.get('man_days')
             
             old_cost_name_id = request.form.get('old_cost_list')
+            new_name = request.form.get("new_name")
             new_man_days = request.form.get("updated_man_days")
-
-            print(cost_name, man_days, old_cost_name_id, new_man_days)
-            print(type(cost_name), type(man_days), type(old_cost_name_id), type(new_man_days))
             
             if cost_name in list_of_cats_name:
                 error = True
@@ -86,17 +83,34 @@ def edit_cat_cost():
                 new_cost_task = CostsTasks(1, 100, ProjectCosts.query.order_by(ProjectCosts.id.desc()).first().id)
                 new_cost_task.save()
             # Если пытаются отредактировать старую статью
-            print("Элемент из списка:", old_cost_name_id)
             if old_cost_name_id != "default":
-                old_project_cost = ProjectCosts.query.filter_by(id=int(old_cost_name_id)).first()
-                if new_man_days:
-                    old_project_cost.man_days = int(new_man_days)
-                    Costs.commit()
-                    flash("Статья расходов была изменена!", category="success")
+                old_project_cost: ProjectCosts = ProjectCosts.query.filter_by(id=int(old_cost_name_id)).first()
+                old_cost_name = ProjectCosts.get_cat_cost_name_by_id(id=old_cost_name_id)
+                if new_man_days or old_cost_name != new_name:
+                    if new_man_days:
+                        old_project_cost.man_days = int(new_man_days)
+                        Costs.commit()
+                        flash("Плановый показатель был изменен!", category="success")
+                    if old_cost_name != new_name:
+                        if new_name == "":
+                            error = True
+                            flash("Невозможное имя", category="error")
+                        elif new_name in list_of_cats_name:
+                            error = True
+                            flash("Такая статья расходов уже добавлена", category="error")
+                        else:
+                            costs_names = Costs.get_costs_names()
+                            if new_name not in costs_names:
+                                new_cost = Costs(cost_name=new_name)
+                                new_cost.save()
+                            new_cost_id = Costs.get_id_by_name(new_name)
+                            old_project_cost.cost_name_fk = new_cost_id
+                            ProjectCosts.commit()
+                            flash("Название было изменено!", category="success")
                 else:
                     error = True
                     flash("Похоже, что вы пытались редактировать добавленную статью расходов, \
-                        но не указали новое время", category="error")
+                        но не указали новое время или новое имя", category="error")
                     
             if not error:
                 flash("Статья добавлена!", category="success")  
@@ -105,7 +119,7 @@ def edit_cat_cost():
                                added_cost=added_costs_list_id_name,
                                project_name=project.project_name)
     except Exception as e:
-        logger.warning(f"In edit_cat_cost fail: {e}")
+        logger.exception(f"In edit_cat_cost fail: {e}")
         flash("Что-то пошло не по плану в редакторе статей расходов...", category="error")
         return redirect(url_for("gip.edit_cat_cost"))
 

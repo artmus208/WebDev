@@ -8,7 +8,7 @@ from transliterate import translit
 from app import db, app
 from app.models import (
     Employees, Projects, Records,
-    Costs, Tasks, ProjectCosts, CostsTasks
+    Costs, Tasks, ProjectCosts, CostsTasks, GIPs
 )
 from app import logger
 from utils import timeit
@@ -91,7 +91,7 @@ example = \
         ]},
     ]
 }
-@timeit
+
 def project_report2(p_id):
     """
        Функция генерирует отчет по проекту в виде словаря:
@@ -117,19 +117,22 @@ def project_report2(p_id):
                     }
             
     """
+    p = Projects.get(p_id)
+    project_name = p.project_name
+    gip_id = p.gip_id
+    
+    gip_symbols:str = Employees.get(GIPs.get(gip_id).employee_id).login
+    gip_symbols = gip_symbols.upper()
     project_report = {
         "p_id": p_id,
-        "p_name": Projects.get_project_name_by_id(p_id),
+        "p_name": project_name + " ГИП: " + gip_symbols,
         "cat_cost_list": {},
         "total_perf_time": 0,
         "plan_time": 0,
         "abs_diff": 0,
         "rel_diff": 0
     }
-
-
-
-    for cat_cost_id in Records.get_cat_costs_ids_by_project_id(p_id):
+    for cat_cost_id in ProjectCosts.get_name_costs_ids_by_project_id(p_id):
         cat_cost_name = ProjectCosts.get_cat_cost_name_by_id(cat_cost_id)
         if not (cat_cost_name in project_report["cat_cost_list"]): 
             cat_cost_plan = ProjectCosts.get(cat_cost_id).man_days * 8 * 60 
@@ -141,6 +144,7 @@ def project_report2(p_id):
                 "abs_diff": 0,
                 "rel_diff": 0 
             }
+            project_report["plan_time"] += cat_cost_plan
         for emp_id in Records.get_emp_ids_by_project_id_cat_cost_id(
                         project_id=p_id, cat_cost_id=cat_cost_id):
             emp_login = Employees.get_login_by_id(emp_id)
@@ -163,19 +167,23 @@ def project_report2(p_id):
         cat_cost_fact = sum(total_cat_cost_time)
         project_report["cat_cost_list"][cat_cost_name]["total_perf_time"] = cat_cost_fact
         project_report["cat_cost_list"][cat_cost_name]["abs_diff"] = cat_cost_plan - cat_cost_fact
-        project_report["cat_cost_list"][cat_cost_name]["rel_diff"] = round(
-            100*(cat_cost_plan - cat_cost_fact)/cat_cost_plan, 2
-        )
+        if cat_cost_plan:
+            project_report["cat_cost_list"][cat_cost_name]["rel_diff"] = round(
+                100*(cat_cost_plan - cat_cost_fact)/cat_cost_plan, 2
+            )
+        else:
+            project_report["cat_cost_list"][cat_cost_name]["rel_diff"] = 0
 
     for cat_cost_name in project_report["cat_cost_list"]:
         project_report["total_perf_time"] += project_report["cat_cost_list"][cat_cost_name]["total_perf_time"]
+     
+    project_report["abs_diff"] = project_report["plan_time"] - project_report["total_perf_time"]
     
-    project = Projects.get(p_id)
-    plan_man_days = project.project_costs.with_entities(func.sum(ProjectCosts.man_days)).scalar()
-    plan_man_days = plan_man_days * 8 * 60 
-    project_report["plan_time"] = plan_man_days 
-    project_report["abs_diff"] = plan_man_days - project_report["total_perf_time"]
-    project_report["rel_diff"] = round((project_report["abs_diff"]/plan_man_days)*100, 2)
+    if project_report["plan_time"]:
+        project_report["rel_diff"] = round((project_report["abs_diff"] / project_report["plan_time"])*100, 2)
+    else:
+        project_report["rel_diff"] = 0
+        
     return project_report
 
 
@@ -326,7 +334,36 @@ def report_about_employee(employee_id, lower_date=None, upper_date=None):
     return data
 
 
+def get_projects_with_unfilled_costs():
+    """Для Даши отображение Статей расходов, у которых не заполнены плановые показатели
+    
+    res_scheme = [{
+        "p_name": "p_name",
+        "gip": "gip",
+        "c_list": [
+            "cost1", "cost2"
+        ],
+    },]
+    """
 
+    res = []
+    all_p = Projects.query.all()
+    p: Projects
+    c: ProjectCosts
+    for p in all_p: # type: Projects
+        proj_dict = {"p_name": 0, "gip": 0, "c_list": []}
+        for c in p.project_costs.all(): # type: Costs    
+            if c.man_days == 0:
+                if proj_dict["p_name"] == 0:
+                    proj_dict["p_name"] = p.project_name
+                    proj_dict["gip"] = p.gips.Employees.login
+                    proj_dict["c_list"].append(c.Costs.cost_name)
+                else:
+                    proj_dict["c_list"].append(c.Costs.cost_name) if c.Costs.cost_name not in proj_dict["c_list"] else None
+        if proj_dict["p_name"]:
+            res.append(proj_dict)
+            
+    return res
 
 if __name__ == "__main__":
     res = get_project_report_dict(all_records=list_of_dicts,p_name="Project 1")

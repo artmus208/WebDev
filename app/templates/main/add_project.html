@@ -1,32 +1,41 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="main-container">
-    <div class="container">
-        <div class="content__inner">
-            <div class="space">
-                {% for cat, msg in get_flashed_messages(True) %}
-                    <div class="space flash {{cat}}">{{msg}}</div>
-                {% endfor %}
-                {% for field, errors in form.errors.items() %}
-                    <div class="alert alert-error">
-                        Поле: "{{ form[field].label }}" {{ ', '.join(errors) }}
-                    </div>
-                {% endfor %}
-            </div>
-            <form method="POST" action="{{ url_for('main.add_project') }}">
-                {{ form.csrf_token }}
-                <p>{{ form.code.label }}</p>
-                <p>{{ form.code(placeholder="Например, 23П99") }}</p>
-                <p>{{ form.name.label }}</p>
-                <p>{{ form.name(placeholder="Например, Ультрамар СПМ-02", size="38") }}</p>
-                <p>{{ form.cat_costs.label }}</p>
-                <p>{{ form.cat_costs }}</p>
-                <p>{{ form.gip.label }}</p>
-                <p>{{ form.gip }}</p>
-                <p>{{ form.submit }}</p>
-            </form>
+<!-- prettier-ignore -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pages/add_project.css' ) }}" />
+{% endblock styles %} {% block content %}
+
+<section class="page-section add_project">
+  <div class="container">
+    <div class="add_project__inner">
+      <h1 class="title">Добавление проекта</h1>
+      <div class="space">
+        {% for cat, msg in get_flashed_messages(True) %}
+        <div class="space flash {{cat}}">{{msg}}</div>
+        {% endfor %} {% for field, errors in form.errors.items() %}
+        <div class="alert alert-error">Поле: "{{ form[field].label }}" {{ ', '.join(errors) }}</div>
+        {% endfor %}
+      </div>
+      <form method="POST" class="form-add_project" action="{{ url_for('main.add_project') }}">
+        <!-- prettier-ignore -->
+        {{ form.csrf_token }}
+       {{ form.code.label(class='select-input-title') }}
+        {{ form.code(placeholder="Например, 23П99", class='input') }}
+       {{ form.name.label(class='select-input-title') }}
+       {{ form.name(placeholder="Например, Ультрамар СПМ-02", size="38", class='input') }}
+        <!-- {{ form.cat_costs.label }} -->
+        <h2 class="select-input-title">Выберите категорию затрат проекта</h2>
+        <h3 class="add_project__subtitle">По умолчанию 100 ч/д на каждой статье</h3>
+        <!-- prettier-ignore -->
+        {{ form.cat_costs }} 
+        {{ form.gip.label(class='select-input-title') }} 
+        {{ form.gip(class='input form-add_project__employee') }}
+        <div class="btns">
+          {{form.submit(class='btn form-add_project__btn')}}
+          <a class="btn btn_back" href="/record">Назад</a>
         </div>
+      </form>
     </div>
-</div>
+  </div>
+</section>
 {% endblock content %}

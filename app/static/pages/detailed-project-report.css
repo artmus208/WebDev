@@ -1,0 +1,128 @@
+.red {
+  color: #D7263D;
+}
+.green {
+  color: rgb(0, 238, 238);
+}
+.open .green {
+  color: #06a77d;
+}
+
+.project p:not(:last-child) {
+  /* margin-bottom: 10px; */
+  margin-bottom: 1rem;
+}
+
+.stage {
+  font-weight: 400;
+
+  /* border-left: 2px solid #4786ff;
+  border-right: 2px solid #4786ff; */
+
+  /* margin-top: 23px; */
+  margin-top: 2.3rem;
+  background-color: #fff;
+
+  /* width: 1000px; */
+  width: 100rem;
+}
+
+#project_name {
+  width: 80rem;
+}
+
+/* .stage:last-child {
+  margin-bottom: 40px;
+} */
+
+/* .open {
+}
+.open .stage__header {
+  background-color: #fff;
+  color: inherit;
+}
+.open .stage__body {
+  max-height: 500px;
+  padding-top: 10px;
+  border-bottom: 2px solid #4786ff;
+  padding-bottom: 30px;
+}
+.open .stage__header::after {
+  transform: translateY(-50%) rotate(180deg);
+  background-image: url('../images/arrow.png');
+}
+
+.stage__header {
+  padding-top: 23px;
+  border-top: 2px solid #4786ff;
+  border-bottom: 2px solid #4786ff;
+  padding-bottom: 25px;
+  position: relative;
+
+  background: #4786ff;
+  color: #fff;
+  cursor: pointer;
+}
+.stage__header::after {
+  position: absolute;
+  content: '';
+  right: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-image: url('../images/arrow-white.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  transition: all 0.2s;
+}
+.stage__body {
+  max-height: 0px;
+  overflow: hidden;
+  transition: all 0.2s;
+} */
+
+/* .stage__header,
+.stage__body {
+  padding-left: 35px;
+  padding-right: 165px;
+}
+*/
+
+.stage__title {
+  /* font-size: 22px; */
+  font-size: 2.2rem;
+
+  font-weight: 400;
+  margin-bottom: 12px;
+  margin-bottom: 1.2rem;
+}
+
+.stage__costs {
+  display: flex;
+  /* gap: 30px; */
+  gap: 3rem;
+}
+
+.employee {
+  /* font-size: 16px; */
+  font-size: 1.6rem;
+}
+.employee__line {
+  /* padding-top: 10px;
+  padding-bottom: 10px; */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  display: flex;
+  border-bottom: 1px solid #c4c4c4;
+}
+.employee__block:first-child {
+  /* width: 311px; */
+  width: 31.1rem;
+}
+
+.employee__title {
+  /* font-size: 18px; */
+  font-size: 1.8rem;
+}

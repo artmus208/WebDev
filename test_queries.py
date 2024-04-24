@@ -1,4 +1,6 @@
-from datetime import datetime, date, time
+from copy import copy
+from datetime import datetime, date, time, timedelta
+from decimal import Decimal
 from typing import List
 
 from app import app, db, text
@@ -10,14 +12,85 @@ from app import helper_functions
 from app import select, execute
 
 from app.reports_makers import report_about_employee, get_project_report_dict
+from app.report.utils import get_end_week_dates
+from app.report.reports_generators import weekly_project_report
 
 from utils import timeit
 
 
-
+# with app.app_context():
+#     # Для Даши ispect3 - отображение проектов и статей расходов
+#     # и общих трудозатрат с количеством записей за последние две недели
+#     m, f = get_end_week_dates(is_before_last_week=True)
+#     count = Records.count_project_records(22, m, f) # 22 - это id TCS
 
 
 # with app.app_context():
+#     # Для Даши отображение Статей расходов, у которых не заполнены плановые показатели
+    
+#     res_scheme = [{
+#         "p_name": "p_name",
+#         "gip": "gip",
+#         "c_list": [
+#             "cost1", "cost2"
+#         ],
+#     }]
+
+#     res = []
+#     all_p = Projects.query.all()
+#     p: Projects
+#     c: ProjectCosts
+#     for p in all_p: # type: Projects
+#         proj_dict = {"p_name": 0, "gip": 0, "c_list": []}
+#         for c in p.project_costs.all(): # type: Costs    
+#             if c.man_days == 0:
+#                 if proj_dict["p_name"] == 0:
+#                     proj_dict["p_name"] = p.project_name
+#                     proj_dict["gip"] = p.gips.Employees.login
+#                     proj_dict["c_list"].append(c.Costs.cost_name)
+#                 else:
+#                     proj_dict["c_list"].append(c.Costs.cost_name) if c.Costs.cost_name not in proj_dict["c_list"] else None
+#         if proj_dict["p_name"]:
+#             res.append(proj_dict)
+
+# with app.app_context():
+#     proj_id = 3
+#     records_res = Records.get_records_by_proj_id(proj_id)
+#     cat_costs = Records.get_cat_costs_ids_by_project_id(proj_id)
+#     cat_costs_names = ProjectCosts.get_costs_id_name(proj_id)
+#     all_cc_names = []
+#     all_cc_labors = []
+#     for cc_id in cat_costs:
+#         all_cc_names.append(ProjectCosts.get_cat_cost_name_by_id(cc_id))
+#         all_cc_labors.append(Records.get_labors_by_cat_cost_id(cc_id))
+#     print(all_cc_names)
+    
+with app.app_context():
+    report, summury, caption = weekly_project_report(22, True)
+    print(caption)
+    for key in report:
+        print(f"{key}\n{report[key]}")
+    
+#     for key in summury:
+#         print(f"{key}:{summury[key]}")
+    
+        
+        
+
+    
+    
+
+# with app.app_context():
+#     task = Tasks.query.filter_by(task_name="blank_task").first()
+#     try:
+#         print(task.id)
+#     except:
+#         print(task)
+        
+#     tasks = Tasks.query.all()
+#     for t in tasks:
+#         print(t.task_name.__repr__())
+         
 #     res = execute(
 #         select(Records)
 #     ).first()
@@ -29,9 +102,9 @@ from utils import timeit
 #     for r in res:
 #         print(r)
 
-# Проверка работы отчета по сотруднику по всему периоду
-with app.app_context():
-    data = report_about_employee(51)
+# # Проверка работы отчета по сотруднику по всему периоду
+# with app.app_context():
+#     data = report_about_employee(51)
     # print(data["total_emp_time"]//60, data["total_emp_time"]%60)
 
 # all_records_list = []

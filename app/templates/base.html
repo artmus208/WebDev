@@ -1,33 +1,33 @@
-<!DOCTYPE html>
-<html lang="ru">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css' ) }}">
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='/images/logo.svg') }}">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='reset.css' ) }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css' ) }}" />
+  {% block styles %} {% endblock styles %}
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='/images/logo.svg') }}" />
+
   <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       // сюда попадём, если страница полностью загрузится
       $('#project_name').change(function () {
         // сюда попадём, если изменится элемент списка с id=project_name
-        $.getJSON('{{ url_for("main.update_cat_costs_list") }}', { // надо использовать url_for
+        $.getJSON('{{ url_for("main.update_cat_costs_list") }}', {
+          // надо использовать url_for
           // здесь мы формируем JSON-файл для роута '/_update_dropdown' с
-          selected_project_id: $('#project_name').val()
+          selected_project_id: $('#project_name').val(),
         }).success(function (data) {
           // Здесь мы получили ответ от роута, в виде JSON-data
-          $("#category_of_costs").html(data.html_string_selected);
-          // метод обновляет содержание элемента с id=category_of_costs 
+          $('#category_of_costs').html(data.html_string_selected)
+          // метод обновляет содержание элемента с id=category_of_costs
         })
-      });
+      })
     })
   </script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
 </head>
 
-<body style="background-color:#ffffff">
+<body>
   <header>
     <div class="container">
       <div class="header_content">
@@ -35,26 +35,39 @@
           <img class="logo" src="{{ url_for('static', filename='/images/taskpesk.svg') }}" height="68" />
         </a>
         <div class="header_project">
-          <p class="header_text"> </p>
+          <p class="header_text"></p>
         </div>
         <div class="header_otchet">
-          <p class="header_text"> </p>
+          <p class="header_text"></p>
         </div>
-        <a href="https://t.me/artmus208" class="tl_telegram_share_btn">
-          <i class="tl_telegram_share_icon"></i>
-          <span class="tl_telegram_share_label">Обратная связь</span>
-        </a>
+        <div class="header__btns">
+          <a class="header__btn" href="https://t.me/taskpesk_bot">
+            <img src="{{ url_for('static', filename='/images/notification-icon.svg') }}" class="telegram-notifier">
+          </a>
+          <a href="https://t.me/artmus208" class="header__btn tl_telegram_share_btn">
+            <!-- <i class="tl_telegram_share_icon"></i> -->
+
+            <img src="{{ url_for('static', filename='/images/telega.svg') }}" class="telegram-icon" alt="">
+            <span class="tl_telegram_share_label">Обратная связь</span>
+          </a>
+          <a class="header__btn" href="{{url_for('auth.logout')}}">Выйти</a>
+
+        </div>
       </div>
     </div>
   </header>
-  {% block content %}
-  {% endblock content %}
 
-  <footer>
 
-  </footer>
+
+  <main>
+    <div class="errors">
+      {% block error %} 
+    
+      {% endblock error %}
+    </div>
+    {% block content %} {% endblock content %}
+  </main>
 
 </body>
 <script type="text/javascript" src="{{ url_for('static', filename='/scripts/script.js') }}"></script>
-
 </html>

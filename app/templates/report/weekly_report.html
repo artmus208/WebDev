@@ -1,0 +1,111 @@
+{% from 'utils.j2' import colorize_it %} {% extends "base.html" %}
+
+<!-- prettier-ignore -->
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pages/report-weekly.css' ) }}" />
+{% endblock styles %}
+
+<!-- prettier-ignore -->
+colorize_it(value, conditional_value, class_red, class_green)
+
+{% block content %}
+
+
+<section class="page-section report-weekly">
+  <div class="container">
+  
+    
+    {% include 'base_parts/reports_btns.html' %}
+
+    <div class="report-weekly__inner">
+      <h1 class="title">Еженедельный отчет по проекту</h1>
+
+      <form method="POST" action="{{ url_for('report.weekly') }}">
+        {{ form.csrf_token }}
+        {{form.project_name(class='select')}}
+
+        <div class="btns">
+          {{form.submit(class='btn')}}
+          <a class="btn btn_back" href="/record">Назад</a>
+
+        </div>
+        
+      </form>
+
+      <hr />
+      {% if report %}
+      <div style="display: flex;">
+        <h2 class="title">Еженедельный отчет по проекту</h2>
+        <a href="/report/xl/weekly/project/{{ project_id }}" style="margin-left: 100px">
+          <img src="{{ url_for('static', filename='images/xl.svg') }}" width="50px" height="50px" alt="">
+        </a>
+      </div>
+      <table>
+        <caption>
+          {{ caption }}
+        </caption>
+
+        <thead>
+          <tr>
+            <th>Статьи расходов</th>
+            <th>
+              План, чел/д
+            </th>
+            <th>
+              Факт, чел/д
+            </th>
+            <th>Отклонение, чел/д</th>
+            <th>
+             Отклонение(отн)
+            </th>
+        
+            <th>
+              За неделю, чел/д
+            </th>
+         
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for cc_name in report %}
+          
+          
+          <tr>
+            <td >{{cc_name}}</td>
+            <td>{{ colorize_it(report[cc_name]["plan_labor"], 0, "color_red", "")}}</td>
+            <td>
+              {{ colorize_it(report[cc_name]["fact_labor"], report[cc_name]["plan_labor"], "color_green", "color_red")}}
+            </td>
+           
+            <td>{{ colorize_it(report[cc_name]["delta"], 0, "color_red", "")}}</td>
+            <td>{{ colorize_it(report[cc_name]["progress"], 0, "color_red", "") }} %</td>
+            
+            <td>
+              {% if report[cc_name]["week_labor"] != 0 %} +{{ report[cc_name]["week_labor"] }} {% else %} {{
+              colorize_it(report[cc_name]["week_labor"], -1, "color_red", "") }} {% endif %}
+            </td>
+          
+          </tr>
+          {% endfor %}
+        </tbody>
+
+        <tfoot>
+          <tr>
+            <td style="text-align: right">Итого:</td>
+            <td >{{ colorize_it(summury["plan_labor"], 0, "color_red", "") }}</td>
+            <td>{{ colorize_it(summury["fact_labor"], summury["plan_labor"], "color_green", "color_red") }}</td>
+            <td>{{ colorize_it(summury["delta"], 0, "color_red", "") }} </td>
+            <td>{{ colorize_it(summury["progress"], 0, "color_red", "")}} %</td>
+            <td>
+              {% if summury["week_labor"] != 0 %} +{{ summury["week_labor"] }} {% else %} {{ colorize_it(summury["week_labor"], -1,
+              "color_red", "") }} {% endif %}
+            </td>
+          
+          </tr>
+        </tfoot>
+      </table>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock content %}

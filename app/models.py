@@ -2,8 +2,19 @@ from app import db, select, execute, app, text, logger
 from flask import session
 from sqlalchemy.sql import func
 from sqlalchemy import between
-# from passlib.hash import bcrypt
 
+import datetime
+
+
+
+MAX_DATETIME = datetime.datetime.combine(
+    datetime.datetime.max.date(),
+    datetime.datetime.max.time(),
+)
+MIN_DATETIME = datetime.datetime.combine(
+    datetime.datetime.min.date(),
+    datetime.datetime.min.time(),
+)
 
 # TIPS:
 # Должен быть способ через relationship получить данные из связанной таблицы
@@ -46,7 +57,20 @@ class Records(db.Model, MyBaseClass):
     hours = db.Column(db.Integer, default=0)
     minuts = db.Column(db.Integer, default=0)
 
-    def __init__(self, employee_id, project_id, cost_id, task_id, hours, minuts):
+    def __init__(
+        self, 
+        id=None, 
+        time_created=None, 
+        employee_id=None, 
+        project_id=None, 
+        cost_id=None, 
+        task_id=None, 
+        hours=None, 
+        minuts=None):
+        if id:
+            self.id = id
+        if time_created:
+            self.time_created = time_created
         self.employee_id = employee_id
         self.project_id = project_id
         self.cost_id = cost_id
@@ -107,29 +131,49 @@ class Records(db.Model, MyBaseClass):
                 ).order_by(cls.time_created.asc())).scalars().all()
         else:
             res = execute(
-                select(cls).where(
-                    cls.employee_id == employee_id,
-                    cls.project_id == project_id,
-                    cls.cost_id == cat_cost_id,
-                    cls.time_created.between(lower_date, upper_date)
-            ).order_by(cls.time_created.asc())).scalars().all()
+                    select(cls).where(
+                        cls.employee_id == employee_id,
+                        cls.project_id == project_id,
+                        cls.cost_id == cat_cost_id,
+                        cls.time_created.between(lower_date, upper_date)
+                    ).order_by(cls.time_created.asc())).scalars().all()
 
         return [(r.time_created.strftime("%d.%m.%Y %H:%M"), r.hours, r.minuts) for r in res]
     
     @classmethod
-    def get_records_by_proj_id(cls, project_id):
+    def get_records_by_proj_id(cls, project_id, date_from=MIN_DATETIME, date_to=MAX_DATETIME):
         try:
-            return execute(select(cls).where(cls.project_id==project_id)).scalars().all()
+            return execute(
+                        select(cls).where(
+                            cls.project_id==project_id,
+                            cls.time_created.between(date_from, date_to)
+                        )
+                   ).scalars().all()
         except Exception as e:
             db.session.rollback()
-            logger.warning(f"in Records class {e}")
+            logger.exception(f"in Records class {e}")
+        
+    @classmethod
+    def get_labors_by_cat_cost_id(cls, cat_cost_id, project_id, date_from=MIN_DATETIME, date_to=MAX_DATETIME):
+        try:
+            stmt = select(func.sum(cls.hours), func.sum(cls.minuts)).where(
+                cls.cost_id==cat_cost_id,
+                cls.project_id==project_id,
+                cls.time_created.between(date_from, date_to)
+            )
+            res = execute(stmt)
+            return res
+        except Exception as e:
+            db.session.rollback()
+            logger.exception()
+    
             
     @classmethod
     def get_info_by_proj_id_cat_id_emp_id(cls, project_id, project_cost_id, employee_id):
         """
         Возврат общего времени сотрудника под ЭТОЙ статьей расходов и в ЭТОМ проекте
         внутри функция просто делает запросы к БД с вычислением суммы по часам и минутам
-        Возврат: (часы, минуты, логин сотрудника)
+        Возврат: минуты общих трудозатрат
         """
         stmt = select(func.sum(cls.hours)).where(
             cls.project_id==project_id, cls.cost_id==project_cost_id, cls.employee_id==employee_id)
@@ -174,6 +218,18 @@ class Records(db.Model, MyBaseClass):
         return (self.id,
                 self.time_created.strftime("%d.%m.%Y %H:%M"),
                 emp_login, project_name, cost_name, self.hours, self.minuts)
+        
+    @classmethod
+    def count_project_records(cls, project_id, cost_id, lower_date, upper_date):
+        stmt = select(func.count(cls.id)).where(
+            cls.project_id == project_id, 
+            cls.time_created.between(lower_date, upper_date),
+            cls.cost_id == cost_id
+        )
+        res = execute(stmt).scalar_one()
+        return res
+        
+        
         
 class Employees(db.Model, MyBaseClass):
     id = db.Column(db.Integer, primary_key=True)
@@ -255,13 +311,9 @@ class Projects(db.Model, MyBaseClass):
         s = f"{self.id},{self.time_created},{self.time_updated},{self.project_name},{self.gip_id},{self.start_time},{self.end_time},{self.end_time_fact}"
         return s
     
-    def __init__(self, p_name, gip_id, id=None, code=None):
-        if code is not None:
-            self.project_name = " ".join([code, p_name])
-        elif id is not None:
-            self.id = id
-        else:
-            self.project_name = p_name
+    def __init__(self, p_name, gip_id, id=None, code=''):
+        self.id = id
+        self.project_name = p_name if not code else f"{code} {p_name}"
         self.gip_id = gip_id
 
     @classmethod
@@ -327,8 +379,8 @@ class Costs(db.Model, MyBaseClass):
         s = f"{self.id},{self.time_created},{self.time_updated},{self.cost_name}"
         return s
 
-    def __init__(self, cost_name, id=None):
-        if id is not None:
+    def __init__(self, id=None, cost_name=None):
+        if id:
             self.id = id
         self.cost_name = cost_name
 
@@ -366,6 +418,12 @@ class ProjectCosts(db.Model, MyBaseClass):
         self.cost_name_fk = cost_id
         self.man_days = man_days
         self.project_id = project_id
+
+    @classmethod
+    def get_name_costs_ids_by_project_id(cls, project_id):
+        stmt = select(cls.id).where(cls.project_id==project_id)
+        res = set(execute(stmt).scalars().all())
+        return list(res)
 
     @classmethod
     def add(cls, new_cost_id, man_days, project_id):

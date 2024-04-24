@@ -1,0 +1,37 @@
+.form-add_project {
+  /* font-size: 16px; */
+  font-size: 1.6rem;
+}
+
+.form-add_project label {
+  display: flex;
+  /* gap: 10px; */
+  gap: 1rem;
+  align-items: center;
+  width: auto !important;
+  height: auto !important;
+}
+.form-add_project label::before {
+  /* margin-right: 20px; */
+  /* width: 18px !important;
+  height: 18px !important; */
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.add_project__subtitle {
+  /* font-size: 16px; */
+  color: #545454;
+  /* margin-bottom: 8px; */
+  margin-bottom: 0.8rem;
+}
+
+.form-add_project__employee {
+  /* width: 350px; */
+  width: 35rem;
+}
+
+.form-add_project__btn {
+  /* width: 184px; */
+  width: 18.4rem;
+}
