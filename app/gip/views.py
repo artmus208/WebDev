@@ -65,11 +65,7 @@ def edit_cat_cost():
             
             old_cost_name_id = request.form.get('old_cost_list')
             new_name = request.form.get("new_name")
-            print(new_name)
             new_man_days = request.form.get("updated_man_days")
-
-            print(cost_name, man_days, old_cost_name_id, new_man_days)
-            print(type(cost_name), type(man_days), type(old_cost_name_id), type(new_man_days))
             
             if cost_name in list_of_cats_name:
                 error = True
@@ -87,7 +83,6 @@ def edit_cat_cost():
                 new_cost_task = CostsTasks(1, 100, ProjectCosts.query.order_by(ProjectCosts.id.desc()).first().id)
                 new_cost_task.save()
             # Если пытаются отредактировать старую статью
-            print("Элемент из списка:", old_cost_name_id)
             if old_cost_name_id != "default":
                 old_project_cost: ProjectCosts = ProjectCosts.query.filter_by(id=int(old_cost_name_id)).first()
                 old_cost_name = ProjectCosts.get_cat_cost_name_by_id(id=old_cost_name_id)
