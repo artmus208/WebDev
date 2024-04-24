@@ -71,8 +71,8 @@ def login():
                 
                 session['emp_role'] = u'Сотрудник'
                 
-                if login == "zda":
-                    session["is_zda"] = True
+                if login == "gtu":
+                    session["inspector"] = True
                 
                 if employee.is_gip:
                     session['emp_role'] = u'ГИП '

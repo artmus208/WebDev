@@ -93,9 +93,6 @@ def weekly():
         if form.validate_on_submit():
             proj_id = int(form.project_name.data)
             report, summury, caption, project_id = weekly_project_report(project_id=proj_id)
-            print(report)
-            print(summury)
-            print(caption)
             return render_template(
                 "report/weekly_report.html", 
                 form=form,
@@ -120,7 +117,7 @@ def inspect_2():
         all_p = Projects.query.all()
         for p in all_p:
             inner = {"caption": None, "costs": []}
-            p_report, summury, caption = weekly_project_report(project_id=p.id)
+            p_report, summury, caption, project_id = weekly_project_report(project_id=p.id)
             for c in p_report:
                 if p_report[c]["week_labor"] == 0.0:
                     if inner["caption"] is None:
@@ -143,7 +140,7 @@ def inspect_3():
         all_p = Projects.query.all()
         for p in all_p:
             inner = {"caption": None, "p_report": {}}
-            p_report, summury, caption = weekly_project_report(project_id=p.id, is_before_last_week=True)
+            p_report, summury, caption, project_id = weekly_project_report(project_id=p.id, is_before_last_week=True)
             report.append(
                 {
                     "caption": caption,

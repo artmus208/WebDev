@@ -5,7 +5,7 @@
   {% if session.get("emp_is_gip", False) -%}
     <a class="reports-btns__btn" href="/gip/"><span>Мой проект</span></a>
   {% endif %}
-  {% if session.get("is_zda", False) -%}
+  {% if session.get("inspector", False) -%}
     <a class="reports-btns__btn" href="{{ url_for('main.inspect') }}"><span>Inspect</span></a>
     <a class="reports-btns__btn" href="{{ url_for('report.inspect_2') }}"><span>Inspect2</span></a>
     <a class="reports-btns__btn" href="{{ url_for('report.inspect_3') }}"><span>Inspect3</span></a>
