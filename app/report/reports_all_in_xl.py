@@ -40,7 +40,6 @@ def create_xl_project(projects_data):
             green_bold_font = Font(bold=True, color="06a77d")
             black_bold_font = Font(bold=True, color="000000")
 
-            print(expense)
             for i in range(len(expense)):
                 font_to_apply = bold_font
 
@@ -103,6 +102,5 @@ def get_info_project(id):
             round(c_c_list[c_c_name]["rel_diff"], 1),
         ]
         info_project.append(d_p_row)
-        # print(d_p_row)
     return info_project
 
