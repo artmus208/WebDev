@@ -315,7 +315,7 @@ def notification1645():
                 response = requests.post(url, data=params)
 
 
-# schedule.every().day.at("16:45").do(notification1645)
+schedule.every().day.at("16:45").do(notification1645)
 
 
 bg_process = threading.Thread(target=background_process)
