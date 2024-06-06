@@ -18,6 +18,11 @@ from app.report.reports_generators import weekly_project_report
 from utils import timeit
 
 
+with app.app_context():
+    data = report_about_employee(43)
+    print(data)
+    
+
 # with app.app_context():
 #     # Для Даши ispect3 - отображение проектов и статей расходов
 #     # и общих трудозатрат с количеством записей за последние две недели
@@ -65,11 +70,11 @@ from utils import timeit
 #         all_cc_labors.append(Records.get_labors_by_cat_cost_id(cc_id))
 #     print(all_cc_names)
     
-with app.app_context():
-    report, summury, caption = weekly_project_report(22, True)
-    print(caption)
-    for key in report:
-        print(f"{key}\n{report[key]}")
+# with app.app_context():
+#     report, summury, caption = weekly_project_report(22, True)
+#     print(caption)
+#     for key in report:
+#         print(f"{key}\n{report[key]}")
     
 #     for key in summury:
 #         print(f"{key}:{summury[key]}")
