@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'OpenSans';
+  font-display: swap;
+  src: local('OpenSans-Regular'), url('../assets/fonts/OpenSans/OpenSans-Regular.woff2') format('woff2'),
+    url('../assets/fonts/OpenSans/OpenSans-Regular.woff') format('woff'), url('../assets/fonts/OpenSans/OpenSans-Regular.eot') format('eot'),
+    url('../assets/fonts/OpenSans/OpenSans-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'OpenSans';
+  font-display: swap;
+  src: local('OpenSans-Regular'), url('../assets/fonts/OpenSans/OpenSans-Medium.woff2') format('woff2'),
+    url('../assets/fonts/OpenSans/OpenSans-Medium.woff') format('woff'), url('../assets/fonts/OpenSans/OpenSans-Medium.eot') format('eot'),
+    url('../assets/fonts/OpenSans/OpenSans-Medium.ttf') format('ttf');
+  font-weight: 500;
+  font-style: normal;
+}

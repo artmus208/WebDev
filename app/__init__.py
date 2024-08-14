@@ -64,12 +64,14 @@ from app.auth.views import auth
 from app.gip.views import gip
 from app.admin import admin
 from app.report.routes import report 
+from app.stub import stub_bp
 
 app.register_blueprint(main)
 app.register_blueprint(auth)
 app.register_blueprint(gip)
 app.register_blueprint(admin)
 app.register_blueprint(report)
+app.register_blueprint(stub_bp)
 
 with app.app_context():
     db.create_all()

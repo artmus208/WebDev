@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stub_style.css') }}">
+  </head>
+  <body>
+    <div class="block">
+      <p class="title">Уважаемые коллеги!</p>
+      <p class="text">
+        В связи с выпуском
+        <a href="https://tcs.pesk.spb.ru/login" class="link">TCS_v2</a> данная
+        версия приложения временно прекращает свою работу. Настоятельно
+        рекомендуем Вам активно пользоваться
+        <a href="https://tcs.pesk.spb.ru/login" class="link"
+          >новой версией продукта</a
+        >
+        для внесения трудозатрат.
+      </p>
+      <img src="{{ url_for('static', filename='images/Time.svg') }}" class="image" />
+    </div>
+  </body>
+</html>

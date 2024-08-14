@@ -1,0 +1,38 @@
+body {
+  font-family: "OpenSans";
+}
+.title {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 0;
+}
+.text {
+  font-size: 16px;
+  text-align: center;
+  width: 650px;
+  line-height: 26px;
+}
+.image {
+  width: 400px;
+}
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.link {
+  color: #4786ff;
+  cursor: pointer;
+}
+a {
+  color: inherit;
+}
+a,
+a:link,
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
